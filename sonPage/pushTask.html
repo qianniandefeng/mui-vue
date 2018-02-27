@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>片方/发行方</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        .buyBtn{
+			position: absolute;
+			top: 4px;
+			right: 10px;
+        }
+		.bili{
+			float: right;
+			background: #fff;
+			padding: 11px 15px;
+			right: 100px;
+			width: 15%;
+		}
+    </style>
+</head>
+<body>
+<div id="pushTask">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">发布我的任务</h1>
+    </header>
+    <div id="content" class="mui-content">
+        <form class="mui-input-group">
+	        <div class="mui-table-view-cell" style="background: #333030;">
+	            <img class="mui-pull-left" :src="cinema.titleImg|photo" style="width: 120px;height: 150px;margin-right: 10px;">
+	            <div class="mui-media-body">
+	                <h3 class="font-mid font-white"><span v-text="cinema.name"></span></h3>
+	                <div class="font-min font-orange">评分：<span v-text="cinema.pingfen?cinema.pingfen:'未评'"></span>分</div>
+	                <div class="font-mid font-white" v-text="cinema.ctype"></div>
+	                <div class="font-mid font-white" v-text="cinema.ltime"></div>
+	                <div class="font-mid font-white" v-text="cinema.playdate"></div>
+	                <div class="font-mid font-white"><span v-text="cinema.xiangkan?cinema.xiangkan:0"></span>人想看</div>
+	            </div>
+	        </div>
+            <div class="mui-input-row">
+                <label>片名</label>
+                <input id="nameInput" type="text" placeholder="请输入电影名称" list="cinema" @blur="inputBlur(movie.filename)" @tap="getFilm()" v-model="movie.filename">
+                <datalist id="cinema" style="position: absolute;z-index: 2;" >
+                	<div v-for="item in tempList" >
+                		<option :value="item.name" :label="item.id" v-text="item.name"></option>
+                	</div>
+                </datalist>
+            </div>
+            <div class="mui-input-row">
+                <label>最低票价</label>
+                <input type="number" class="mui-input-clear" placeholder="请输入最低票价" v-model="movie.minticketprice">
+            </div>
+            <div class="mui-input-row">
+                <label>最低人数</label>
+                <input type="number" class="mui-input-clear" placeholder="请输入最低人数" v-model="movie.minicount">
+            </div>
+            <div class="mui-input-row">
+                <label>任务积分</label>
+                <input type="number" class="" placeholder="剩余300积分可用" v-model="movie.integral">
+            		<button type="button" class="mui-btn-red buyBtn" @click="recharged">充值</button>
+            </div>
+            <div class="mui-input-row">
+                <label>开始时间</label>
+                <input type="text" data-options='{"type":"date"}' class="btn" v-model="movie.startdate">
+            </div>
+            <div class="mui-input-row">
+                <label>结束时间</label>
+                <input type="text" data-options='{"type":"date","beginYear":2018}' class="btn" v-model="movie.enddate">
+            </div>
+            
+            <div class="mui-input-row">
+                <label>票房奖励</label>
+                <span class="bili">%</span>
+                <input type="number" class="" placeholder="范围5-100" v-model="movie.bili" style="width: 50%;">                
+            </div>
+            <div class="mui-button-row">
+                <div class="font-red">奖励最低5%，超出部分奖励给影院经理</div>
+            </div>
+            <div class="mui-button-row">
+            	<button id="submitBtn" type="button" class="mui-btn mui-btn-red" data-loading-text = "发布中" @click="submitMovie" style="width: 46%;">发布</button>
+            	<button type="button" class="mui-btn" @click="cancel"  style="width: 46%;">取消</button>
+            </div>
+            <div class="mui-input-row mui-checkbox mui-left">
+                <label class="font-red">已要求影院提供准确场次时间</label>
+                <!--<input name="checkbox" type="checkbox" checked>-->
+            </div>
+        </form>
+    </div>
+    
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../js/mui.picker.min.js"></script>
+<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/app.js" type="text/javascript" charset="utf-8"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    var v = new Vue({
+        el: '#pushTask',
+        data: {
+        	cinema: {
+        		'id':34442,
+        		'name':'电影名称',
+        		'ename':'',
+        		'titleImg':'../images/nopic.png',
+        		'ctype':'剧情类型',
+        		'ltime':'国家',
+        		'playdate':'上映时间',
+        		'xiangkan':'',
+        		'pingfen':''
+        	},
+        	tempList: [],
+            movie: {
+                id: '',
+                filmId: '',
+                memid: app.getUser().memid,
+                status: 0,
+                titleImg: '../images/qq.png',
+                filename: '',
+                minticketprice: '40',
+                integral: '1000',
+                bili: 10,
+                remainintegral: '500',
+                minicount: '50',
+                startdate: '',
+                enddate: ''
+            }
+        },
+        mounted: function (){
+        	var that = this;
+			//mui时间选择
+            (function(m) {
+                m.init();
+                //如果有电影信息，则讲电影信息复制过来
+                if(app.getCinema().id){
+                	var nowDate = new Date().Format("yyyy-MM-dd"); 
+                	that.cinema = app.getCinema();
+                	that.movie.titleImg = that.cinema.titleImg;
+                	that.movie.filename = that.cinema.name;
+					that.movie.filmId = that.cinema.id;
+					that.movie.startdate = nowDate;
+					that.movie.enddate = nowDate;
+                }
+               	m.plusReady(function(){
+	               	 //返回刷新主页
+	                var main = plus.webview.currentWebview().opener();
+	                var that = this;
+	                var btns = $('.btn');
+	                btns.each(function (i,btn) {
+	                    btn.addEventListener('tap', function () {
+	                        var _self = this;
+	                        if (_self.picker) {
+	                            _self.picker.show(function (rs) {
+	                                _self.value = rs.text;
+	                                _self.picker.dispose();
+	                                _self.picker = null;
+	                            });
+	                        } else {
+	                            var optionsJson = this.getAttribute('data-options') || '{}';
+	                            var options = JSON.parse(optionsJson);
+	                            var id = this.getAttribute('id');
+	                            var date = new Date();
+	                            options.beginYear = date.getFullYear();
+	                            options.beginMonth = date.getMonth()+1;
+	                            options.beginDay = date.getDate();
+	                            
+	                            /*
+	                             * 首次显示时实例化组件
+	                             * 示例为了简洁，将 options 放在了按钮的 dom 上
+	                             * 也可以直接通过代码声明 optinos 用于实例化 DtPicker
+	                             */
+	                            _self.picker = new m.DtPicker(options);
+	                            _self.picker.show(function (rs) {
+	                                /*
+	                                 * rs.value 拼合后的 value
+	                                 * rs.text 拼合后的 text
+	                                 * rs.y 年，可以通过 rs.y.vaue 和 rs.y.text 获取值和文本
+	                                 * rs.m 月，用法同年
+	                                 * rs.d 日，用法同年
+	                                 * rs.h 时，用法同年
+	                                 * rs.i 分（minutes 的第二个字母），用法同年
+	                                 */
+	                                _self.value = rs.text;
+	                                if(i == 0){
+	                                	v.movie.startdate = rs.text;
+	                                }else if(i == 1){
+	                                	v.movie.enddate = rs.text;
+	                                }
+	                                /*
+	                                 * 返回 false 可以阻止选择框的关闭
+	                                 * return false;
+	                                 */
+	                                /*
+	                                 * 释放组件资源，释放后将将不能再操作组件
+	                                 * 通常情况下，不需要示放组件，new DtPicker(options) 后，可以一直使用。
+	                                 * 当前示例，因为内容较多，如不进行资原释放，在某些设备上会较慢。
+	                                 * 所以每次用完便立即调用 dispose 进行释放，下次用时再创建新实例。
+	                                 */
+	                                _self.picker.dispose();
+	                                _self.picker = null;
+	                            });
+	                        }
+	
+	                    }, false);
+	                })
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    localStorage.removeItem('_cinema_');
+	                    m.fire(main, "pageflowrefresh" );
+	                    old_back();
+	                }
+               })
+                
+            })(mui);
+        },
+        methods: {
+			CompareDate: function (d1,d2){//比较日期大小
+			  	return ((new Date(d1.replace(/-/g,'\/'))) > (new Date(d2.replace(/-/g,'\/'))));
+			},
+			recharged:function (){ 
+				app.mainPage('../html/payMoney');
+			},
+			//发布
+			submitMovie: function(){
+				var that = this;
+				var myDate = new Date();
+                //时间校验
+            	if(this.CompareDate(that.movie.startdate,that.movie.enddate)){
+            		alert('结束时间应晚于开始时间');
+            		return;
+            	}
+            	 if(that.movie.bili<5){
+                		plus.nativeUI.toast('返点比例不得低于5%');
+                }else{
+	                that.movie.id = (new Date()).getTime();          	                 
+	                var btnArray = ['我在想想', '确认提交'];
+					mui.confirm('电影：'+ that.movie.filename+
+					'\n最低票价:	'+ that.movie.minticketprice+' 元'+
+					'\n最低人数:	'+that.movie.minicount+' 人'+					
+					'\n消耗积分:	'+that.movie.integral+
+					'\n返点比例:	'+that.movie.bili+' %'+
+					'\n任务周期:	'+that.movie.startdate+'--'+that.movie.enddate
+					     , '包场任务信息', btnArray, function(e) {
+						if (e.index == 1) {
+							mui('#submitBtn').button('loading'); 
+							pushTask();
+						} else{
+							return;
+						}
+					})
+	                	return;
+                }
+                //数据全部包含在this.movie中，发送ajax请求
+                function pushTask(){
+                aja.pushNewTask(that.movie,function(data){
+		            if(data.r == 1){
+		            	console.log(JSON.stringify(that.movie))
+		            	plus.nativeUI.alert('发布成功');
+		            	mui('button').button('reset');
+		            	mui.back();
+		            	
+		            }
+		            
+                }) }
+			},
+			cancel: function(){
+				mui.back()
+			},
+			getFilm: function(){//根据电影名称查询电影并生成列表
+				var that = this;
+				aja.getPresaleFilmLike(that.movie.filename,function(info){
+					that.tempList = info;
+				});
+			},
+			inputBlur: function(obj){
+				var that = this;
+				var regu =/^\//;
+				var re = new RegExp(regu);
+				aja.getFilmDataLike(that.movie.filename,function(info){
+					if(!info[0]){
+						that.cinema = {
+			        		'id':344422,
+			        		'name':'电影名称',
+			        		'ename':'',
+			        		'titleImg':'../images/nopic.png',
+			        		'ctype':'剧情类型',
+			        		'ltime':'国家',
+			        		'playdate':'上映时间',
+			        		'xiangkan':'',
+			        		'pingfen':''
+			        	}
+						return;
+					}
+					that.cinema = info[0];
+					if(re.test(that.cinema.titleImg)){
+						var imgUrl = 'http:'+that.cinema.titleImg;
+						that.cinema.titleImg = imgUrl;
+						that.movie.titleImg = imgUrl;
+						that.movie.filename = that.cinema.name;
+						that.movie.filmId = that.cinema.id;
+					}
+				});
+			}
+        }
+    })
+</script>
+</body>
+</html>

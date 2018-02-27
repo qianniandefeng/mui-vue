@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影院经理</title>
+    <!--apple-mobile-web-app-capable删除默认的苹果工具栏和菜单栏-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--apple-mobile-web-app-status-bar-style控制状态栏显示样式-->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../css/feedback-page.css"/>
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+		/*图片预览*/
+		.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4px;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
+			}
+    </style>
+</head>
+<body>
+<div id="finishedy">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title" v-text="task.filmname"></h1>
+        <!--<button class="mui-btn mui-btn-blue mui-btn-link mui-pull-right" @tap="addComment" v-if="task.checks==3">评论</button>-->
+    </header>
+    <div id="content" class="mui-content">
+        <div class="mui-table-view" style="background: #fff">
+            <div class="mui-table-view-cell mui-media">               
+                <img class="mui-pull-left" :src="task.titleImg|photo" />
+                <img class="mui-pull-right" src="../images/finished.png" v-if="task.checks==3" style="width: 48px;height: 48px;"/>
+                <div class="mui-media-body">
+                    <div class="font-min font-red">票房：<span v-text="task.seatcount*task.ticketprice"></span>元</div>
+                    <div class="font-min font-gray">团体：<span v-text="task.seatcount"></span>人</div>
+                    <div class="font-min font-gray">票价：<span v-text="task.ticketprice"></span>元</div>
+                    <div class="font-min font-gray" >放映厅：<span v-text="task.movehall"></span>号影厅</div>
+                    <div class="font-min font-gray">放映时间：<span v-text="task.showtime"></span></div>
+                </div>
+            </div>
+	    	<ul class="mui-table-view mui-grid-view">
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4" v-for="imgEl in (JSON.parse(task.checkimgs))">
+	                <p>
+	                    <img class="mui-media-object" :src="imgEl.url|photo" data-preview-src="" data-preview-group="1" />
+	                <p>
+	            </li>
+	        </ul>
+	        <div class="mui-clearfix" style="padding: 10px;">
+	        	<p class="mui-pull-left" v-if="task.checks==3">审核日<span v-text="task.checktime"></span></p>
+	        	<p class="font-mid font-green mui-pull-right">奖励<span v-text="task.bounty"></span>积分</p>
+	        </div>
+        </div>
+        
+    </div>
+</div>
+
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../js/mui.zoom.js"></script>
+<script src="../js/mui.previewimage.js"></script>
+<script src="../js/app.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#finishedy',
+        data: {
+            task: {
+                id: '',
+                memid: '',
+                rewuid: '',
+                filmname: '',
+                cinemaLogo: 'http://www.36le.com/img/user-photo.png',
+                showtime: '2017-10-02 13:00',//showTime放映时间
+                movehall: '1',
+                seatcount: '50',//座位数
+                ticketprice: '40',//预售票价
+//                                    total: '2000',
+                status: 0,//状态
+                bounty: '200',//奖励金
+                checks: 0,//审核状态0---等待提交审核 1—等待片方确认; 2---片方确认成功; 3---片方确认失败;
+                checkimgs: '[]'//审核图片
+            }
+        },
+       	mounted: function (){
+            var that = this;
+        	(function(m) {
+        		m.init();
+        		//图片预览
+            	m.previewImage();
+            	
+        		that.task = JSON.parse(localStorage.getItem('_jidian_task_'));
+                //返回键退出当前页
+                var old_back = m.back;
+                m.back = function(){
+                    m.currentWebview.close();
+                    old_back();
+                }
+        	}(mui))
+        	
+        },
+        methods: {
+			addComment: function(){//添加评论
+				var that = this;
+				app.mainPage('editComment');
+			}
+        }
+    })
+</script>
+</body>
+</html>

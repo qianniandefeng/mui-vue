@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影院经理</title>
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+		.mui-content>.mui-table-view:first-child{
+        	margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+<div id="editBlockTask">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title" v-text="movie.filename"></h1>
+    </header>
+    <div id="content" class="mui-content">
+        <div class="mui-table-view">
+            <div class="mui-table-view-cell" style="background: #333030;">            	 
+                <img class="mui-pull-left" :src="movie.titleImg|photo" />
+                <div class="mui-media-body">
+                    <div class="font-mid font-orange">票房奖励<span v-text="movie.bili"></span>%</div>
+                    <div class="font-min font-white">剩余积分:<span v-text="movie.remainintegral < 0 ? 0 : movie.remainintegral"></span></div>
+                    <div class="font-min font-white">最低票价:<span v-text="movie.minticketprice"></span>元</div>
+                    <div class="font-min font-white" >最低人数：<span v-text="movie.minicount"></span>人/场</div>
+                    <div class="font-min font-white">任务时间：{{movie.startdate | time}}至{{movie.enddate | time}}</div>
+                </div>
+            </div>
+        </div>
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label class="mui-text-right">影厅：</label>
+                <select v-model="task.movehall">
+                    <option v-for="item in tings" v-text="item"></option>
+                </select>
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">团体人数：</label>
+                <input type="number" class="mui-input-clear" v-model="task.seatcount">
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">票价：</label>
+                <input type="number" class="mui-input-clear" placeholder="不低于要求最低票价" v-model="task.ticketprice">
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">放映时间：</label>
+                <input type="text" data-options='{}' class="btn" v-model="task.showtime">
+            </div>
+            <div class="mui-button-row">
+                <div class="font-red">放映时间前12小时内不可修改</div>
+            </div>
+            <div class="mui-button-row">
+                <div class="font-green font-max">预计票房：<span v-text="task.seatcount*task.ticketprice"></span> 收获<span v-text="task.seatcount*task.ticketprice*movie.bili/100"></span>积分</div>
+            </div>
+            <div class="mui-button-row">
+                <button type="button" class="mui-btn mui-btn-red" data-loading-text = "确认中" @click="queryTask" style="width: 46%;">确认</button>
+                <button type="button" class="mui-btn" @click="backTask" style="width: 46%;">撤单</button>&nbsp;&nbsp;
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../js/app.js" type="text/javascript"></script>
+<script src="../js/mui.picker.min.js"></script>
+<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#editBlockTask',
+        data: {
+            movie: {
+                id:'101',
+                memid: 123456,
+                titleImg: '../images/qihoo.png',
+                filename: '让子弹飞',
+                integral: '1000',
+                bili: '10%',
+                remainintegral: '500',
+                minticketprice: '30',
+                minicount: '50',
+                startdate: '2017-10-1',
+                enddate: '2017-10-30',
+                status: '1'
+            },
+            task: {
+                id: '',
+                memid: '',
+                rewuid: '',
+                filmname: '',
+                cinemaLogo: 'http://www.36le.com/img/user-photo.png',
+                showtime: '2017-10-02 13:00',//showTime放映时间
+                movehall: '4',
+                seatcount: '50',//座位数
+                ticketprice: '40',//预售票价
+//              total: '2000',
+                status: 0,//状态
+                bounty: '200',//奖励金
+                checks: 0,//审核状态0---等待提交审核 1—等待片方确认; 2---片方确认成功; 3---片方确认失败;
+                checkimgs: '[]'//审核图片
+            },
+            tings: []
+        },
+        mounted: function (){
+        	var that = this;
+            (function(m) {
+                m.init();
+                //获取片方任务信息，获取团票信息（不一定有），如果片方任务信息的id与团票rewuid一致则说明是编辑原有信息
+                //								如果不一致或者不存在，则说明是新增信息
+                that.tings = app.getTings();
+                
+                that.movie = JSON.parse(localStorage.getItem('_jidian_chang_'));
+                var taskText = localStorage.getItem('_jidian_task_') || '{}';
+                var task = JSON.parse(taskText);
+                that.task = task;
+                //设置日期
+                var btns = m('.btn');
+                btns.each(function (i, btn) {
+                    btn.addEventListener('tap', function () {
+                        var _self = this;
+                        if (_self.picker) {
+                            _self.picker.show(function (rs) {
+                                _self.value = rs.text;
+                                _self.picker.dispose();
+                                _self.picker = null;
+                            });
+                        } else {
+                            var optionsJson = this.getAttribute('data-options') || '{}';
+                            var options = JSON.parse(optionsJson);
+                            var id = this.getAttribute('id');
+                            options = {
+                            	beginDate: new Date(that.movie.startdate+' 00:00:00'),//设置开始日期 
+							    endDate: new Date(that.movie.enddate+' 23:59:59')//设置结束日期 
+                            }
+                            _self.picker = new m.DtPicker(options);
+                            _self.picker.show(function(rs) {
+                                that.task.showtime = rs.text;
+//                              _self.value = rs
+//                                  .text;
+                                
+                                _self.picker.dispose();
+                                _self.picker = null;
+                            });
+                        }
+                    }, false);
+                })
+                m.plusReady(function(){
+        			//返回刷新主页
+                	var main = plus.webview.currentWebview().opener();
+        			//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    m.fire(main, "pageflowrefresh");
+	                    old_back();
+	                }
+        		})
+            })(mui);
+        },
+        methods: {
+			queryTask: function(){
+				var that = this;
+				that.task.checks = 1;
+				var bounty = that.task.seatcount * that.task.ticketprice * that.movie.bili / 100;
+			    if(that.task.seatcount < that.movie.minicount){
+					plus.nativeUI.toast('不得低于最低包场人数');
+				}else if(that.task.ticketprice < that.movie.minticketprice){
+					plus.nativeUI.toast('票价不得低于最低票价');
+				}
+				else {
+					that.task.bounty = bounty;
+					submitCheckTask();
+				}
+				function submitCheckTask(){
+					var btnArray = ['否', '是'];
+					mui.confirm('执行时间:'+that.task.showtime+
+						'\n团体人数:'+that.task.seatcount+
+						'\n单人票价:'+that.task.ticketprice+
+						'\n完成任务可获得'+that.task.seatcount*that.task.ticketprice*that.movie.bili/100+'积分'+
+						'\n注意：若调整票房需重新审核！', '编辑任务', btnArray, function(e) {
+						if (e.index == 1) {
+							aja.submitCheckTask(that.task,function(data){
+								if(data.r == '1'){
+									plus.nativeUI.toast('恭喜！任务已确认，做好排期准备哦 :)');
+									mui.back()
+								}else if(data.r == '-1'){
+									plus.nativeUI.toast('剩余积分不足');
+								}
+							})
+						} 
+					})
+				}
+				
+			},
+			backTask: function(){
+				var that = this;				 
+				that.task.checks = -1;
+				var btnArray = ['否', '是'];
+				mui.confirm('提示：多次撤销会影响您的信用值！', '影娱宝', btnArray, function(e) {
+					if (e.index == 1) {
+						aja.deleteBlockTaskOrder(that.task.id,function(data){
+							if(data.r == '1'){
+								plus.nativeUI.toast('撤销成功');
+								mui.back();
+							}else if(data.r == '-1'){
+								plus.nativeUI.toast('后台不允许撤销');
+							}
+						})
+					} 
+				})
+			}
+        }
+    })
+</script>
+</body>
+</html>

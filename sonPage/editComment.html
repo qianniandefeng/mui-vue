@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<title>短评</title>
+		<link rel="stylesheet" type="text/css" href="../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../css/feedback.css" />
+		<link rel="stylesheet" type="text/css" href="../css/color.css" />
+	</head>
+
+	<body>
+		<div id="comment">
+			<header id="header" class="mui-bar mui-bar-nav">
+				<a href="javascript:;" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<button class="mui-btn mui-btn-link mui-pull-right" @tap="send(comments)" style="color:#fff">发送</button>
+				<h1 class="mui-title">短评</h1>
+			</header>
+			<div id="content" class="mui-content">
+				<div class="mui-content-padded">
+					<div class="mui-inline">评论</div>
+				</div>
+				<div class="row mui-input-row">
+					<textarea class="mui-input-clear question" placeholder="请发表您的评论..." v-model="comments.content"></textarea>
+				</div>
+				
+				<div class="mui-content-padded">
+					<div class="mui-inline">评分</div>
+					<div class="icons mui-inline" style="margin-left: 6px;">
+						<span class="mui-icon font-orange" :class="[(comments.star>0&&comments.star<=10) ? 'mui-icon-star-filled': 'mui-icon-star']" @tap="comments.star=2"></span>
+						<span class="mui-icon font-orange" :class="[(comments.star>2&&comments.star<=10) ? 'mui-icon-star-filled': 'mui-icon-star']" @tap="comments.star=4"></span>
+						<span class="mui-icon font-orange" :class="[(comments.star>4&&comments.star<=10) ? 'mui-icon-star-filled': 'mui-icon-star']" @tap="comments.star=6"></span>
+						<span class="mui-icon font-orange" :class="[(comments.star>6&&comments.star<=10) ? 'mui-icon-star-filled': 'mui-icon-star']" @tap="comments.star=8"></span>
+						<span class="mui-icon font-orange" :class="[(comments.star>8&&comments.star<=10) ? 'mui-icon-star-filled': 'mui-icon-star']" @tap="comments.star=10"></span>
+					</div>
+				</div><br />
+			</div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+		        el: '#comment',
+		        data: {
+		            comments: {
+		            	id: '',
+		            	memid: app.getUser().memid,
+		            	nickname:app.getUser().nickname,
+		            	filmid: localStorage.getItem('__movieinfo_'),
+		            	star: '',
+		            	content: ''
+		            }
+		        },
+		        mounted: function (){
+		        	mui.init();
+					mui('.mui-scroll-wrapper').scroll();
+					//返回
+					mui.plusReady(function(){
+						 //返回刷新主页
+	                	var main = plus.webview.currentWebview().opener();
+	                	
+	                	var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "movierefresh" );
+				            old_back();
+				        }
+					})
+	                
+		        },
+		        methods: {
+		        	send: function(info){
+		        		var that = this;
+		        		if(!that.comments.filmid){
+		        			plus.nativeUI.toast('没有找到影片ID')
+		        			return;
+		        		}
+		        		if(info.content.length<5){
+		        			plus.nativeUI.toast('至少五个字')
+		        			return;
+		        		}
+		        		if(!info.star){
+		        			plus.nativeUI.toast('请打分')
+		        			return;
+		        		}
+		        		
+		        		aja.updateUserComment(that.comments, function(data){
+		        			if(data.r == 1){
+		        				plus.nativeUI.toast('发表成功');
+		        				mui.back();
+		        			}
+		        		})
+		        	}
+		        	
+		        }
+		    })
+			
+		</script>
+	</body>
+
+</html>

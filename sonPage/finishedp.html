@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>片方/发行方</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+        .mui-table-view .mui-table-view-cell .touxiang{
+        	height: 80px;
+        	border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="allTaskList">
+        <header id="header" class="mui-bar mui-bar-nav">
+            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 class="mui-title" v-text="movie.filename"></h1>
+        </header>
+        <div id="content" class="mui-content mui-scroll-wrapper">
+        	<div class="mui-scroll">
+	            <div class="mui-table-view font-white title" style="background: #aa8ec5">
+	                <div class="mui-table-view-cell mui-media">
+	                    <img class="mui-pull-left" :src="movie.titleImg|photo">
+	                    <div class="mui-media-body">
+	                        <div class='font-blue font-mid'>票房奖励：<span v-text="movie.bili+movie.ptbili"></span>%</div>
+	                        <div class="font-mid">剩余积分：<span v-text="movie.remainintegral < 0 ? 0 : movie.remainintegral"></span></div>
+	                        <div class="font-mid">最低票价：<span v-text="movie.minicount"></span>元</div>
+	                        <div class="font-mid">最低人数：<span v-text="movie.minicount"></span>人/场</div>
+	                        <div class="font-mid">任务时间：<span v-text="movie.startdate"></span>至<span v-text="movie.enddate"></span></div>
+	                    </div>
+	                </div>
+	            </div>
+	            <ul class="mui-table-view">
+	            	<!--没有订单-->
+					<li class="mui-table-view-cell" v-if="task.length==0">
+            			<div class="mui-text-center">
+            				<img src="../images/default.png">	 
+            			</div>
+	                </li>
+	                <!--有订单-->
+	                <li class="mui-table-view-cell mui-media" v-for="item in task">
+	                    <img class="mui-pull-left touxiang" :src="item.memid|touxiang">
+	                    <div class="mui-media-body">
+	                    	<div class='font-gray font-min'>影院名称：<span v-text="item.cinema"></span></div>
+	                        <div class='font-gray font-min'>排场时间：<span v-text="item.showtime"></span></div>
+	                        <div class='font-gray font-min'>单张票价：<span v-text="item.ticketprice"></span>元</div>
+	                        <div class='font-gray font-min'>包场人数：<span v-text="item.seatcount"></span></div>
+	                        <div class='font-gray font-min'>票房返点：<span v-text="item.ticketprice*item.seatcount"></span>元 返<span v-text="item.ticketprice*item.seatcount*(movie.ptbili+movie.bili)/100"></span>分</div>
+	                    </div>
+	                </li>
+	            </ul>
+	        </div>
+        </div>
+    </div>
+    <script src="../js/mui.min.js" type="text/javascript"></script>
+    <script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+    <script src="../libs/vue.js" type="text/javascript"></script>
+    <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#allTaskList',
+            data: {
+                movie: {},
+                task: [
+            		/*{
+					    "id": 1515400928352,
+					    "memid": 1511167906751,
+					    "filename": "移动迷宫3：死亡解药",
+					    "integral": 100,
+					    "remainintegral": 100,
+					    "minticketprice": 40,
+					    "minicount": 50,
+					    "startdate": "2018-01-09",
+					    "enddate": "2018/01/15 23:59:00",
+					    "bili": 5,
+					    "status": "0",
+					    "createtime": "2018-01-08 08:42:10",
+					    "filmId": 248639,
+					    "titleImg": "http://p0.meituan.net/movie/16b410d5c58fce6b76c14775d946c3cc310492.jpg@165w_220h",
+					    "paybounty": null,
+					    "frozen": null,
+					    "ptbili": 5
+					}*/
+                ]
+            },
+            mounted: function (){
+            	var that = this;
+            	(function(m) {
+            		mui.init({
+						swipeBack: false,
+						pullRefresh: {
+							container: '#content',
+							up: {
+								contentrefresh: '正在加载...',
+								callback: upRefresh
+							}
+						}
+					});
+					that.movie = JSON.parse(localStorage.getItem('_pianfang_task_')) ;
+					function upRefresh(){
+						setTimeout(function() {
+							aja.getALLTaskOrderByRenwuID(that.movie.id,that.task.pageNum+1,1,function(data){
+								if(!data.list[0]){
+									mui('#content').pullRefresh().endPullupToRefresh(true)
+								}else{
+									app.afterList(that.task,data.list);
+									that.task.pageNum = data.pageNum;
+									mui('#content').pullRefresh().endPullUpToRefresh();
+								}
+							});
+						}, 1000);
+					}
+            		aja.getALLTaskOrderByRenwuID(that.movie.id,1,1,function(data){
+            			that.task = data.list;
+            			that.task.pageNum = data.pageNum;
+            			//alert(that.movie.id);
+            		})
+            		//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    old_back();
+	                }
+            	}(mui))
+            	
+            },
+            methods: {
+            	
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影院经理</title>
+    <!--apple-mobile-web-app-capable删除默认的苹果工具栏和菜单栏-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!--apple-mobile-web-app-status-bar-style控制状态栏显示样式-->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/feedback-page.css" rel="stylesheet" type="text/css"/>
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="submitTask">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title" v-text="task.filmname"></h1>
+    </header>
+    <div id="content" class="mui-content">
+        <div class="mui-table-view" style="background: #fff">
+            <div class="mui-table-view-cell mui-media">              
+               <!-- <div class="font-max font-red mui-text-center">票房{{task.seatcount*task.ticketprice}}元</div>-->
+                <img class="mui-pull-left" :src="task.titleImg|photo">
+                <div class="mui-media-body">
+                    <div class="font-mid font-green">奖励<span v-text="task.bounty"></span>积分</div>
+                    <div class="font-min font-gray">团体：<span v-text="task.seatcount"></span>人</div>
+                    <div class="font-min font-gray">票价：<span v-text="task.ticketprice"></span>元</div>
+                    <div class="font-min font-gray" >放映厅：<span v-text="task.movehall"></span>号影厅</div>
+                    <div class="font-min font-gray">放映时间：<span v-text="task.showtime"></span></div>
+                </div>
+            </div>
+            <div class="mui-table-view-cell font-orange mui-text-center">
+              	  请在放映结束后24小时内提交截图
+            </div>
+
+        </div>
+    	<div class="feedback">
+    		<p>图片(上传2~3张图片)</p>
+			
+			<div id='image-list' class="row image-list">
+				<div class="row image-item" style="background-image: url(../images/Untitled-1.png);">
+	            	<div class="image-close" @click="deleteImg(0)">X</div>
+	                <a href="#picture" @tap="picIndex=0" v-if="imgList[0].url!=''">
+	                	<img id="movieImg" :src="imgList[0].url|photo" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	                </a>
+	                <a href="#picture" @tap="picIndex=0" v-if="imgList[0].url==''">
+	                	<img id="movieImg" src="../images/Untitled-1.png" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	                </a>
+	            </div>
+	            <div class="row image-item" style="background-image: url(../images/Untitled-1.png);">
+	            	<div class="image-close" @click="deleteImg(1)">X</div>
+	            	<a href="#picture" @tap="picIndex=1" v-if="imgList[1].url!=''">
+	                	<img id="movieImg" :src="imgList[1].url|photo" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	            	</a>
+	            	<a href="#picture" @tap="picIndex=1" v-if="imgList[1].url==''">
+	                	<img id="movieImg" src="../images/Untitled-1.png" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	                </a>
+	            </div>
+	            <div class="row image-item" style="background-image: url(../images/Untitled-1.png);">
+	            	<div class="image-close" @click="deleteImg(2)">X</div>
+	            	<a href="#picture" @tap="picIndex=2" v-if="imgList[2].url!=''">
+	                	<img id="movieImg" :src="imgList[2].url|photo" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	            	</a>
+	            	<a href="#picture" @tap="picIndex=2" v-if="imgList[2].url==''">
+	                	<img id="movieImg" src="../images/Untitled-1.png" style="width: 100%;height: 100%;margin-right: 10px;margin-bottom: 10px;">
+	                </a>
+	            </div>
+			</div>
+    	</div>
+        
+        <div class="mui-button-row">
+            <button type="button" class="mui-btn mui-btn-primary" data-loading-text = "提交中" @click="submitTask" :disabled="imgList.length<2" style="width: 46%;">提交</button>
+            <button type="button" class="mui-btn" @click="cancelTask" style="width: 46%;">返回</button>
+        </div>
+    
+     	<div class="mui-table-view-cell font-orange mui-text-center">
+	        <span>	  1、上传团体票原始票据截图；</span></br>
+	        <span>	  2、上传团体票发票或小票凭证;</span>
+        </div>
+    </div>
+    <div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <a href="javascript:void(0);" @click="captureImage(picIndex)">拍照</a>
+            </li>
+            <li class="mui-table-view-cell">
+                <a href="javascript:void(0);" @click="galleryImgs(picIndex)">相册</a>
+            </li>
+        </ul>
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <a href="#picture"><b>取消</b></a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="../libs/easymob-webim-sdk/upload.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#submitTask',
+        data: {
+        	picIndex: '',
+            imgList: [//上传图片临时数组
+	            {url:''},
+	            {url:''},
+	            {url:''}
+            ],
+            task: {
+                id: 'jingli001',
+                memid: '',
+                rewuid: '',
+                filmname: '',
+                cinemaLogo: 'images/weixin.png',
+                showtime: '2017-11-11 13:00',//showTime放映时间
+                movehall: '4',
+                seatcount: '50',//座位数
+                ticketprice: '40',//预售票价
+//                                    total: '2000',
+                status: '0',//状态
+                bounty: '200',//奖励金
+                checks: 1,//审核状态0---等待提交审核 1—等待片方确认; 2---片方确认成功; 3---片方确认失败;
+                checkimgs: '[]'//审核图片
+            }
+        },
+       	mounted: function (){
+            var that = this;
+        	(function(m) {
+        		m.init();
+        		that.task = JSON.parse(localStorage.getItem('_jidian_task_'));
+//      		that.imgList = JSON.parse(that.task.checkimgs)
+				
+                m.plusReady(function(){
+        			//返回刷新主页
+                	var main = plus.webview.currentWebview().opener();
+        			//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    m.fire(main, "pageflowrefresh");
+	                    old_back();
+	                }
+        		})
+        	}(mui))
+        	
+        },
+        methods: {
+            //上传图片
+            upload: function (server,path,index){
+                var that = this;
+                var wt=plus.nativeUI.showWaiting();
+                var task=plus.uploader.createUpload(server,
+                    {method:'POST'},
+                    function(t,status){ //上传完成
+                        if(status == 200){
+                            var data = JSON.parse(t.responseText);
+                            var imgUrl = data.url;
+                            that.imgList[index].url = imgUrl;
+                            //that.imgList.push({url: imgUrl});
+                            console.log(JSON.stringify(that.imgList));
+                            wt.close(); //关闭等待提示按钮
+                        }else{
+                            alert('上传失败：'+status);
+                            wt.close();//关闭等待提示按钮
+                        }
+                    }
+                );
+                //添加其他参数
+                task.addData('name','test');
+                task.addFile(path,{key:'file'});
+                task.start();
+            },
+            //相册
+            galleryImgs: function(index){
+                var that = this;
+                /*if(that.imgList.length >= 3){
+            		mui.alert('上传图片数量已达极限，请先删除图片后再上传','影娱宝');
+            		return;
+            	}*/
+                console.log('从相册中选择单张图片:');
+                plus.gallery.pick( function(path){
+                	that.compressImage(path,index)
+                   
+                }, function ( e ) {
+                    console.log( '取消选择图片' );
+                }, {filter:'image',multiple:false});
+                //隐藏上拉框
+                mui('#picture').popover('toggle');
+            },
+            // 拍照
+            captureImage: function (index){
+                var that = this;
+                /*if(that.imgList.length >= 3){
+            		mui.alert('上传图片数量已达极限，请先删除图片后再上传','影娱宝');
+            		return;
+            	}*/
+                var cmr = plus.camera.getCamera();
+                cmr.captureImage( function( path ){
+                        console.log( 'Capture image success: ' + path );
+                        plus.io.resolveLocalFileSystemURL(path, function(entry){
+                            var p = entry.toLocalURL();
+                            that.compressImage(p,index)
+                        }, function(e){
+                            console.log('读取拍照文件错误：'+e.message);
+                        });
+                    },
+                    function( error ) {
+                        console.log('取消拍照上传')
+                    }
+                );
+
+                //隐藏上拉框
+                mui('#picture').popover('toggle');
+            },
+             //压缩图片
+			compressImage: function (imgPath,index){
+				var that = this;
+				plus.zip.compressImage({
+						src:imgPath,
+						dst:'_doc/a.jpg',
+						overwrite: true,
+						quality:20
+					},
+					function() {
+						var serv = aja.server + "/upload/ue?comid=201";
+						that.upload(serv,'_doc/a.jpg',index)
+						console.log("图片压缩成功");
+					},function(error) {
+						console.log("图片压缩失败");
+				});
+			},
+            deleteImg: function (index) {
+            	var that = this;
+            	that.imgList[index].url = '';
+            	console.log(JSON.stringify(that.imgList))
+            },
+            submitTask: function () {
+            	var that = this;
+            	that.task.checkimgs = JSON.stringify(that.imgList)
+           // 	alert(that.imgList[0].url)
+            	if(that.imgList[0].url=='' || that.imgList[1].url=='' ||that.imgList[2].url==''){
+            		plus.nativeUI.toast('请上传全部资料 ');return;
+            	}
+           // 	console.log(JSON.stringify(that.task));
+            	aja.applyCheckTask(that.task,function(data){
+            		console.log(JSON.stringify(data))
+            		plus.nativeUI.toast('提交成功，等待审核');
+            		mui.back();
+            	});
+            },
+            cancelTask: function () {
+                mui.back()
+            }
+
+        }
+    })
+</script>
+</body>
+</html>

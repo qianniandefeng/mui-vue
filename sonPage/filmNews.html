@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<title>首页</title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/color.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-content{
+				background: #fff;
+			}
+			.title{
+				margin: 20px 25px 10px;
+				color: #6d6d72;
+				font-size: 17px;
+			}
+			.img{
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="filmNews">
+	        <header id="header" class="mui-bar mui-bar-nav">
+	            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	            <h1 class="mui-title">影视快讯</h1>
+	        </header>
+	        <div id="content" class="mui-content">
+	        	<div class="mui-content-padded">
+	        		<h3 class="title mui-text-center" v-text="content.newsttile"></h3>
+		        	<div>
+		        		<p class="mui-pull-right">阅读<span v-text="content.click"></span>次</p>
+		        		<p>
+		        			<span v-text="content.souce"></span>
+		        			<span v-text="content.createdate"></span>
+		        		</p>
+		        	</div>
+		        	<img class="img" :src="content.homepic"/>
+		        	<div class="font-min" v-text="content.remark"></div>
+	        	</div>
+	        	
+	        </div>
+       </div>
+       <script src="../js/immersed.js" type="text/javascript"></script>
+       <script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+       <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+       <script type="text/javascript">
+       		new Vue({
+       			el: '#filmNews',
+       			data: {
+       				content: {}
+       			},
+       			mounted: function(){
+       				mui.init();
+       				var that = this;
+       				var filmNewsId = localStorage.getItem('_filmNewsId_');
+       				aja.getFilmNewsByID(filmNewsId, function(data){
+       					that.content = data;
+       					console.log(JSON.stringify(data))
+       				})
+       				
+       				var old_back = mui.back;
+			        mui.back = function(){
+			            mui.currentWebview.close();
+			            old_back();
+			        }
+       			}
+       		})
+       </script>
+	</body>
+</html>

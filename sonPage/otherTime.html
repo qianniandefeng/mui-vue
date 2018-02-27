@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影院经理</title>
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../css/mui.picker.min.css" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="otherTime">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title" v-text="task.filmname"></h1>
+    </header>
+    <div id="content" class="mui-content">
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label class="mui-text-right">影厅：</label>
+                <select v-model="task.movehall">
+                    <option value="1">1号厅</option>
+                    <option value="2">2号厅</option>
+                    <option value="3">3号厅</option>
+                    <option value="4">4号厅</option>
+                    <option value="5">5号厅</option>
+                    <option value="6">6号厅</option>
+                    <option value="7">7号厅</option>
+                    <option value="8">8号厅</option>
+                    <option value="9">9号厅</option>
+                    <option value="10">10号厅</option>
+                    <option value="11">11号厅</option>
+                    <option value="12">12号厅</option>
+                    <option value="13">13号厅</option>
+                    <option value="14">14号厅</option>
+                    <option value="15">15号厅</option>
+                    <option value="16">16号厅</option>
+                    <option value="17">17号厅</option>
+                    <option value="18">18号厅</option>
+                    <option value="19">19号厅</option>
+                    <option value="20">20号厅</option>
+                </select>
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">团体人数：</label>
+                <input type="number" class="mui-input-clear" v-model="task.seatcount">
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">票价：</label>
+                <input type="number" class="mui-input-clear" placeholder="不低于要求最低票价" v-model="task.ticketprice">
+            </div>
+            <div class="mui-input-row">
+                <label class="mui-text-right">放映时间：</label>
+                <input type="text" data-options='{}' class="btn" v-model="task.showtime">
+            </div>
+            <div class="mui-button-row">
+                <div class="font-red">放映时间前12小时内不可修改</div>
+            </div>
+            <div class="mui-button-row">
+                <div class="font-green font-max">预计票房：<span v-text="task.seatcount*task.ticketprice"></span> 收获<span v-text="task.seatcount*task.ticketprice*movie.bili/100"></span>积分</div>
+            </div>
+            <div class="mui-button-row">
+                <button type="button" class="mui-btn mui-btn-primary" data-loading-text = "确认中" @click="queryTask" style="width: 46%;">确认</button>
+                <button type="button" class="mui-btn" @click="backTask" style="width: 46%;">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../js/mui.picker.min.js"></script>
+<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript"></script>
+<script type="text/javascript">
+    new Vue({
+        el: '#otherTime',
+        data: {
+            movie: {
+                id:'101',
+                memid: 123456,
+                titleImg: '../images/qihoo.png',
+                filename: '让子弹飞',
+                integral: '1000',
+                bili: '10',
+                remainintegral: '500',
+                minticketprice: '30',
+                minicount: '50',
+                startdate: '2017-10-1',
+                enddate: '2017-10-30',
+                status: '1'
+            },
+            task: {
+                id: '',
+                memid: '',
+                rewuid: '',
+                filmname: '',
+                cinemaLogo: 'http://www.36le.com/img/user-photo.png',
+                showtime: new Date().getFullYear()+'-'+(new Date().getMonth()+1)+'-'+new Date().getDate()+' '+new Date().getHours()+':'+new Date().getMinutes(),//showTime放映时间
+                movehall: '1',
+                seatcount: '50',//座位数
+                ticketprice: '40',//预售票价
+//                                    total: '2000',
+                status: 0,//状态
+                bounty: '200',//奖励金
+                checks: 0,//审核状态0---等待提交审核 1—等待片方确认; 2---片方确认成功; 3---片方确认失败;
+                checkimgs: '[]'//审核图片
+            }
+        },
+        mounted: function (){
+        	var that = this;
+            (function(m) {
+                m.init();
+                
+                that.movie = JSON.parse(localStorage.getItem('_jidian_chang_'));
+                
+            	that.task.memid = JSON.parse(localStorage.getItem('_user_')).memid;
+            	that.task.cmemId = that.movie.memid;
+                that.task.rewuid = that.movie.id;
+                that.task.filmname = that.movie.filename;
+                that.task.titleImg = that.movie.titleImg;
+                that.task.seatcount = that.movie.minicount;
+                that.task.ticketprice = that.movie.minticketprice;
+                
+                //设置日期
+                var btns = m('.btn');
+                btns.each(function (i, btn) {
+                    btn.addEventListener('tap', function () {
+                        var _self = this;
+                        if (_self.picker) {
+                            _self.picker.show(function (rs) {
+                                _self.value = rs.text;
+                                _self.picker.dispose();
+                                _self.picker = null;
+                            });
+                        } else {
+                            var optionsJson = this.getAttribute('data-options') || '{}';
+                            var options = JSON.parse(optionsJson);
+                            var id = this.getAttribute('id');
+                            options = {
+                             	beginDate: new Date(that.movie.startdate+' 00:00:00'),//设置开始日期 
+                            }
+                            _self.picker = new m.DtPicker(options);
+                            _self.picker.show(function(rs) {
+                                that.task.showtime = rs.text;
+//                              _self.value = rs
+//                                  .text;
+                                
+                                _self.picker.dispose();
+                                _self.picker = null;
+                            });
+                        }
+                    }, false);
+                })
+                m.plusReady(function(){
+                	//返回刷新主页
+	                var main = plus.webview.currentWebview().opener();
+                	//返回
+	                var old_back = m.back;
+			        m.back = function(){
+			            m.currentWebview.close();
+			            m.fire(main, "pageflowrefresh");
+			            old_back();
+			        }
+                })
+                
+            })(mui);
+        },
+        methods: {
+			queryTask: function(){
+				var that = this;
+				that.task.checks = 0;
+				that.task.id = (new Date()).getTime()+'61';
+				var bounty = that.task.seatcount * that.task.ticketprice * that.movie.bili / 100;
+				console.log(that.movie.remainintegral,bounty)
+				if(bounty > that.movie.remainintegral){
+					var btnArray = ['取消', '继续'];
+					mui.confirm('您所设置的积分总数已经超过剩余积分数，继续确认需要等待片方审核,一经通过将不允许撤单，继续？', '影娱宝', btnArray, function(e) {
+						if (e.index == 1) {
+							that.task.checks = 1;
+							pushTask();
+						} else{
+							return;
+						}
+					})
+				}else {
+					that.task.bounty = bounty;
+					pushTask();
+				}
+				function pushTask(){
+					aja.takeTaskOrder(that.task,function(data){
+						console.log(JSON.stringify(data))
+						if(data.r == '1'){
+							plus.nativeUI.toast('发布成功');
+							mui.back()
+						}else if(data.r == '-1'){
+							plus.nativeUI.toast('剩余积分不足');
+						}
+						
+					})
+				}
+				
+			},
+			backTask: function(){
+				var that = this;
+				mui.back();
+			}
+        }
+    })
+</script>
+</body>
+</html>
