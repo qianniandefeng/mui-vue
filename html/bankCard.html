@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+	</head>
+	<body>
+		<div id="bankCard">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">我的银行卡</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-card" style="background: #CF2D28;" v-for="bank in bankcardList">
+					<div class="mui-card-header font-white">
+
+						<span>招商银行</span>
+						<button type="button" class="mui-left mui-btn-link mui-pull-right mui-icon mui-icon-trash font-white"  @tap="deleteBankcard(bank)"></button>
+					
+					</div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner" >
+							<div class="mui-text-center font-white font-max">**** **** **** {{bank.cardnumber|four}}</div>
+						</div>
+					</div>
+					<div class="mui-card-footer font-white">储蓄卡</div>
+				</div>
+				<div class="mui-card">
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner" @tap="addBankcard">
+							<a class="font-gray font-max">+添加银行卡</a>
+						</div>
+					</div>
+				</div>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#bankCard',
+				data: {
+					bankcardList: [
+						{
+							id: '',
+							memid: '',
+							cardholder: '',
+							cardnumber: '32512213412'
+						}
+					]
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+					//获取银行卡列表
+			        aja.getBankCardPage(function(data){
+			        	that.bankcardList = data.list;
+			        })
+					mui.plusReady(function(){
+						window.addEventListener("bankcardrefresh", function (e) {
+		        			//获取银行卡列表
+					        aja.getBankCardPage(function(data){
+					        	that.bankcardList = data.list;
+					        })
+		        		})
+                		//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					deleteBankcard: function(info){//删除银行卡
+						var that = this;
+						var btnArray = ['否', '是'];
+						mui.confirm('你确定要删除吗？', '影娱宝', btnArray, function(e) {
+							if (e.index == 1) {
+								aja.deleteBankCard(info.id, function(data){
+			            			console.log(JSON.stringify(data))
+			            			if(data.r == 1){//如果添加成功就重新获取银行卡信息
+			            			//获取银行卡列表
+								        aja.getBankCardPage(function(data){
+								        	that.bankcardList = data.list;
+								        	plus.nativeUI.toast('删除成功');
+								        })
+				            		}
+			            		})
+							} 
+						})
+					}
+					,
+					addBankcard: function(){//添加银行卡
+						var that = this;
+						app.mainPage('addBankcard');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

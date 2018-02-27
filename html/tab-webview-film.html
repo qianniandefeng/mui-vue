@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>影院经理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/color.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: rgb(240,61,55);
+			}
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+				display: flex;
+				justify-content: space-around;
+				width: 100%;
+				height: 45px;
+			}
+			.mui-fullscreen .mui-segmented-control~.mui-slider-group{
+				top:44px;
+			}
+			.mui-segmented-control.mui-scroll-wrapper{
+				height: 44px;
+			}
+			.mui-items{
+				width: 200px !important;
+				margin-left: calc(50% - 100px);
+				background-color: rgb(240,61,55);
+			}
+			/*list*/
+			.mui-scroll .mui-table-view .mui-table-view-cell img {
+				width: 83px;
+				height: 117px;
+				line-height: 117px;
+				margin-right: 10px;
+				border-radius: 2px;
+			}
+
+			.mui-table-view-cell.mui-active{
+				background-color: #fff;
+			}
+			
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+				border-bottom: 4px solid #fff;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item{
+				color: rgb(255,209,208);
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+				color: #fff;
+			}
+			.ping{
+				width: 83px;
+				padding-left: 4px;
+				position: absolute;
+				background-color: rgba(0,0,0,0.3);
+				bottom: 20px;
+			}
+			.btn-right{
+				position: absolute;
+				right: 20px;
+				bottom: 44px;
+			}
+			.mui-media-body .mui-btn{
+				height: 25px;
+				width: 53px;
+				border-radius: 25px;
+				padding: 0;
+				text-align: center;
+			}
+			/*抢*/
+			.radius{
+				position: absolute;
+				right: 18px;
+				border-radius: 50%;
+				width: 40px;
+				height: 40px;
+				line-height: 26px;
+			}
+			/*右上角下拉菜单*/
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+			/*悬浮按钮*/
+			.qiangFix{
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				width: 50px;
+				height: 50px;
+				text-align: center;
+				line-height: 50px;
+				border-radius: 50%;
+				background: #0062CC;
+				border: 1px solid #bbb;
+			}
+		</style>
+	</head>
+
+<body>
+	<div id="tabFilm">
+		<div class="mui-content">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div id="header" class="mui-scroll mui-items">
+						<a class="mui-control-item mui-active" href="#item1mobile">
+							热映任务
+						</a>
+						<a class="mui-control-item" href="#item2mobile">
+							即将上映
+						</a>						 
+					</div>
+				</div>
+				<!--<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-6"></div>-->
+				<div id="scontent" class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell mui-media" v-for="item in items1">
+										<div class="mui-pull-left">
+											<div @tap="movieInfo(item.id,item)">
+												<img :src="item.titleImg|photo"/>
+											</div>
+											<div class='ping font-orange font-mid'>经理评<span v-text="item.pingfen"></span></div>
+										</div>
+										<div class="mui-media-body">
+											<div class="font16"><span v-text="item.name"></span></div>		
+											<div class="btn-right font-red">												 
+												<button class="mui-btn mui-btn-red" @tap="submitBtn(item)" v-if="user.type==1">+票房</button>
+												<button class="mui-btn mui-btn-red" @tap="qiangList(item.id)" v-if="item.istask==1&&user.type==2">包场</button>
+												<button class="mui-btn mui-btn-yellow" @tap="updateHostFilm(item.id)" v-if="item.istask==0&&user.type==2">想包场</button>
+											</div>
+											<div @tap="movieInfo(item.id,item)">
+												<div class='font-orange font-min' v-if="item.bili">票房奖励 <span class="font-red" v-text="item.bili"></span>%起</div>
+												<div class='font-gray font-min'><span v-text="item.ctype"></span></div>
+												<!--<div class='font-gray font-min'><span v-text="item.playdate"></span></div>-->
+												<div class='font-gray font-min'><span v-text="item.ltime"></span></div>
+											    <div class='font-gray font-mid'><span class="font-orange" v-text="item.xiangkan"></span>人想看</div>
+												<div class="mui-pull-right" v-if="item.yibaochang>0"> 已完成<span class="font-red" v-text="item.yibaochang"></span>次包场</div>
+											    <div class='font-gray font-mid' v-if="item.xiangbaochang>0"><span class="font-orange" v-text="item.xiangbaochang"></span>位经理想包场 </div>
+										    </div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<li class="mui-table-view-cell mui-media" v-for="item in items2">
+										<div class="mui-pull-left">
+											<div @tap="movieInfo(item.id,item)">
+												<img :src="item.titleImg|photo"/>
+											</div>
+											<div class="ping font-orange font-mid">经理评<span v-text="item.pingfen"></span></div>
+										</div>
+										<div class="mui-media-body">
+											<div class="font16"><span v-text="item.name"></span></div>		
+											<div class="btn-right font-red">												 
+												<button class="mui-btn mui-btn-red" @tap="submitBtn(item)"  v-if="user.type==1">+票房</button>
+												<button class="mui-btn mui-btn-yellow" @tap="updateHostFilm(item.id)" v-if="user.type==2">想包场</button>
+											</div>
+											<div @tap="movieInfo(item.id,item)">
+												<div class="font-orange font-min" v-if="item.bili">票房奖励 <span class="font-red" v-text="item.bili"></span>%起</div>
+												<div class="font-gray font-min">类型<span v-text="item.ctype"></span></div>
+												<div class="font-gray font-min"><span v-text="item.playdate"></span></div>
+												<div class="font-gray font-min"><span v-text="item.ltime"></span></div>
+											    <div class="font-orange font-min"><span v-text="item.xiangkan"></span>人想看</div>
+										   </div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>		
+
+				</div>
+				<!--<div class="qiangFix" @tap="pushTask" v-if="user.type==1">
+					<span class="font-white">发布</span>
+				</div>-->
+			</div>
+		</div>
+	</div>
+
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.pullToRefresh.js"></script>
+	<script src="../js/mui.pullToRefresh.material.js"></script>
+	<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+	<script src="../libs/vue.js" type="text/javascript"></script>
+	<script src="../js/app.js" type="text/javascript"></script>
+	<script src="../js/movieAjax.js" type="text/javascript"></script>
+	
+	<script>
+		new Vue({
+			el: '#tabFilm',
+			data: {
+				user: {},
+                items1: [//热
+                    {
+                        id: '49',
+		                name: '大闹天宫',
+		                ename: 'The Monkey King 2D',
+		                titleImg: 'http://p1.meituan.net/movie/0e2400f144c69fe28edb36a8ec91784a744391.jpg@165w_220h',
+		                ctype: '动画',
+		                ltime: '中国大陆 / 88分钟',//放映时间
+		                playdate: '2017-10-02',//上映日期
+		                xiangkan: '50',//想看数
+		                pingfen: '4.3',//评分
+		                xiangbaochang: '0',//想包场
+		                yibaochang: '200',//已包场
+		                istask: '',//0--没有包场任务；1--有包场任务
+		                bili: '20'
+                    }
+				],
+				items2: []//即将上映
+			},
+			 mounted: function (){
+			 	mui.init( );
+				//阻尼系数
+				var that = this;
+			    that.user = app.getUser();
+			     
+				var deceleration = mui.os.ios?0.003:0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration:deceleration
+				});
+				//上下加载
+				mui.ready(function() {
+					//数据初始化
+					function getData(){
+						aja.getAllHostFilms(1,function(data){
+							that.items1 = data.list;
+							that.items1.pageNum = data.pageNum;
+						});
+						aja.getAllPresaleFilms(1,function(data){
+							that.items2 = data.list;
+							that.items2.pageNum = data.pageNum;
+						})
+					}
+					getData();
+					window.addEventListener("chatrefresh", function (e) {
+						//当memid没有发生改变时,数据不刷新
+						that.user = app.getUser();
+	        			getData();
+	        		})
+					//循环初始化所有下拉刷新，上拉加载。
+					mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+						mui(pullRefreshEl).pullToRefresh({
+							down: {
+								callback: function() {
+									var self = this;
+									setTimeout(function() {
+										var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+										var status = '';
+										switch (currentText){
+											case '热映任务':
+												status = 0;
+												aja.getAllHostFilms(1,function(data){
+													console.log(JSON.stringify(data.list));
+													that.items1 = data.list;
+													that.items1.pageNum = 1;
+													self.endPullDownToRefresh();
+													self.refresh(true)
+												});
+												break;
+											case '即将上映':
+												status = 1;
+												aja.getAllPresaleFilms(1,function(data){
+													console.log(JSON.stringify(data.list));
+													that.items2 = data.list;
+													that.items2.pageNum = 1;
+													self.endPullDownToRefresh();
+													self.refresh(true)
+												});
+												break;
+											
+											default:
+												break;
+										}
+									}, 1000);
+								}
+							},
+							up: {
+								contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+  								contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+								callback: function() {
+									var self = this;
+									setTimeout(function() {
+									    var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+										switch (currentText){
+											case '热映任务':
+												status = 0;
+												aja.getAllHostFilms(that.items1.pageNum+1,function(data){
+													if(!data.list){
+														self.endPullUpToRefresh(true);
+													}else{
+														app.afterList(that.items1,data.list);
+														that.items1.pageNum++;
+														self.endPullUpToRefresh();
+													}
+												})
+												break;
+											case '即将上映':
+												status = 1;													
+												aja.getAllPresaleFilms(that.items1.pageNum+1,function(data){
+													if(!data.list){
+														self.endPullUpToRefresh(true);
+													}else{
+														app.afterList(that.items2,data.list);
+														that.items2.pageNum++;
+														self.endPullUpToRefresh();
+													}
+												})
+												break;
+											
+											default:
+												break;
+										}
+									}, 1000);
+								}
+							}
+						});
+					});
+				});
+				 
+				mui.plusReady(function() {
+					//禁止右滑退出
+					//var wv=plus.webview.currentWebview();
+					// 关闭侧滑返回功能
+					//wv.setStyle({'popGesture':'none'});						 
+					//设置
+					var header = document.getElementById('sliderSegmentedControl');
+					var scontent = document.getElementById('scontent');
+					header.style.paddingTop = app.Immersed(header) +'px';
+					console.log(header.offsetHeight)
+					header.style.height = scontent.style.top = header.offsetHeight + app.Immersed(header) + 'px';
+					//--
+					mui.oldBack = mui.back;
+					var backButtonPress = 0;
+					mui.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			 },
+			methods: {
+				fun: function(itemSrc){
+					plus.gallery.save(itemSrc, function() {
+						console.log('success')
+					}, function() {
+						console.log('error')
+					});
+				},
+				qiangList: function (id) {//抢list
+					var that = this;
+					if(!that.user.memid){
+						app.mainPage('login')
+						return;
+					}
+					localStorage.setItem('__movieinfo_',id)
+                    mui.openWindow({
+                        url: '../sonPage/qiangList.html',
+                        id: 'qiangList',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+                },
+                pushTask: function(){
+                	localStorage.removeItem('_cinema_');
+                	mui.openWindow({
+                        url: '../sonPage/pushTask.html',
+                        id: 'pushTask',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+                },
+				updateHostFilm: function(id){
+					var that = this;
+					if(!that.user.memid){
+						app.mainPage('login')
+						return;
+					}
+					console.log(id)
+					aja.updateHostFilm(id,1,function(data){
+						console.log(JSON.stringify(data))
+						plus.nativeUI.toast("感谢点赞")
+					})
+				},
+                submitBtn: function(info){
+                	var that = this;
+					if(!that.user.memid){
+						app.mainPage('login')
+						return;
+					}
+                	app.setCinema(info);
+					mui.openWindow({
+						url: '../sonPage/pushTask.html',
+						id: 'pushTask',
+						preload: true,
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'close'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+                },
+				movieInfo: function(id,obj){//显示图片信息
+					//console.log(JSON.stringify(id))
+					var that = this;
+//						if(!that.user.memid){
+//							app.mainPage('login')
+//							return;
+//						}
+					localStorage.removeItem('__movieinfo_');
+               		localStorage.setItem('__movieinfo_',id);
+               		localStorage.setItem('_jidian_chang_',JSON.stringify(obj));
+//	               		var wv=plus.webview.create('../sonPage/movieInfo.html','movieInfo',{'popGesture':'close'});
+//	               	    wv.show();
+                    mui.openWindow({
+                        url: '../sonPage/movieInfo.html',
+                        id: 'movieInfo',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+               	}
+			}
+		})
+	</script>
+	
+</body>
+</html>

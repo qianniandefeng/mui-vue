@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>我的邀请</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        
+        .mui-table-view .mui-table-view-cell img {
+            width: 80px;
+            height: 100px;
+            line-height: 100px;
+            margin-right: 10px;
+        }
+        .mui-table-view .mui-table-view-cell .touxiang{
+        	height: 80px;
+        	border-radius: 50%;
+        }
+        .btn-right{
+				position: absolute;
+				right: 20px;
+				bottom: 44px;
+			}
+    </style>
+</head>
+<body>
+    <div id="myInvite">
+        <header id="header" class="mui-bar mui-bar-nav">
+            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 class="mui-title">邀请列表</h1>
+        </header>
+        <div id="content" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view">
+					<!--没有list-->
+					<li class="mui-table-view-cell" v-if="nameCard.length==0">
+            			<div class="mui-text-center">
+            				<img src="../images/yaoqing.png">	 
+            			</div>
+	                </li>
+	                <!--有list-->
+	                <li class="mui-table-view-cell mui-media" v-for="item in nameCard">
+	                    <img class="mui-pull-left touxiang" :src="item.titleImg|photo">
+	                    <div class="mui-media-body">	                    	
+	                        <div class='font-gray font-min' v-text="item.nickname"></div>
+	                        <div class='font-gray font-min' v-text="item.mobile"></div>
+	                        <div class="btn-right font-red">												 
+								<button class="mui-btn mui-btn-red" @tap="renzheng(item.memid)" v-if="item.isvip==null">邀他认证</button>
+	                        </div>
+	                    </div>
+	                </li>
+	            </ul>
+	        </div>
+        </div>
+    </div>
+    <script src="../js/mui.min.js" type="text/javascript"></script>
+    <script src="../js/immersed.js"></script>
+    <script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+    <script src="../libs/vue.js" type="text/javascript"></script>
+    <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#myInvite',
+            data: {
+                nameCard: [
+	                {
+	                	memid:'',
+	                	cinema: '裕华影院',
+	                	name: '张晓丽',
+	                	addr: '昌平区东辰小区'
+	                }
+                ]
+            },
+            mounted: function (){
+            	var that = this;
+            	(function(m) {
+            		m.init({
+            			pullRefresh: {
+							container: '#content',
+							down: {
+								style:'circle',
+								callback: pulldownRefresh
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+            		});
+	                function pullupRefresh() {
+						setTimeout(function() {
+							aja.getReferrerPage(that.nameCard.pageNum+1,function(data){
+								if(!data.list[0]){
+									mui('#content').pullRefresh().endPullup(true); 
+								}else{
+									app.afterList(that.nameCard,data.list);
+									that.nameCard.pageNum = data.pageNum;
+									mui('#content').pullRefresh().endPullup(); 
+								}
+							})
+							
+						}, 1500);
+					}
+	                /**
+					 * 下拉刷新具体业务实现
+					 */
+					function pulldownRefresh() {
+						setTimeout(function() {
+							aja.getReferrerPage(1,function(data){
+								that.nameCard = data.list;
+								that.nameCard.pageNum = data.pageNum;
+		                    });
+							mui('#content').pullRefresh().endPulldown();
+							mui('#content').pullRefresh().refresh(true);
+						}, 1500);
+					}
+					aja.getReferrerPage(1,function(data){
+						console.log(JSON.stringify(data.list))
+						that.nameCard = data.list;
+						that.nameCard.pageNum = data.pageNum;
+                    });
+            		//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    old_back();
+	                }
+            	}(mui))
+            },
+            methods: {
+					renzheng: function (id) {
+						alert('邀请');
+					}
+            }
+        })
+    </script>
+</body>
+</html>

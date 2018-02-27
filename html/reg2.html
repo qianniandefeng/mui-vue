@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影娱宝</title>
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="../css/color.css"/>
+    <link href="../css/style.css" rel="stylesheet" />
+    <style>
+        .area {
+            margin: 20px auto 0px auto;
+        }
+        .mui-input-group:first-child {
+            margin-top: 20px;
+        }
+        .mui-checkbox input[type=checkbox],
+        .mui-radio input[type=radio] {
+            top: 6px;
+        }
+        .mui-content-padded {
+            margin-top: 25px;
+        }
+        .mui-btn {
+            padding: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+<div id="cinemaReg">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">认证</h1>
+    </header>
+    <div id="content" class="mui-content">
+        <form class="mui-input-group">
+        	<div class="mui-input-row">
+                <label>影院编码</label>
+                <input id='cinemacode' type="text" class="mui-input" v-model="cinema.cinemacode">
+            </div>
+            <div class="mui-input-row">
+                <label>影院名称</label>
+                <input id='company' type="text" class="mui-input" v-model="cinema.cinema">
+            </div>
+            <div class="mui-input-row">
+                <label>姓名</label>
+                <input id='name' type="text" class="mui-input" v-model="cinema.name">
+            </div>
+            <div class="mui-input-row">
+                <label>手机</label>
+                <input id='tel_cell' type="text" class="mui-input" v-model="cinema.mobile">
+            </div>
+        </form>
+        <div class="mui-content-padded">
+            <div v-show="cinema.certpic" class="mui-text-center">
+                <img id="movieImg" :src="cinema.certpic|photo" alt="证件照片" style="max-width: 300px;max-height: 200px;">
+            </div>
+            <a href="#picture" class="mui-btn mui-btn-yellow mui-btn-block mui-btn-outlined" style="padding: 5px 20px;">上传名片</a>
+        </div>
+        <div class="mui-content-padded">
+            <button id='reg' class="mui-btn mui-btn-block mui-btn-red" @click="check">提交审核</button>
+        </div>
+
+    </div>
+    <div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <a href="javascript:void(0);" @click="captureImage">拍照</a>
+            </li>
+            <li class="mui-table-view-cell">
+                <a href="javascript:void(0);" @click="galleryImg">相册</a>
+            </li>
+        </ul>
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <a href="#picture"><b>取消</b></a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/app.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript"></script>
+<script>
+    new Vue({
+        el: '#cinemaReg',
+        data: {
+            cinema: {
+            	memid: app.getUser().memid,
+            	type: 2,
+            	mobile: '',
+            	cinemacode: '',
+            	cinema: '',
+            	name: '',
+            	certpic: ''
+            }
+        },
+        mounted: function (){
+             var that = this;
+            //返回
+            var old_back = mui.back;
+	        mui.back = function(){
+	            mui.currentWebview.close();
+	            old_back();
+	        }
+        },
+        methods: {
+            //上传图片
+            upload: function (server,path){
+                var that = this;
+                var wt=plus.nativeUI.showWaiting();
+                var task=plus.uploader.createUpload(server,
+                    {method:'POST'},
+                    function(t,status){ //上传完成
+                        if(status==200){
+                        	var data = JSON.parse(JSON.parse(t.responseText).outputs[0].outputValue.dataValue);
+//                      	that.imgUrl = JSON.parse(t.responseText).img[0].url;
+                        	
+                            that.cinema = {
+                            	cinema: data.company[0],
+                            	name: data.name,
+                            	mobile: data.tel_cell[0],
+                            	cinemacode: data.request_id,
+                            	certpic: JSON.parse(t.responseText).img[0].url
+                            };
+                            wt.close(); //关闭等待提示按钮
+                        }else{
+                            alert('上传失败：'+status);
+                            wt.close();//关闭等待提示按钮
+                        }
+                    }
+                );
+                //添加其他参数
+                task.addData('name','test');
+                task.addFile(path,{key:'file'});
+                task.start();
+            },
+            //压缩图片
+			compressImage: function (imgPath){
+				var that = this;
+				plus.zip.compressImage({
+						src:imgPath,
+						dst:'_doc/a.jpg',
+						overwrite: true,
+						quality:20
+					},
+					function() {
+						var serv = aja.server + '/ocr/img?type=mp&comid=201';
+						that.upload(serv,'_doc/a.jpg')
+						console.log('图片压缩成功');
+					},function(error) {
+						console.log('图片压缩失败');
+				});
+			},
+            //相册
+            galleryImg: function(){
+                var that = this;
+                console.log('从相册中选择图片:');
+                plus.gallery.pick( function(path){
+                    that.compressImage(path)
+                }, function ( e ) {
+                    console.log( '取消选择图片' );
+                }, {filter:'image'} );
+                //隐藏上拉框
+                mui('#picture').popover('toggle');
+            },
+            // 拍照
+            captureImage: function (){
+                var that = this;
+                var cmr = plus.camera.getCamera();
+                /*var res = cmr.supportedImageResolutions[0];
+                var fmt = cmr.supportedImageFormats[0];*/
+                cmr.captureImage( function( path ){
+                        console.log( 'Capture image success: ' + path );
+                        plus.io.resolveLocalFileSystemURL(path, function(entry){
+                            var p = entry.toLocalURL();
+                            that.compressImage(p)
+
+                        }, function(e){
+                            console.log('读取拍照文件错误：'+e.message);
+                        });
+                    },
+                    function( error ) {
+                        console.log('取消拍照上传')
+                    }
+//                  ,{resolution:res,format:fmt}
+                );
+
+                //隐藏上拉框
+                mui('#picture').popover('toggle');
+            },
+            //发布即注册
+            check: function(){
+                var that = this;
+                function limitMode(obj, callback){
+                	if (obj.certpic == "") {
+						plus.nativeUI.toast('请上传个人名片');
+						return;
+					}
+                	if (obj.cinema.trim() == "") {
+						plus.nativeUI.toast('请输入影院名称');
+						return;
+					}
+					if (obj.name.trim() == "") {
+						plus.nativeUI.toast('请输入姓名');
+						return;
+					}
+					if (obj.mobile.trim() == "") {
+						plus.nativeUI.toast('请输入手机号');
+						return;
+					}
+					callback();
+                }
+                limitMode(that.cinema, function(){
+                	var user = app.getUser();
+                	var main = plus.webview.getWebviewById('tab-webview-subpage-setting.html');//设置页，为了刷新使用
+            		var firstPage = plus.webview.getLaunchWebview();//首页，为了跳转使用
+	                that.cinema.memid = user.memid;
+	                aja.updateCinema(that.cinema,function(data){
+	                	// 请求成功
+	                    if(data.r == 1){
+	                    	var loginInfo = {
+								username: user.memName,
+								password: user.memPwd,
+							}
+	                    	plus.nativeUI.toast('审核已提交');
+	                    	var id = setTimeout(function () {
+	                        	app.login(loginInfo,function(info){
+	                        		user.type = info.type;
+									console.log(JSON.stringify(user))
+		                    		if(info.result == 'ok'){
+		                    			mui.currentWebview.close();
+		                    			mui.fire(main, "settingrefresh");
+		                    			firstPage.show();
+									}
+	                        	})
+	                        	clearTimeout(id);
+							},40);
+						}
+	                })
+                });
+            }
+        }
+    })
+
+</script>
+</body>
+
+</html>

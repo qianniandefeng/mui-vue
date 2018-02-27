@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影娱宝</title>
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet" />
+    <style>
+    	body{
+    		background-color: #fff;
+    	}
+       	.mui-content{
+       		background-color: #f5f5f5;
+       	}
+		.titleImg{
+			margin: 20px auto;
+			text-align: center;
+		}		
+		.titleImg img{
+			width: 150px;
+			height: 120px;
+		}
+		.mui-content-padded .text{
+			padding: 20px;
+		}
+		.mui-content-padded .text h2{
+			font-size: 22px;
+			color: #0062CC;
+			padding-bottom: 10px;
+		}
+    </style>
+</head>
+<body>
+<div id="cinemaReg">
+    <header id="header" class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">账户实名认证</h1>
+    </header>
+    <div id="content" class="mui-content">
+		<div class="titleImg">
+            <img id="movieImg" src="../images/jingli.jpg" alt="证件照片">
+        </div>
+    </div>
+    <div class="mui-content-padded">
+    	<div class="text">
+        	<h2 class="mui-text-center">
+        		账号实名认证，享受更多权益
+        	</h2>
+        	<p>实名认证后可有效保障账号安全，更尊享“领任务赚积分，积分兑现，积分兑换”等特权服务</p>
+        </div>
+        <button class="mui-btn mui-btn-red mui-btn-block" style="padding: 12px 20px;" @tap="reVerified()">
+        	<span v-if='user.isVip==1'>重新上传</span>
+        	<span v-else='user.isVip==1'>上传名片，限影院经理</span>
+        	
+        </button>
+    	
+    </div>
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript"></script>
+<script src="../js/app.js" type="text/javascript"></script>
+<script src="../js/movieAjax.js" type="text/javascript"></script>
+<script>
+    new Vue({
+        el: '#cinemaReg',
+        data: {
+        	imgUrl: '',
+        	user: {},
+            cinema: {
+            	memid: app.getUser().memid,
+            	type: 2,
+            	mobile: app.getUser().memName,
+            	cinemacode: '',
+            	cinema: '',
+            	name: ''
+            }
+        },
+        mounted: function (){
+             var that = this;
+             that.user = app.getUser();
+            //返回
+            mui.plusReady(function(){
+        	//返回刷新主页
+                var main = plus.webview.currentWebview().opener();
+            	//返回
+                var old_back = mui.back;
+		        mui.back = function(){
+		            mui.currentWebview.close();
+		            mui.fire(main, "settingrefresh");
+		            old_back();
+		        }
+		        window.addEventListener('settingrefresh',function(){
+		        	mui.back();
+		        })
+            })
+        },
+        methods: {
+        	reVerified: function(){
+            	app.mainPage('verified2-1');
+            }
+        }
+    })
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<script src="../js/common.js" type="text/javascript"></script>
+		<style>
+			p {
+				text-indent: 22px;
+				padding: 5px 8px;
+			}
+			
+			html,
+			body,
+			.mui-content {
+				background-color: #fff;
+			}
+			
+			h4 {
+				margin-left: 5px;
+			}
+			
+			.qrcode {
+				/*position: absolute;*/
+				top: 50px;
+				/*left: 50%;*/
+				width: 100%;
+				/*-webkit-transform: translate(-50%, 0);
+				transform: translate(-50%, 0);*/
+				text-align: center;
+			}
+			
+			.qrcode img {
+				margin: 0 auto;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">关于</h1>
+			<a id="share" class="mui-icon mui-icon-redo mui-pull-right"></a>
+		</header>
+		<div id="content" class="mui-content">
+			<div class="mui-content-padded">
+				<div class="qrcode">
+					<img id="qrcode" src="../images/qrcode.png" width="100%" />
+					<a id="shortcut" style="width: 60%;margin: 15px auto;padding: 5px;" class="mui-hidden mui-btn mui-btn-block mui-btn-red">创建桌面图标</a>
+				</div>
+				<!--<h4 style="margin-top:10px;">mui</h4>-->
+				<p>mui是一款小巧高能的前端UI框架，其UI控件富有原生UI样式；
+					通过封装多webview、启动原生动画，使得mui成为目前最接近原生体验的前端框架，
+					更多详细介绍，请到<a href="http://dev.dcloud.net.cn/mui">mui官网</a>查看</p>
+				<p style="text-align: center;color: #ccc;text-indent: 0;">当前版本：<span id="version">3.6.0</span></p>	
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init({
+				gestureConfig: {
+					longtap: true
+				},
+				swipeBack: true //启用右滑关闭功能
+			});
+			
+			var shares=null;
+			//var sharecontent = '我正在使用HBuilder+HTML5开发移动应用，赶紧跟我一起来体验！http://www.baidu.com';
+			// H5 plus事件处理
+			function plusReady(){
+				updateSerivces();
+			}
+			if(window.plus){
+				plusReady();
+			}else{
+				document.addEventListener('plusready', plusReady, false);
+			}
+			/**
+			 * 更新分享服务
+			 */
+			function updateSerivces(){
+				plus.share.getServices(function(s){
+					shares={};
+					for(var i in s){
+						var t=s[i];
+						shares[t.id]=t;
+					}
+				}, function(e){
+					console.log('获取分享服务列表失败：'+e.message);
+				});
+			}
+			/**
+			 * 调用系统分享
+			  */
+			function shareSystem(sharecontent){
+				var msg={content:sharecontent};
+				if('iOS'==plus.os.name){//iOS平台添加链接地址
+					msg.href='http://www.dcloud.io/';
+				}
+				plus.share.sendWithSystem?plus.share.sendWithSystem(msg, function(){
+					console.log('Success');
+				}, function(e){
+					console.log('Failed: '+JSON.stringify(e));
+				}):shareSystemNativeJS();
+			}
+			function shareSystemNativeJS() {
+				if(plus.os.name!=='Android'){
+					plus.nativeUI.alert('此平台暂不支持系统分享功能!');
+					return;
+				}
+				var intent=new Intent(Intent.ACTION_SEND);
+				if(pic&&pic.realUrl){
+					var p = '';
+					p = pic.realUrl;
+					if(p.substr(0,7)==='file://'){
+						p=p.substr(7);
+					}else if(p.sub(0)!=='/'){
+						p=plus.io.convertLocalFileSystemURL(p);
+					}
+				}
+				var f = new File(p);
+				var uri = Uri.fromFile(f);
+				if(f.exists()&&f.isFile()){
+					console.log('image/*');
+					intent.setType('image/*');
+					intent.putExtra(Intent.EXTRA_STREAM,uri);
+				}else{
+					console.log('text/plain');
+					intent.setType('text/plain');
+				}
+				intent.putExtra(Intent.EXTRA_SUBJECT,'HelloH5');
+				intent.putExtra(Intent.EXTRA_TEXT,sharecontent);
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				main.startActivity(Intent.createChooser(intent,'系统分享HelloH5'));
+			}
+			/**
+			   * 分享操作
+			   * @param {JSON} sb 分享操作对象s.s为分享通道对象(plus.share.ShareService)
+			   * @param {Boolean} bh 是否分享链接
+			   */
+			function shareAction(sb,bh) {
+				if(!sb||!sb.s){
+					return;
+				}
+				var msg={content:sharecontent,extra:{scene:sb.x}};
+				if(bh){
+					msg.href=sharehref.value;
+					if(sharehrefTitle&&sharehrefTitle.value!=''){
+						msg.title=sharehrefTitle.value;
+					}
+					if(sharehrefDes&&sharehrefDes.value!=''){
+						msg.content=sharehrefDes.value;
+					}
+					msg.thumbs=['_www/logo.png'];
+					msg.pictures=['_www/logo.png'];
+				}else{
+					if(pic&&pic.realUrl){
+						msg.pictures=[pic.realUrl];
+					}
+				}
+				// 发送分享
+				if(sb.s.authenticated){
+					shareMessage(msg, sb.s);
+				}else{
+					sb.s.authorize(function(){
+						shareMessage(msg,sb.s);
+					}, function(e){
+						console.log('认证授权失败：'+e.code+' - '+e.message);
+					});
+				}
+			}
+			/**
+			   * 发送分享消息
+			   * @param {JSON} msg
+			   * @param {plus.share.ShareService} s
+			   */
+			function shareMessage(msg, s){
+				console.log(JSON.stringify(msg));
+				s.send(msg, function(){
+					console.log('分享到"'+s.description+'"成功！');
+				}, function(e){
+					console.log('分享到"'+s.description+'"失败: '+JSON.stringify(e));
+				});
+			}
+			/**
+			 * 解除所有分享服务的授权
+			 */
+			function cancelAuth(){try{
+				console.log('解除授权：');
+				for(var i in shares){
+					var s=shares[i];
+					if(s.authenticated){
+						console.log('取消"'+s.description+'"');
+					}
+					s.forbid();
+				}
+				// 取消授权后需要更新服务列表
+				updateSerivces();
+				console.log('操作成功！');}catch(e){alert(e);}
+			}
+			
+			//处理点击事件，需要打开原生浏览器
+			mui('body').on('tap', 'a', function(e) {
+				var href = this.getAttribute('href');
+				if (href) {
+					if (window.plus) {
+						plus.runtime.openURL(href);
+					} else {
+						location.href = href;
+					}
+				}
+			});
+
+			var qrcodeEl = document.getElementById("qrcode");
+			qrcodeEl.addEventListener('longtap', function() {
+				plus.nativeUI.actionSheet({
+					cancel: '取消',
+					buttons: [{
+						title: '保存到相册'
+					}]
+				}, function(e) {
+					var index = e.index;
+					if (e.index === 1) {
+						plus.gallery.save(qrcodeEl.src, function() {
+							mui.toast('保存成功');
+						}, function() {
+							mui.toast('保存失败，请重试！');
+						});
+					}
+				});
+			});
+			if (mui.os.android&&mui.os.stream) { //创建快捷方式
+				var shortcutElem = document.getElementById("shortcut");
+				shortcutElem.classList.remove('mui-hidden');
+				shortcutElem.addEventListener('tap', function() {
+					plus.navigator.createShortcut({
+						name: "hello-mui",
+						icon: "images/logo.png"
+					});
+				});
+			}
+			
+			//分享链接点击事件
+			document.getElementById("share").addEventListener('tap', function() {
+				var ids = [{
+						id: "weixin",
+						ex: "WXSceneSession"
+					}, {
+						id: "weixin",
+						ex: "WXSceneTimeline"
+					}, {
+						id: "sinaweibo"
+					}, {
+						id: "tencentweibo"
+					}, {
+						id: "qq"
+					}],
+					bts = [{
+						title: "发送给微信好友"
+					}, {
+						title: "分享到微信朋友圈"
+					}, {
+						title: "分享到新浪微博"
+					}, {
+						title: "分享到腾讯微博"
+					}, {
+						title: "分享到QQ"
+					}];
+				plus.nativeUI.actionSheet({
+					cancel: "取消",
+					buttons: bts
+				}, function(e) {
+					var i = e.index;
+					if (i > 0) {
+						var s_id = ids[i - 1].id;
+						var share = shares[s_id];
+						if (share) {
+							if (share.authenticated) {
+								shareMessage(share, ids[i - 1].ex);
+							} else {
+								share.authorize(function() {
+									shareMessage(share, ids[i - 1].ex);
+								}, function(e) {
+									console.log("认证授权失败：" + e.code + " - " + e.message);
+								});
+							}
+						} else {
+							mui.toast("无法获取分享服务，请检查manifest.json中分享插件参数配置，并重新打包")
+						}
+					}
+				});
+			});
+	
+			function shareMessage(share, ex) {
+				var msg = {
+					extra: {
+						scene: ex
+					}
+				};
+				msg.href = "http://www.ncc.cn";
+				msg.title = "影娱宝，一款专门为包场定做的APP";
+				msg.content = "我正在使用影娱宝发布包场信息或定制包场任务，受益匪浅，赶快加入我们吧！";
+				if (~share.id.indexOf('weibo')) {
+					msg.content += "；体验地址：http://www.ncc.cn";
+				}
+				msg.thumbs = ["_www/images/qq.png"];
+				share.send(msg, function() {
+					console.log("分享到\"" + share.description + "\"成功！ ");
+				}, function(e) {
+					console.log("分享到\"" + share.description + "\"失败: " + e.code + " - " + e.message);
+				});
+			}
+
+		</script>
+	</body>
+
+</html>

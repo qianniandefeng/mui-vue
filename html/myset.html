@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<style type="text/css">
+			.mui-table-view {
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="myset">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">设置</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<ul class="mui-table-view">
+		    		<li class="mui-table-view-cell" v-if="user.memid">
+						<a class="mui-navigate-right" @tap="changePassword">修改密码</a>
+					</li>
+					<li class="mui-table-view-cell" v-if="user.memid">
+						<a class="mui-navigate-right" @tap="addTing">添加影厅</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="tel" class="mui-navigate-right">客服电话</a>
+					</li>
+					<li id="check_update" class="mui-table-view-cell mui-plus-visible">
+						<a id="update" class="mui-navigate-right">检查更新</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+					<!--<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" @tap="lock">设置锁屏图案</a>
+					</li>-->
+				</ul>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" style="text-align: center;">
+						<a id='exit'>退出登录</a>
+					</li>
+				</ul>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#myset',
+				data: {
+					user: {}
+				},
+				mounted: function(){
+					var that = this;
+					that.user = app.getUser();
+					mui.init();
+					mui.plusReady(function(){
+						//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                 	//返回
+						var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+					
+						//客服电话
+						document.getElementById("tel").addEventListener('tap', function() {
+							plus.device.dial("10000");
+						});
+						//获取版本号
+						var wgtVer=null;
+						plus.runtime.getProperty(plus.runtime.appid,function(inf){
+        						wgtVer=inf.version;
+    						});
+						//检查更新
+						document.getElementById("update").addEventListener('tap', function() {
+							var server = "http://www.36le.com/reg/update"; //获取升级描述文件服务器地址
+							 mui.ajax({
+					            url      : server,
+					            type     : 'GET',
+					            success  : function(data){		
+					            	   // alert(wgtVer);
+					                if (data.version>wgtVer) {
+									    plus.ui.confirm(data.note, function(i) {									     
+										if (0 == i.index) {											 
+											plus.runtime.openURL(data.url);
+										}
+										}, data.title, ["立即更新", "取　　消"]);
+									} else {
+										mui.toast('当前已是最新版本~')
+									}
+					            },
+					            error    : function(xhr,type,errorThrown){
+					                mui.toast(type);
+					            }
+					        });                				 
+//							mui.getJSON(server, {
+//								"appid": plus.runtime.appid,
+//								"version": plus.runtime.version,
+//								"imei": plus.device.imei
+//							}, function(data) {
+//								alert(data.status);
+//								if (data.status) {
+//									plus.ui.confirm(data.note, function(i) {
+//										if (0 == i) {
+//											plus.runtime.openURL(data.url);
+//										}
+//									}, data.title, ["立即更新", "取　　消"]);
+//								} else {
+//									mui.toast('当前已是最新版本~')
+//								}
+//							});
+						});
+						 //退出操作******************
+						document.getElementById('exit').addEventListener('tap', function() {
+							if (mui.os.ios) {
+								app.setState({});
+								app.mainPage('login');
+								return;
+							}
+							var btnArray = [{
+								title: "注销当前账号"
+							}, {
+								title: "直接关闭应用"
+							}];
+							plus.nativeUI.actionSheet({
+								cancel: "取消",
+								buttons: btnArray
+							}, function(event) {
+								var index = event.index;
+								switch (index) {
+									case 1:
+										//注销账号
+										app.setState({});
+										var newUser = {};
+										newUser.type = app.getUser().type;
+										//清除原用户数据，并保存现有类型
+										localStorage.removeItem('_user_')
+										localStorage.setItem('_user_',JSON.stringify(newUser))
+										//plus.runtime.quit();
+										//打开login页面后再关闭setting页面
+										
+										/*var curr = plus.webview.currentWebview();
+				                        var wvs = plus.webview.all();
+				                        for (var i = 0, len = wvs.length; i < len; i++) {
+				                            //关闭除setting页面外的其他页面
+				                            if (wvs[i].getURL() == curr.getURL())
+				                                continue;
+				                            plus.webview.close(wvs[i]);
+				                        }
+				                       	plus.webview.open('../html/login.html');
+				                        curr.close();*/
+				                        //原退回到启动页
+										//plus.webview.getLaunchWebview().show("pop-in");
+										//若启动页不是登录页，则需通过如下方式打开登录页
+										app.mainPage('login')
+										break;
+									case 2:
+										plus.runtime.quit();
+										break;
+								}
+							});
+						}, false);
+					})
+					 //************************
+				},
+				methods: {
+					changePassword: function(){
+						var that = this;
+						app.mainPage('changePassword');
+					},
+					addTing: function(){
+						app.mainPage('addTing');
+					},
+					lock: function(){
+						var that = this;
+						app.mainPage('lock');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
+

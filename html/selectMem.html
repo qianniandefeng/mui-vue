@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="ui-page-login">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>影娱宝</title>
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet" />
+    <style>
+        .mui-card{
+            height: 95%;
+        }
+        .pianFang{
+            height:180px;
+            background-image:url(../images/yuantiao.jpg);
+        }
+        .cinemaMan{
+            height:180px;
+            background-image:url(../images/yuantiao.jpg);
+        }
+        .btn-position{
+            text-align: center;
+            margin-top: 80px;
+        }
+        .text{
+            margin-bottom: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+<header id="header" class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">注册</h1>
+</header>
+<div id="content" class="mui-content">
+    <div class="mui-card">
+        <div class="mui-card-header">请选择您的角色</div>
+        <div class="mui-card-content">
+            <div class="mui-card-content-inner font-gray">
+                与基点合作让您更出色
+            </div>
+        </div>
+
+        <div class="mui-card-header mui-card-media pianFang">
+            <div class="btn-position">
+                <div class="text font-max">我是片方 / 发行方</div>
+                <button id="reg1" class="btn mui-btn-warning">进入角色</button>
+            </div>
+
+        </div>
+        <div class="mui-card-header mui-card-media cinemaMan">
+            <div class="btn-position">
+                <div class="text font-max">我是影院经理</div>
+                <button id="reg2" class="btn mui-btn-warning">进入角色</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script src="../js/mui.min.js" type="text/javascript"></script>
+<script src="../js/immersed.js" type="text/javascript"></script>
+<script src="../js/app.js" type="text/javascript"></script>
+<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+    mui.init({
+        statusBarBackground: '#f7f7f7'
+    });
+    mui.ready(function() {
+        var regBtn1 = document.getElementById('reg1');
+        var regBtn2 = document.getElementById('reg2');
+        
+        regBtn1.addEventListener('tap', function(event) {
+            var user = app.getUser();
+            user.type = '1';
+            user.titleImg = 'http://www.36le.com/img/user-photo.png';
+            localStorage.setItem('_user_', JSON.stringify(user));
+            console.log(JSON.stringify(user))
+            aja.updateMembers(user, function(){
+            	app.mainPage('reg1');
+            })
+            
+        }, false);
+        regBtn2.addEventListener('tap', function(event) {
+            var user = app.getUser();
+            user.type = '2';
+            user.titleImg = 'http://www.36le.com/img/user-photo.png';
+            localStorage.setItem('_user_', JSON.stringify(user));
+            aja.updateMembers(user, function(){
+            	app.mainPage('reg2');
+            })
+        }, false);
+    })
+
+</script>
+</body>
+
+</html>

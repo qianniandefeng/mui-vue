@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+	</head>
+	<body>
+		<div id="lock">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">个人资料</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-content-padded">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							使用手势解锁
+							<div id="lockState" class="mui-switch">
+								<div class="mui-switch-handle"></div>
+							</div>
+						</li>
+					</ul>
+					<div class="mui-locker" data-locker-width='320' data-locker-height='320' data-locker-options='{"ringColor":"rgba(221,221,221,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}'>
+					</div>
+				</div>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src='../libs/easymob-webim-sdk/jquery-1.11.1.js'></script>
+		<script src='../libs/easymob-webim-sdk/strophe-custom-2.0.0.js'></script>
+		<script src='../libs/easymob-webim-sdk/json2.js'></script>
+		<script src="../libs/easymob-webim-sdk/easemob.im-1.0.5.js"></script>
+		<script src="../js/mui.locker.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#lock',
+				data: {
+					
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+				
+					mui.plusReady(function(){
+						//锁屏
+						var settings = app.getSettings();
+						var lockStateButton = document.getElementById("lockState");
+						var locker = document.querySelector('.mui-locker');
+						lockStateButton.classList[settings.gestures ? 'add' : 'remove']('mui-active')
+						locker.style.display = settings.gestures ? 'block' : 'none';
+						lockStateButton.addEventListener('toggle', function(event) {
+							var isActive = event.detail.isActive;
+							locker.style.display = isActive ? 'block' : 'none';
+							if (!isActive) {
+								settings.gestures = '';
+								app.setSettings(settings);
+							}
+						}, false);
+						var record = [];
+						locker.addEventListener('done', function(event) {
+							var rs = event.detail;
+							if (rs.points.length < 4) {
+								plus.nativeUI.toast('设定的手势太简单了');
+								record = [];
+								rs.sender.clear();
+								return;
+							}
+							record.push(rs.points.join(''));
+							if (record.length >= 2) {
+								if (record[0] == record[1]) {
+									plus.nativeUI.toast('解锁手势设定成功，以后用户只需使用手势解锁而无需输入密码登录。');
+									settings.gestures = record[0];
+									settings.autoLogin = true;
+									app.setSettings(settings);
+									setTimeout(function() {
+										mui.back();
+									}, 200);
+								} else {
+									plus.nativeUI.toast('两次手势不一致,请重新设定');
+								}
+								rs.sender.clear();
+								record = [];
+							} else {
+								plus.nativeUI.toast('请确认手势设定');
+								rs.sender.clear();
+							}
+						}, false);
+						
+                		//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					
+				}
+			})
+		</script>
+	</body>
+</html>

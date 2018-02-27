@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 200ms ease;
+				transition: transform 200ms ease;
+			}
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #f7f7f8;
+			}
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				position: static;
+				width: auto;
+			}
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 200ms ease, -webkit-transform 200ms ease;
+				transition: opacity 200ms ease, transform 200ms ease;
+			}
+			.mui-page {
+				display: none;
+			}
+			.mui-pages .mui-page {
+				display: block;
+			}
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			.mui-table-view:after {
+				height: 0;
+			}
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			.mui-content-padded {
+				margin: 10px 0px;
+			}
+			.mui-locker {
+				margin: 35px auto;
+				display: none;
+			}
+			/*个人资料*/
+			.mui-table-view .mui-media-object{
+				max-width: 67px;
+			}
+			#head-img{
+				width: 67px;
+				height: 67px;
+				border-radius: 50%;
+				vertical-align: middle;
+			}
+			#head-img~.mui-media-body{
+				height: 67px;
+				padding-top: 10px;
+			}
+			.mui-input-row{
+				background: #fff;
+			}
+			.content-avatar{
+				margin: 50px auto 90px;
+				width: 82px;
+				height: 82px;
+				line-height: 82px;
+				border-radius: 50%;
+				background: #fff;
+				text-align: center;
+			}
+			.mui-grid-flex{
+				margin: 0 auto;
+				display: flex;
+				justify-content: space-around;
+				padding: 11px !important;
+				background: #fff;
+			}
+			.grid-tab{
+				height: 60px;
+				text-align: center;
+				display: inline-block;
+			}
+			.grid-tab .gird-icon{
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.grid-tab span{
+				font-size: 28px;
+			}
+			.menu img{
+				width: 21px;
+				vertical-align: middle;
+				margin-right: 13px;
+			}
+			.mui-table-view .mui-table-view-cell .padr30{
+				padding-right: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="setting">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <h1 class="mui-title">我</h1>
+		    </header>
+			<div id="content" class="mui-content">
+				<ul class="mui-table-view mui-table-view-chevron" style="margin-top: 0;height: 78px;padding-top:0;background: rgb(240,61,55);">
+					<li class="mui-table-view-cell mui-media">
+						<a href="javascript:;" class="mui-navigate-right font-white" @tap="dataCenter(user)" style="padding-top: 0;background: rgb(240,61,55);">
+							<div class="font-white" v-if="user.memName==undefined">
+								<img class="mui-media-object mui-pull-left head-img" id="head-img" src="http://www.36le.com/img/user-photo.png" />
+								<div class="mui-media-body">
+									<p class='mui-ellipsis font18 font-white' style="line-height: 47px;">立即登录</p>
+								</div>
+							</div>
+							<div class="font-white" v-if="user.memName!=undefined">	
+							<img class="mui-media-object mui-pull-left head-img" id="head-img" :src="user.titleImg|photo" />
+							<div class="mui-media-body">								 
+								<p class='mui-ellipsis font-white font16'>{{user.nickname? user.nickname: '立即登录'}}</p>
+								<p class="font-mid font-white">普通会员</p>
+							</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view" style="margin: 0 auto;">
+					<li class="mui-table-view-cell mui-grid-flex" style="background: #fff;">
+						<div class="grid-tab" @tap="myInvite(user.memid)">
+							<div class="gird-icon">
+								<span class="icon-svg-05"></span>
+							</div>
+							<div class="font-gray font-mid">我的邀请</div>
+						</div>
+						<div class="grid-tab" @tap="riches(user)">
+							<div class="gird-icon">
+								<span class="icon-svg-06"></span>
+							</div>
+							<div class="font-gray font-mid">我的财富</div>
+						</div>
+						<div class="grid-tab" @tap="myMessage(user.memid)">
+							<div class="gird-icon">
+								<span class="icon-svg-07"></span>
+							</div>
+							<div class="font-gray font-mid">我的消息</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right padr30" @tap="myTask(1,'item1')" v-if="user.type==1">
+							<span>我的任务</span>
+							<span class="mui-pull-right font16">全部</span>
+						</a>
+						<a class="mui-navigate-right padr30" @tap="myTask(2,'item1')"  v-if="user.type==2">
+							<span>我的任务</span>
+							<span class="mui-pull-right font16">全部</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-grid-flex" style="margin: 0 auto;background: #fff;" v-if="user.type==1">
+						<div class="grid-tab" @tap="myTask(1,'item1')">
+							<div class="gird-icon">
+								<span class="icon-svg-02">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">任务中</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(1,'item2')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-01">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">待审核</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(1,'item3')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-03">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">已完成</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(1,'item4')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-04">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">未完成</div>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-grid-flex" style="margin: 0 auto;background: #fff;" v-if="user.type==2">
+						<!--<div class="grid-tab" @tap="myTask(2,'item1')">
+							<div class="gird-icon">
+								<span class="mui-icon mui-icon-flag"></span>
+							</div>
+							<div class="font-gray font-min">已领取</div>
+						</div>-->
+						<div class="grid-tab" @tap="myTask(2,'item2')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-02">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">待执行</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(2,'item3')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-01">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">待审核</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(2,'item4')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-03">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">已完成</div>
+						</div>
+						<div class="grid-tab" @tap="myTask(2,'item5')">
+							
+							<div class="gird-icon">
+								<span class="icon-svg-04">
+									<span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span>
+								</span>
+							</div>
+							<div class="font-gray font-mid">未完成</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron menu">
+					<li class="mui-table-view-cell" v-if="user.type==2">
+						<a id="riches-btn" class="mui-navigate-right" @tap="changeGift(user)">
+							<img src="../images/icon/changeGift-i2.png"/> 
+							<span class="font16">积分兑换</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="bankCard-btn" class="mui-navigate-right" @tap="bankCard(user)">
+							<img src="../images/icon/bankcard-i2.png"/>
+							<span class="font16">我的银行卡</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="shareFriends" class="mui-navigate-right" @tap="shareFriends">
+							<img src="../images/icon/shareFriends-i2.png"/> 
+							<span class="font16">邀请好友</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="resetCheck" class="mui-navigate-right padr30" @tap="resetCheck()">
+							<img src="../images/icon/resetCheck-i2.png"/> 
+							<span class="font16">我要认证</span>
+							<span class="mui-pull-right font16" v-if="user.isvip==1">已认证</span>
+							<span class="mui-pull-right font16" v-if="user.isvip==0">未认证</span>
+						</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a id="feedback-btn" class="mui-navigate-right" @tap="feedback">
+							<img src="../images/icon/feedback-i2.png"/> 
+							<span class="font16">问题反馈</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron menu">
+					<li class="mui-table-view-cell">
+						<a class="mui-navigate-right" @tap="myset">
+							<img src="../images/icon/setting-i2.png"/> 
+							<span class="font16">设置</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="mui-table-view mui-table-view-chevron">
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#setting',
+				data: {
+					user: {
+						titleImg: '',
+						memid: '',
+						comId: '',
+						memName: '',
+						type: '',
+						mobile: '',
+						email: '',
+						nickname:'',
+						isvip:''
+						
+					}
+				},
+				mounted: function(){
+					var that = this;
+					//初始化
+					mui.init({
+						swipeBack:true //启用右滑关闭功能
+					});
+					
+		        	mui.plusReady(function(){
+		        		//获取个人信息user
+		        		function getData(){
+		        			var userLogin = app.getUser();
+				        	that.user = userLogin;
+				        	aja.getMemberByID(userLogin.memid, function(data){
+					        	that.user = data;
+					        	console.log(JSON.stringify(that.user))
+					       		//获取会员各自信息
+						        if(userLogin.type == 1){
+						        	aja.getCertCompany(userLogin.memid, function(data){
+							        	app.setBranchMem(data)
+							        	console.log(JSON.stringify(data))
+							        })
+						        }else if(userLogin.type == 2){
+						        	aja.getCinemaByMemID(userLogin.memid, function(data){
+							        	app.setBranchMem(data)
+							        	console.log(JSON.stringify(data))
+							        })
+						        }
+					        })
+		        		}
+						getData();
+		        		window.addEventListener("settingrefresh", function (e) {
+		        			console.log("成功了")
+		        			getData();
+		        		})
+						 //************************
+		        	})
+				},
+				methods: {
+					myInvite: function(id){//邀请列表
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('myInvite');
+					},
+					myPushTask: function(id){//我的发布
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('myPushTask');
+					},
+					myGetTask: function(id){//新领任务
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login');
+							return;
+						}
+						app.mainPage('myGetTask');
+					},
+					myMessage: function(info){//我的消息
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('myMessages');
+					},
+					dataCenter: function(info){//我的资料
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('dataCenter');
+					},
+					myTask: function(type,item){//我的任务
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						if(type == 1){
+							app.mainPage('main');
+						}else if(type == 2){
+							app.mainPage('mainy');
+						}
+						localStorage.setItem('_tabItem_',item);
+					},
+					riches: function(info){//我的财富
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('riches');
+					},
+					changeGift: function(info){//积分兑换
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login');
+							return;
+						}
+						app.mainPage('changeGift');
+					},
+					bankCard: function(info){//我的银行卡
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('bankCard');
+					},
+					shareFriends: function(){//邀请好友
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('shareFriends');
+					},
+					resetCheck: function(){//我要认证
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+		            	if(that.user.type == 1){
+		            		app.mainPage('reg1');
+		            	}else if(that.user.type == 2){
+		            		app.mainPage('verified2');
+		            	}
+					},
+					feedback: function(){//问题反馈
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login')
+							return;
+						}
+						app.mainPage('feedback');
+					},
+					myset: function(){//设置
+						var that = this;
+						if(!that.user.memid){
+							app.mainPage('login');
+							return;
+						}
+						app.mainPage('myset');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

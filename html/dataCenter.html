@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<style type="text/css">
+			/*个人资料*/
+			.mui-input-row{
+				background: #fff;
+			}
+			.content-avatar{
+				margin: 50px auto 90px;
+				width: 82px;
+				height: 82px;
+				line-height: 82px;
+				border-radius: 50%;
+				background: #fff;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="dataCenter">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">个人资料</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="content-avatar">
+					<img :src="user.titleImg | photo" style="width: 100%;height: 100%;border-radius: 50%;"/>
+					<a href="#picture" class="mui-btn" >修改头像</a>
+				</div>
+				<!--<div class="mui-input-row">
+                	<label>我的昵称</label>
+	                <input id='company' type="text" class="mui-input" v-model="user.nickname" />
+	            </div>-->
+				<div class="mui-input-row" v-if="user.type == 1">
+                	<label>我的公司</label>
+	                <input id='company' type="text" class="mui-input" v-model="branchMem.company" />
+	            </div>
+	            <div class="mui-input-row" v-else-if="user.type == 2">
+                	<label>影院名称</label>
+	                <input id='cinema' type="text" class="mui-input" v-model="branchMem.cinema" />
+	            </div>
+	            <div class="mui-input-row">
+	                <label>姓名</label>
+	                <input id='person' type="text" class="mui-input" v-model="branchMem.name" />
+	            </div>
+	            <div class="mui-input-row" v-if="user.type == 1">
+	                <label>注册号</label>
+	                <input id='creditcode' type="text" class="mui-input" v-model="branchMem.creditcode" />
+	            </div>
+	            <div class="mui-input-row" v-if="user.type == 1">
+	                <label>法人代表</label>
+	                <input id='faren' type="text" class="mui-input" v-model="branchMem.faren" />
+	            </div>
+	            <div class="mui-input-row">
+	                <label>电话</label>
+	                <input id='mobile' type="number" class="mui-input" v-model="branchMem.mobile" />
+	            </div>
+	            <div class="mui-input-row" v-if="user.type == 1">
+	                <label>性别</label>
+	                <select id='reg_num' type="text" class="mui-input" v-model="branchMem.sex" >
+	                	<option value="man">男</option>	
+	                	<option value="woman">女</option>	
+	                </select>
+	            </div>
+				<button type="button" class="mui-btn mui-btn-red" style="margin-top: 50px;margin-bottom: 10px;width: 90%;left: 50%;-webkit-transform: translate(-50%);" @click="saveData()">保存修改</button>
+		    </div>
+		    <div id="picture" class="mui-popover mui-popover-action mui-popover-bottom">
+		        <ul class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		                <a href="javascript:void(0);" @click="captureImage">拍照</a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a href="javascript:void(0);" @click="galleryImg">相册</a>
+		            </li>
+		        </ul>
+		        <ul class="mui-table-view">
+		            <li class="mui-table-view-cell">
+		                <a href="#picture"><b>取消</b></a>
+		            </li>
+		        </ul>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#dataCenter',
+				data: {
+					user: {
+						titleImg: '',
+						memid: '',
+						comId: '',
+						memName: '',
+						type: '',
+						mobile: '',
+						email: '',
+						nickname: ''
+					},
+					branchMem: {
+						memid: '',
+						cinemaId: '',
+						cinema: '',
+						cinemacode: '',
+						name: '',
+						mobile: '',
+						sex: '',
+						bankcard: ''
+					}
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+					//获取资料
+					var userLogin = app.getUser();
+			        that.user = userLogin;
+			        aja.getMemberByID(userLogin.memid, function(data){
+			        	that.user = data;
+			        })
+			        //获取会员各自信息
+			        that.branchMem = app.getBranchMem();
+					
+					mui.plusReady(function(){
+                	//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					//上传图片
+					getRandom: function(){//随机数，为了更新头像后清除缓存
+						var ran = parseInt(Math.random()*100000);
+						return ran;
+					},
+		            upload: function (server,path){
+		                var that = this;
+		                var wt=plus.nativeUI.showWaiting('请稍等...');
+		                var task=plus.uploader.createUpload(server,
+		                    {method:"POST",timeout:10000},
+		                    function(t,status){ //上传完成
+		                        if(status == 200){
+		                        	console.log(t.responseText)
+		                        	that.user.titleImg = JSON.parse(t.responseText).url+'?random='+that.getRandom();
+		                            wt.close(); //关闭等待提示按钮
+		                        }else{
+		                            alert("上传失败："+status);
+		                            wt.close();//关闭等待提示按钮
+		                        }
+		                    }
+		                );
+		                //添加其他参数
+		                task.addData("name","test");
+		                task.addFile(path,{key:"file"});
+		                task.start();
+		            },
+		            //压缩图片
+					compressImage: function (imgPath){
+						var that = this;
+						plus.zip.compressImage({
+								src:imgPath,
+								dst:'_doc/a.jpg',
+								overwrite: true,
+								quality:10
+							},
+							function() {
+								var serv = aja.server + "/upload/title?comid="+that.user.memid;
+								that.upload(serv,'_doc/a.jpg')
+								console.log("图片压缩成功");
+							},function(error) {
+								console.log("图片压缩失败");
+						});
+					},
+		            //相册
+		            galleryImg: function(){
+		                var that = this;
+		                console.log("从相册中选择图片:");
+		                plus.gallery.pick( function(path){
+		                    that.compressImage(path)
+		                }, function ( e ) {
+		                    console.log( "取消选择图片" );
+		                }, {filter:"image"} );
+		                //隐藏上拉框
+		                mui('#picture').popover('toggle');
+		            },
+		            // 拍照
+		            captureImage: function (){
+		                var that = this;
+		                var cmr = plus.camera.getCamera();
+		                cmr.captureImage( function( path ){
+		                        plus.io.resolveLocalFileSystemURL(path, function(entry){
+		                            var p = entry.toLocalURL();
+		                            that.compressImage(p)
+		                        }, function(e){
+		                            console.log('读取拍照文件错误：'+e.message);
+		                        });
+		                    },
+		                    function( error ) {
+		                        console.log('取消拍照上传')
+		                    }
+		                );
+		
+		                //隐藏上拉框
+		                mui('#picture').popover('toggle');
+		            },
+		            saveData: function(){//保存个人资料
+		            	var that = this;
+		            	var userLogin = app.getUser();
+	            		//保存更新单独个人信息
+	            		aja.updateMembers(that.user, function(data){
+	            			console.log(JSON.stringify(data))
+	            			if(userLogin.type == 1){
+			            		aja.updateCertCompany(that.branchMem, function(data){
+			            			plus.nativeUI.toast('修改成功')
+			            		})
+			            	}else if(userLogin.type == 2){
+			            		aja.updateCinema(that.branchMem, function(data){
+			            			plus.nativeUI.toast('修改成功')
+			            		})
+			            	}
+			            	app.setBranchMem(that.branchMem);
+	            		})
+		            	
+		            }
+				}
+			})
+		</script>
+	</body>
+</html>

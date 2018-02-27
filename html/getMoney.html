@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/color.css" rel="stylesheet" type="text/css" />
+		
+	</head>
+	<body>
+		<div id="getMoney">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">金额</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-card dcontent" id="dcontent">
+					<div class="mui-card-header">
+						<div class="mui-card-media-object mui-pull-left">
+							储蓄卡
+						</div>
+						<a href="#forward" class="mui-card-media-body" >
+							XX银行（{{branchMem.bankcard.cardnumber}}）
+						</a>
+					</div>
+					<div class="mui-card-content" style="height:120px;width: 90%;margin: 0 auto;">
+						<br />
+						<div class="mui-input-row" style="border-bottom: 1px solid #000;">
+							<label style="width: 12%;">￥</label>
+							<input id="total" type="number" style="width: 88%;" value="0.01" autofocus>
+						</div>
+					</div>
+					<div class="mui-card-footer">
+						<button class="mui-btn mui-btn-success mui-btn-block" @tap="money">提现</button>
+					</div>
+				</div>
+				<br />
+		    </div>
+		    <div id="forward" class="mui-popover mui-popover-action mui-popover-bottom">
+				<ul class="mui-table-view mui-input-group">
+					<li class="mui-input-row mui-radio mui-left" v-for="item in bankcardList" @tap="branchMem.bankcard = item">
+						<label>XX银行（{{item.cardnumber|four}}）</label>
+						<input name="bankcard" type="radio" />
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../js/mui.min.js" type="text/javascript"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js" type="text/javascript"></script>
+		<script src="../libs/vue.js" type="text/javascript"></script>
+		<script src="../js/movieAjax.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#getMoney',
+				data: {
+					ceshi: "1",
+					user: {
+						titleImg: '',
+						memid: '',
+						comId: '',
+						memName: '',
+						type: '',
+						mobile: '',
+						email: ''
+					},
+					branchMem: {
+						memid: '',
+						cinemaId: '',
+						cinema: '',
+						cinemacode: '',
+						name: '',
+						mobile: '',
+						sex: '',
+						bankcard: '{}'
+					},
+					bankcardList: [
+						{
+							id: "",
+							memid: "",
+							cardholder: "",
+							cardnumber: "43253"
+						}
+					]
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+					var userLogin = app.getUser();
+			        that.user = userLogin;
+			        aja.getMemberByID(userLogin.memid, function(data){
+			        	that.user = data;
+			        })
+			        //获取会员各自信息
+			        if(userLogin.type == 1){
+			        	aja.getCertCompany(userLogin.memid, function(data){
+				        	that.branchMem = data;
+//				        	that.branchMem.bankcard = JSON.parse(data.bankcard);
+				        	console.log(JSON.stringify(data))
+//				        	jifen = that.branchMem.jifen
+				        })
+			        }else if(userLogin.type == 2){
+			        	aja.getCinemaByMemID(userLogin.memid, function(data){
+				        	that.branchMem = data;
+//				        	that.branchMem.bankcard = JSON.parse(data.bankcard);
+				        	console.log(JSON.stringify(data))
+//				        	jifen = that.branchMem.bounty
+				        })
+			        }
+			        aja.getBankCardPage(function(data){//获取银行卡列表
+			        	that.bankcardList = data.list;
+			        	if(!isBankList(that.bankcardList)){//如果默认银行卡不存在则将第一个银行卡信息设置成默认银行卡
+			        		that.branchMem.bankcard = that.bankcardList[0];
+			        	}
+			        })
+			        //判断银行卡列表中是否为空
+			        function isBankList(bankcardList){
+			        	if(!bankcardList.length){
+			        		alert('您还没有添加银行卡，请先在“我的银行卡”中添加');
+			        		return;
+			        	}else{
+			        		return isBankCurrent();
+			        	}
+			        }
+			        //判断默认银行卡是否被删除
+			        function isBankCurrent(){
+			        	for(var i=0; i<that.bankcardList.length; i++){
+			        		if(that.bankcardList[i].id == that.branchMem.bankcard.id){
+			        			return true;//如果默认银行卡还存在则返回true
+			        		}
+			        	}
+			        }
+					mui.plusReady(function(){
+                		//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "richesrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					money: function(){//提现
+						var that = this;
+						var obj = that.branchMem;
+						obj.bankcard = JSON.stringify(obj.bankcard);
+						aja.updateCinema(obj, function(data){//更新默认银行卡信息
+			        		console.log(JSON.stringify(data))
+			        		plus.nativeUI.toast("提现成功！")
+			        		mui.back();
+			        	})
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

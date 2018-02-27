@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+	</head>
+	<body>
+		<div id="myMessages">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">我的消息</h1>
+		    </header>
+		    <div id="content" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell mui-media" v-if="msgs.length==0">
+							<a href="javascript:;">
+								<div class="mui-media-body">
+									<p class="mui-text-center">您还没有任何消息</p>
+								</div>
+							</a>
+						</li>
+						<li class="mui-table-view-cell mui-media" v-for="item in msgs" @tap="toMsgInfo(item)">
+							<a href="javascript:;">
+								<img class="mui-media-object mui-pull-left" :src="item.titleimg">
+								<div class="mui-media-body">
+									<span class="mui-pull-left">新消息</span>
+									<p class="mui-text-right" v-text="item.createtime"></p>
+									<p class='mui-ellipsis' v-text="item.descripe"></p>
+								</div>
+							</a>
+						</li>
+						
+					</ul>
+			    </div>
+		   </div>
+		</div>
+		
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#myMessages',
+				data: {
+					msgs: []
+				},
+				mounted: function(){
+					var that = this;
+					(function(m) {
+	            		m.init({
+	            			pullRefresh: {
+								container: '#content',
+								down: {
+									style:'circle',
+									callback: pulldownRefresh
+								},
+								up: {
+									contentrefresh: '正在加载...',
+									callback: pullupRefresh
+								}
+							}
+	            		});
+		                function pullupRefresh() {
+							setTimeout(function() {
+								aja.getIMessagePage(that.msgs.pageNum+1,function(data){
+									if(!data.list[0]){
+										mui('#content').pullRefresh().endPullup(true); 
+									}else{
+										app.afterList(that.msgs,data.list);
+										that.msgs.pageNum = data.pageNum;
+										mui('#content').pullRefresh().endPullup(); 
+									}
+								})
+								
+							}, 1500);
+						}
+		                /**
+						 * 下拉刷新具体业务实现
+						 */
+						function pulldownRefresh() {
+							setTimeout(function() {
+								aja.getIMessagePage(1,function(data){
+									that.msgs = data.list;
+									that.msgs.pageNum = data.pageNum;
+			                    });
+								mui('#content').pullRefresh().endPulldown();
+								mui('#content').pullRefresh().refresh(true);
+							}, 1500);
+						}
+						aja.getIMessagePage(1,function(data){
+							that.msgs = data.list;
+							console.log(JSON.stringify(data))
+							that.msgs.pageNum = data.pageNum;
+	                    });
+	            		mui.plusReady(function(){
+		                	//返回刷新主页
+			                var main = plus.webview.currentWebview().opener();
+		                	//返回
+			                var old_back = mui.back;
+					        mui.back = function(){
+					            mui.currentWebview.close();
+					            mui.fire(main, "settingrefresh");
+					            old_back();
+					        }
+		                })
+	            	}(mui))
+					
+					
+				},
+				methods: {
+					toMsgInfo: function(obj){
+						app.setMsgObj(obj);
+						app.mainPage('msgInfo');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

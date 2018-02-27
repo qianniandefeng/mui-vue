@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/color.css" />
+		<style type="text/css">
+			.mui-content-padded .mui-input-row .addIpt{
+				border: 1px solid #6C6C6C;
+				background: #fff; 
+				padding-left: 10px;
+				width: 83%;
+			}
+			.fixed-footer .mui-btn{
+				top: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="addTing">
+			<header id="header" class="mui-bar mui-bar-nav">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title">添加影厅</h1>
+			</header>
+			<nav class="mui-bar mui-bar-tab fixed-footer">
+	            <div class="mui-content-padded">
+					<div class="mui-input-row">
+						<button type="button" class="mui-btn" @tap="addTingItem(ting)">
+							添加
+						</button>
+						<input type="text" class="addIpt" placeholder="添加影厅名称 如：1号厅" v-model="ting"/>
+					</div>
+				</div>
+	        </nav>
+			
+			<div id="content" class="mui-content">
+				
+				<ul id="OA_task_1" class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(item,index) in tings">
+						<div class="mui-slider-right mui-disabled">
+							<a class="mui-btn mui-btn-red" @tap="deleteTing(index)">删除</a>
+						</div>
+						<div class="mui-slider-handle mui-text-center" v-text="item"></div>
+					</li>
+				</ul>
+				
+				
+			</div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			new Vue({
+				el: '#addTing',
+				data: {
+					ting: '',
+					tings: []
+				},
+				mounted: function(){
+					var that =this;
+					mui.init();
+					
+					that.tings = app.getTings();
+					mui.plusReady(function(){
+						//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                 	//返回
+						var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            app.setTings(that.tings);
+				            mui.fire(main,'addTing');
+				            old_back();
+				        }
+			       	})
+				},
+				methods: {
+					addTingItem: function(obj){
+						var that = this;
+						console.log(JSON.stringify(obj))
+						if(obj.trim()){
+							console.log(that.tings instanceof Array)
+							that.tings.push(obj)
+							that.ting=''
+						}
+					},
+					deleteTing: function(index){
+						var that = this;
+						var btnArray = ['确认', '取消'];
+						console.log(index)
+						mui.confirm('确认删除该条记录？', '提示', btnArray, function(e) {
+							if (e.index == 0) {
+								that.tings.splice(index,1)
+							} else {
+								
+							}
+						});
+						
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

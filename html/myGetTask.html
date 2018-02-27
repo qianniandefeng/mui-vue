@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>我的任务</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        
+        /*list*/
+		.mui-scroll .mui-table-view .mui-table-view-cell img {
+			width: 80px;
+			height: 100px;
+			line-height: 100px;
+			margin-right: 10px;
+		}
+		.mui-table-view-cell.mui-active{
+			background-color: #fff;
+		}
+    </style>
+</head>
+<body>
+    <div id="myGetTask">
+        <header id="header" class="mui-bar mui-bar-nav">
+            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 class="mui-title">我的任务</h1>
+        </header>
+        <div id="content" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view">
+					<!--没有list-->
+					<li class="mui-table-view-cell" v-if="items1.length==0">
+            			<div class="mui-text-center">
+            				<img src="../images/default.png">	 
+            			</div>
+	                </li>
+	                <!--有list-->
+					<li class="mui-table-view-cell mui-media" v-for="item in items1" v-if="item.checks==='0'">
+						<div class="mui-pull-left">
+							<div>
+								<img :src='item.titleImg|photo'/>
+							</div>
+						</div>
+						<div class="mui-media-body">
+							<div>《<span v-text="item.filmname"></span>》</div>
+							<div class="mui-pull-right font-red">
+								<button class="mui-btn" @tap="edit(item)">编辑</button>
+							</div>
+							<div class='font-gray font-min'>预放映:<span v-text="item.showtime"></span></div>
+							<div class='font-gray font-min'><span v-text="item.movehall"></span>号影厅 <span v-text="item.seatcount"></span>座 <span v-text="item.ticketprice"></span>元</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+        </div>
+    </div>
+    <script src="../js/mui.min.js" type="text/javascript"></script>
+    <script src="../js/immersed.js"></script>
+    <script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+    <script src="../libs/vue.js" type="text/javascript"></script>
+    <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#myGetTask',
+            data: {
+            	items1: []
+            },
+            mounted: function (){
+            	var that = this;
+            	(function(m) {
+            		m.init({
+            			pullRefresh: {
+							container: '#pullrefresh',
+							down: {
+								style:'circle',
+								callback: pulldownRefresh
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+            		});
+	                function pullupRefresh() {
+						setTimeout(function() {
+							aja.getBlockTaskOrderPage(0,that.items1.pageNum+1,function(data){
+								if(!data.list[0]){
+									mui('#content').pullRefresh().endPullup(true); 
+								}else{
+									app.afterList(that.items1,data.list);
+									that.items1.pageNum = data.pageNum;
+									mui('#content').pullRefresh().endPullup(); 
+								}
+							})
+							
+						}, 1500);
+					}
+	                /**
+					 * 下拉刷新具体业务实现
+					 */
+					function pulldownRefresh() {
+						setTimeout(function() {
+							aja.getBlockTaskOrderPage(0,1,function(data){
+								that.items1 = data.list;
+								that.items1.pageNum = data.pageNum;
+		                    });
+							mui('#content').pullRefresh().endPulldown();
+							mui('#content').pullRefresh().refresh(true);
+						}, 1500);
+					}
+					aja.getBlockTaskOrderPage(0,1,function(data){
+						that.items1 = data.list;
+						that.items1.pageNum = data.pageNum;
+                    });
+            		//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    old_back();
+	                }
+            	}(mui))
+            	
+            },
+            methods: {
+            	movieInfo: function(id){
+               		localStorage.setItem('__movieinfo_',id);
+                    mui.openWindow({
+                        url: '../sonPage/movieInfo.html',
+                        id: 'movieInfo',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+               	},
+				edit: function (obj) {//编辑
+                	aja.getBlockTaskByID(obj.rewuid,function(data){
+                		localStorage.setItem('_jidian_chang_',JSON.stringify(data))
+                	})
+                	localStorage.setItem('_jidian_task_',JSON.stringify(obj))
+                    mui.openWindow({
+                        url: '../sonPage/editBlockTask.html',
+                        id: 'editBlockTask',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>

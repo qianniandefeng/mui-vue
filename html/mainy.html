@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>影院经理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/color.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+				
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+				display: flex;
+				justify-content: space-around;
+				/*width: 100%;*/
+				height: 39px;
+			}
+			.mui-fullscreen .mui-segmented-control~.mui-slider-group{
+				top:36px;
+			}
+			/*list*/
+			.mui-scroll .mui-table-view .mui-table-view-cell img {
+				width: 80px;
+				height: 100px;
+				line-height: 100px;
+				margin-right: 10px;
+			}
+
+			.mui-table-view-cell.mui-active{
+				background-color: #fff;
+			}
+
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+				border-bottom: 2px solid #dd524d;
+			}
+			.finish-icon{
+				position: absolute;
+				right: 0;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+	<div id="mainy">
+		<header id="header" class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			 <h1 class="mui-title">我的任务</h1>
+		</header>
+
+		<div id="content" class="mui-content">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-segmented-control-negative">
+					<div class="mui-scroll mui-items">
+						<a class="mui-control-item mui-active" href="#item2mobile" id="item2">
+							待执行
+						</a>
+						<a class="mui-control-item" href="#item3mobile" id="item3">
+							待审核
+						</a>
+						<a class="mui-control-item" href="#item4mobile" id="item4">
+							已完成
+						</a>
+						<a class="mui-control-item" href="#item5mobile" id="item5">
+							未完成
+						</a>
+					</div>
+				</div>
+				<div id="scontent" class="mui-slider-group">
+					<div id="item2mobile" class="mui-slider-item mui-control-content mui-active">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<!--没有list-->
+									<li class="mui-table-view-cell" v-if="items2.length==0">
+				            			<div class="mui-text-center">
+				            				<img src="../images/default.png">	 
+				            			</div>
+					                </li>
+					                <!--有list-->
+									<li class="mui-table-view-cell mui-media" v-for="item in items2" v-if="item.checks==='1' || item.checks==='0'">
+										<div class="mui-pull-left">
+											<div>
+												<img :src='item.titleImg|photo'/>
+											</div>
+										</div>
+										<div class="mui-media-body">
+											<div><span v-text="item.filmname"></span></div>											
+											<div class='font-gray font-min'>排场日期:<span v-text="item.showtime"></span></div>
+											<div class='font-gray font-min'>影厅:<span v-text="item.movehall"></span> </div>										
+											<div class="mui-pull-right font-red">
+												<button class="mui-btn mui-btn-warning" v-if="item.checks==='1'" @tap="submitBtn(item)">提交</button>
+												<button class="mui-btn mui-btn-primary" v-if="item.checks==='0'" @tap="edit(item)">编辑</button>
+											</div>
+											<div class='font-gray font-min'>团体人数:<span v-text="item.seatcount"></span></div>
+											<div class='font-gray font-min'>单张票价:<span v-text="item.ticketprice"></span>元</div>
+											<div class='font-green font-min'>完成任务可获得<span v-text="item.ticketprice*item.seatcount*item.bili*0.01"></span>积分</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<!--没有list-->
+									<li class="mui-table-view-cell" v-if="items3.length==0">
+				            			<div class="mui-text-center">
+				            				<img src="../images/default.png">	 
+				            			</div>
+					                </li>
+					                <!--有list-->
+									<li class="mui-table-view-cell mui-media" v-for="item in items3" v-if="item.checks==='2'">
+										<div class="mui-pull-left">
+											<div>
+												<img :src='item.titleImg|photo'/>
+											</div>
+										</div>
+										<div class="mui-media-body" @tap="details(item.filmId,item)">
+											<div><span v-text="item.filmname"></span></div>
+											<div class='font-gray font-min'>预放映:<span v-text="item.showtime"></span></div>
+											<div class='font-gray font-min'>影厅:<span v-text="item.movehall"></span> <span v-text="item.seatcount"></span>座<span v-text="item.ticketprice"></span>元</div>
+											<p class="font-orange">状态：等待片方确认审核。</p>
+											<button class="mui-btn mui-btn-link mui-pull-right" @tap="details(item.filmId,item)">查看详情>></button>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item4mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<!--没有list-->
+									<li class="mui-table-view-cell" v-if="items4.length==0">
+				            			<div class="mui-text-center">
+				            				<img src="../images/default.png">	 
+				            			</div>
+					                </li>
+					                <!--有list-->
+									<li class="mui-table-view-cell mui-media" v-for="item in items4" v-if="item.checks==='3'">
+										<div class="mui-pull-left">
+											<div>
+												<img :src='item.titleImg|photo'/>
+											</div>
+										</div>
+										<div class="finish-icon">
+											<img src='../images/finished.png' style="width: 48px;height: 48px;"/>
+										</div>
+										
+										<div class="mui-media-body" @tap="details(item.filmId,item)">
+											<div><span v-text="item.filmname"></span></div>
+											<div class='font-gray font-min'>排场日期：<span v-text="item.showtime"></span></div>
+											<div class='font-gray font-min'>影厅：<span v-text="item.movehall"></span></div>	
+											<div class='font-gray font-min'>团体人数： <span v-text=""></span><span v-text="item.seatcount"></span>票价<span v-text="item.ticketprice"></span>元</div>
+											<p class='font-green font-min'>任务完成，奖励<span v-text="item.bounty"></span>分已到账</p>												
+											<button class="mui-btn mui-btn-link mui-pull-right" @tap="details(item.filmId,item)">查看详情>></button>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item5mobile" class="mui-slider-item mui-control-content">
+						<div class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view">
+									<!--没有list-->
+									<li class="mui-table-view-cell" v-if="items5.length==0">
+				            			<div class="mui-text-center">
+				            				<img src="../images/default.png">	 
+				            			</div>
+					                </li>
+					                <!--有list-->
+									<li class="mui-table-view-cell mui-media" v-for="item in items5" v-if="item.checks==='4'">
+										<div class="mui-pull-left">
+											<div>
+												<img :src='item.titleImg|photo'/>
+											</div>
+										</div>
+										<div class="mui-media-body">
+											<div><span v-text="item.filmname"></span></div>											
+											<div class='font-gray font-min'>放映日期:<span v-text="item.showtime"></span></div>
+											<div class='font-gray font-min'>影厅:<span v-text="item.movehall"></span></div>											
+											<div class='font-gray font-min'>团体人数：<span v-text="item.seatcount"></span>人  票价：<span v-text="item.ticketprice"></span>元</div>
+											
+											<div class="mui-pull-right font-red">
+												<button class="mui-btn mui-btn-warning" @tap="submitBtn(item)">再次提交</button>
+											</div>
+											<p class='font-red '>审核未通过</p>
+											<p>理由：<span v-text="item.remark"></span></p>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
+		<script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+		<script src="../libs/vue.js" type="text/javascript"></script>
+		<script src="../js/app.js" type="text/javascript"></script>
+		<script src="../js/movieAjax.js" type="text/javascript"></script>
+		
+		<script>
+			new Vue({
+				el: '#mainy',
+				data: {
+                    items2: [],//准备提交
+					items3: [],//已提交等待审核
+					items4: [],//审核通过
+					items5: []//审核未通过
+				},
+				 mounted: function (){
+				 	mui.init();
+				 	var item = localStorage.getItem('_tabItem_')
+				 	console.log(item)
+					var defaultTab = document.getElementById(item+"mobile");
+					var defaultTitle = document.getElementById(item);
+				    //模拟首页点击
+				    mui.trigger(defaultTab, 'tap');
+				    mui.trigger(defaultTitle, 'tap');
+				    //切换选项卡高亮
+				    var current = document.querySelector(".mui-slider-group>.mui-slider-item.mui-active");
+				    var current1 = document.querySelector(".mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active");
+				    if (defaultTab !== current) {
+				        current.classList.remove('mui-active');
+				        current1.classList.remove('mui-active');
+				        defaultTab.classList.add('mui-active');
+				        defaultTitle.classList.add('mui-active');
+				    }
+					//阻尼系数
+					var that = this;
+					var deceleration = mui.os.ios?0.003:0.0009;
+					mui('.mui-scroll-wrapper').scroll({
+						bounce: false,
+						indicators: true, //是否显示滚动条
+						deceleration:deceleration
+					});
+					
+					//上下加载
+					mui.plusReady(function() {
+						//隐藏顶部状态栏
+						var header = document.getElementById('sliderSegmentedControl');
+						var scontent = document.getElementById('scontent');
+						header.style.paddingTop = app.Immersed(header)+'px';
+						header.style.height = header.offsetHeight + app.Immersed(header) + 'px';
+						//数据初始化
+						window.addEventListener("pageflowrefresh", function (e) {
+							getData();
+						});
+						getData();
+						function getData(){//第一次获取数据，第一页
+							/*aja.getBlockTaskOrderPage(0,1,function(data){
+								that.items2 =that.items3 =that.items5 = data.list;
+								that.items2.pageNum =that.items3.pageNum =that.items5.pageNum = data.pageNum;
+							})
+							aja.getBlockTaskOrderPage(1,1,function(data){
+								that.items4 = data.list;//已完成
+								that.items4.pageNum = data.pageNum;//已完成
+							})*/
+							aja.getTaskOrderByMemid(1,1,function(data){//check,page,callback
+								that.items2 = data.list;
+								that.items2.pageNum = data.pageNum;
+							})
+							aja.getTaskOrderByMemid(2,1,function(data){//check,page,callback
+								that.items3 = data.list;
+								that.items3.pageNum = data.pageNum;
+							})
+							aja.getTaskOrderByMemid(3,1,function(data){//check,page,callback
+								that.items4 = data.list;
+								that.items4.pageNum = data.pageNum;
+							})
+							aja.getTaskOrderByMemid(4,1,function(data){//check,page,callback
+								that.items5 = data.list;
+								that.items5.pageNum = data.pageNum;
+							})
+						}
+						
+						//循环初始化所有下拉刷新，上拉加载。
+						mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+							mui(pullRefreshEl).pullToRefresh({
+								down: {
+									callback: function() {
+										var self = this;
+										setTimeout(function() {
+											var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+											switch (currentText){
+												case '待执行':
+													aja.getTaskOrderByMemid(1,1,function(data){
+														that.items2 = data.list;
+														that.items2.pageNum = 1;
+														self.endPullDownToRefresh();
+														self.refresh(true)
+													});
+													break;
+												case '待审核':
+													aja.getTaskOrderByMemid(2,1,function(data){
+														that.items3 = data.list;
+														that.items3.pageNum = 1;
+														self.endPullDownToRefresh();
+														self.refresh(true)
+													});
+													break;
+												case '已完成':
+													aja.getTaskOrderByMemid(3,1,function(data){
+														that.items4 = data.list;
+														that.items4.pageNum = 1;
+														self.endPullDownToRefresh();
+														self.refresh(true)
+													});
+													break;
+												case '未完成':
+													aja.getTaskOrderByMemid(4,1,function(data){
+														that.items5 = data.list;
+														that.items5.pageNum = 1;
+														self.endPullDownToRefresh();
+														self.refresh(true)
+													});
+													break;
+												default:
+													break;
+											}
+											
+											
+										}, 1000);
+									}
+								},
+								up: {
+									contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+      								contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+									callback: function() {
+										var self = this;
+										setTimeout(function() {
+											var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+											switch (currentText){
+												
+												case '待执行':
+													aja.getTaskOrderByMemid(1,that.items2.pageNum+1,function(data){
+														if(!data.list[0]){
+															self.endPullUpToRefresh(true);
+														}else{
+															app.afterList(that.items2,data.list);
+															that.items2.pageNum++;
+															self.endPullUpToRefresh();
+														}
+													})
+													break;
+												case '待审核':
+													aja.getTaskOrderByMemid(2,that.items3.pageNum+1,function(data){
+														if(!data.list[0]){
+															self.endPullUpToRefresh(true);
+														}else{
+															app.afterList(that.items3,data.list);
+															that.items3.pageNum++;
+															self.endPullUpToRefresh();
+														}
+													})
+													break;
+												case '已完成':
+													aja.getTaskOrderByMemid(3,that.items4.pageNum+1,function(data){
+														if(!data.list[0]){
+															self.endPullUpToRefresh(true);
+														}else{
+															app.afterList(that.items4,data.list);
+															that.items4.pageNum++;
+															self.endPullUpToRefresh();
+														}
+													})
+													break;
+													case '未完成':
+													aja.getTaskOrderByMemid(4,that.items5.pageNum+1,function(data){
+														if(!data.list[0]){
+															self.endPullUpToRefresh(true);
+														}else{
+															app.afterList(that.items5,data.list);
+															that.items5.pageNum++;
+															self.endPullUpToRefresh();
+														}
+													})
+													break;
+												default:
+													break;
+											}
+										}, 1000);
+									}
+								}
+							});
+						});
+					});
+					var old_back = mui.back;
+			        mui.back = function(){
+			            mui.currentWebview.close();
+			            old_back();
+			        }
+				 },
+				methods: {
+                    edit: function (obj) {//编辑
+                    	aja.getBlockTaskByID(obj.rewuid,function(data){
+                    		localStorage.setItem('_jidian_chang_',JSON.stringify(data))
+                    	})
+                    	localStorage.setItem('_jidian_task_',JSON.stringify(obj))
+                        mui.openWindow({
+                            url: '../sonPage/editBlockTask.html',
+                            id: 'editBlockTask',
+                            preload: true,
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+                    },
+					submitBtn: function (obj) {//提交图片进行审核
+						localStorage.setItem('_jidian_task_',JSON.stringify(obj));
+                        mui.openWindow({
+                            url: '../sonPage/submitTask.html',
+                            id: 'submitTask',
+                            preload: true,
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+                    },
+                    details: function (id,obj) {
+                    	localStorage.setItem('__movieinfo_',id);
+                    	localStorage.setItem('_jidian_task_',JSON.stringify(obj));
+                    	console.log(JSON.stringify(obj))
+                        mui.openWindow({
+                            url: '../sonPage/finishedy.html',
+                            id: 'finishedy',
+                            preload: true,
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+                    },
+					movieInfo: function(id,obj){//显示图片信息
+						console.log(JSON.stringify(id))
+						localStorage.removeItem('__movieinfo_')
+	               		localStorage.setItem('__movieinfo_',id);
+	               		localStorage.setItem('_jidian_chang_',JSON.stringify(obj))
+                        mui.openWindow({
+                            url: '../sonPage/movieInfo.html',
+                            id: 'movieInfo',
+                            preload: true,
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+	               }
+				}
+			})
+		</script>
+	</body>
+
+</html>

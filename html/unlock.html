@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<title>影娱宝</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+				overflow: hidden;
+			}
+			.mui-locker {
+				margin: 35px auto;
+			}
+			#forget {
+				display: block;
+				margin-top: 10px;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header id="header" class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">解锁</h1>
+		</header>
+		<div id="content" class="mui-content">
+			<div class="mui-content-padded" style="margin: 10px 0px;">
+				<div class="mui-locker" data-locker-options='{"ringColor":"rgba(221,221,221,1)","fillColor":"#ffffff","pointColor":"rgba(0,136,204,1)","lineColor":"rgba(0,136,204,1)"}' data-locker-width='320' data-locker-height='320'>
+				</div>
+			</div>
+			<a id='forget'>忘记手势密码？</a>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+		<script src="../js/mui.locker.js"></script>
+		<script src="../js/app.js"></script>
+
+		<script>
+			(function($, doc) {
+				$.init();
+				$.plusReady(function() {
+					var toMain = function(type) {
+						//使用定时器的原因：
+						//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
+						if(type == '1'){
+							app.mainPage('main')
+						}else if(type == '2'){
+							app.mainPage('mainy')
+						}
+					};					
+					var user = JSON.parse(localStorage.getItem('_user_'));
+					var loginInfo = {
+						username: user.memName,
+						password: user.memPwd
+					};
+					
+					var settings = app.getSettings();
+					var forgetButton = doc.getElementById("forget");
+					var locker = doc.querySelector('.mui-locker');
+					var clearStateAndToLogin = function() {
+						settings.gestures = '';
+						settings.autoLogin = false;
+						app.setSettings(settings);
+						var state = app.getState();
+						state.token = '';
+						app.setState(state);
+						$.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+                                popGesture: 'close'
+                            },
+							waiting: {
+								autoShow: false
+							}
+						});
+					};
+					
+					forgetButton.addEventListener('tap', function(event) {
+						clearStateAndToLogin();
+					});
+					var tryNumber = 5;
+					locker.addEventListener('done', function(event) {
+						var rs = event.detail;
+						if (settings.gestures == rs.points.join('')) {
+							var id = setTimeout(function () {
+								app.login(loginInfo, function(data) {
+									//请求成功
+									if(data.result == 'error'){
+										plus.nativeUI.toast('用户名或密码错误');
+										return;
+									}
+									//登录时判断是否已经提交资质审核。
+									/*if(没有type){
+										跳转到selectMem.html页
+									}else{
+										跳转到首页,执行toMain函数
+									}*/
+									if(data.result == 'ok'){
+										var stateObj = {
+											username : loginInfo.username,
+											token: data.token
+										}
+										app.createState(stateObj, function(){//data必须有token和name
+											user.memid = data.memid;
+											user.type = data.type;
+											localStorage.setItem('_user_', JSON.stringify(user));
+											toMain(data.type);
+										});
+									}
+								});
+								clearTimeout(id);
+							},20);
+							rs.sender.clear();
+						} else {
+							tryNumber--;
+							rs.sender.clear();
+							if (tryNumber > 0) {
+								plus.nativeUI.toast('解锁手势错误，还能尝试 ' + tryNumber + ' 次。');
+							} else {
+								clearStateAndToLogin();
+							}
+						}
+					}, false);
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

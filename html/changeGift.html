@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>积分兑换</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<style type="text/css">
+			.mui-table-view .mui-table-view-cell .mui-media-object{
+				max-width: 300px;
+				width: 140px;
+				height: 100px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="changeGift">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">剩余<span v-text="branchMem.bounty||branchMem.jifen"></span>积分</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<ul class="mui-table-view">
+				    <li class="mui-table-view-cell mui-media" v-for="item in gifts">
+				        <a href="javascript:;">
+				            <img class="mui-media-object mui-pull-left" :src="item.img">
+				            <div class="mui-media-body">
+				                <span v-text="item.name"></span>
+			                	    <div class="mui-pull-right font-red">												 
+									<button class="mui-btn mui-btn-red" @tap="changeGift(item)">兑换</button>
+								</div>
+								<div class='font-max font-orange'><span v-text="item.integral"></span>积分</div>
+								<div class="mui-clearfix">									
+									<p class="mui-pull-left">市场价：<span v-text="item.price"></span>元</p>
+									<p class="mui-pull-right">库存：<span v-text="item.amount"></span></p>
+								</div>
+				                
+				            </div>
+				        </a>
+				    </li>
+				</ul>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#changeGift',
+				data: {
+					user: {
+						titleImg: '',
+						memid: '',
+						comId: '',
+						memName: '',
+						type: '',
+						mobile: '',
+						email: ''
+					},
+					branchMem: {
+						memid: '',
+						cinemaId: '',
+						cinema: '',
+						cinemacode: '',
+						name: '',
+						mobile: '',
+						sex: '',
+						bankcard: ''
+					},
+					gifts: [
+						/*{
+							id : 1,
+						    name : "",
+						    price : 0,
+						    integral : 0,
+						    img : "",
+						    amount:'',
+						    status : ""
+						}*/
+					]
+
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+					function getData(){
+						var userLogin = app.getUser();
+				        that.user = userLogin;
+				        aja.getMemberByID(userLogin.memid, function(data){
+				        	that.user = data;
+				        })
+				        //获取会员各自信息
+				        if(userLogin.type == 1){
+				        	aja.getCertCompany(userLogin.memid, function(data){
+					        	that.branchMem = data;
+	//				        	jifen = that.branchMem.jifen
+					        })
+				        }else if(userLogin.type == 2){
+				        	aja.getCinemaByMemID(userLogin.memid, function(data){
+					        	that.branchMem = data;
+	//				        	jifen = that.branchMem.bounty
+					        })
+				        }
+				        aja.getGiftsPage(1,1,function(data){ //page,status,status=0已下架，status=1上架
+				        	that.gifts = data.list;
+				        	that.gifts.pageNum = data.pageNum;
+				        })
+					}
+					getData();
+					
+					mui.plusReady(function(){
+                		var userLogin = app.getUser();
+		        		that.user = userLogin;
+		        		
+                		//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					changeGift: function(item){
+					    var btnArray = ['取消', '确认'];
+						mui.confirm('	兑换: '+item.name+'\n	价值: '+item.price+'元 \n	消费: '+item.integral+'分', '积分兑换', btnArray, function(e) {
+							if (e.index == 1) {
+								aja.exchangeGifts(item.id, function(data){
+								console.log(JSON.stringify(data))
+								if(data.r==1){
+									mui.alert( '恭喜你成功兑换一份礼品！\n请前往【我的财富】中查看', '积分兑换', '我知道了');
+									//plus.nativeUI.toast('兑换成功');
+									mui.back();
+								  }else{
+								  	mui.alert('对不起您的剩余积分不足!\n :( ', '积分兑换', '我知道了');
+								  }
+								})							 
+							} else{
+								return;
+							}
+						})					
+						
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<style type="text/css">
+			.mui-content-header{
+				overflow: hidden;
+			}
+			.mcha{
+				float: left;
+				width: 50%;
+				overflow: hidden;
+				padding: 10px 20px;
+				background: #666;
+				color: #eee;
+				border: 1px solid #ccc;
+			}
+			.mui-bar-nav~.mui-content .mui-slider.mui-fullscreen{
+				top: 50px;
+			}
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+				display: flex;
+				justify-content: space-around;
+				width: 100%;
+				height: 39px;
+			}
+			
+			/*小圆圈*/
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+	
+				margin: 0;
+			}
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+				display: flex;
+				justify-content: space-around;
+				width: 100%;
+				height: 39px;
+			}
+			.mui-fullscreen .mui-segmented-control~.mui-slider-group{
+				/*top:36px;*/
+				top: 0;
+				bottom: 44px;
+			}
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+				border-bottom: 2px solid #007aff;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="myBillList">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">积分明细</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-content-header">
+		    		<div class="mcha">
+		    			<div class="font-gray">支出(元)</div>
+		    			<div>245</div>
+		    		</div>
+		    		<div class="mcha">
+		    			<div class="font-gray">收入(元)</div>
+		    			<div>245</div>
+		    		</div>
+		    	</div>
+				<div id="slider" class="mui-slider mui-fullscreen">
+					<!--<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted mui-hidden">
+						<div class="mui-scroll mui-items">
+							<a class="mui-control-item mui-active " href="#item1mobile">
+								明细
+							</a>
+							<a class="mui-control-item" href="#item2mobile">
+								账户
+							</a>					 
+						</div>
+					</div>-->
+					<div class="mui-slider-group">
+						<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="mui-table-view-cell mui-media" v-if="billList.length==0">
+											<a href="javascript:;">
+												<div class="mui-media-body">
+													<p>您还没有明细信息</p>
+												</div>
+											</a>
+										</li>
+										<li class="mui-table-view-cell mui-media" v-for="item in billList">
+											<a href="javascript:;">
+												<div class="mui-media-body">
+													<span class="mui-pull-left font-mid" v-if="item.type==1">兑换礼品</span>
+													<span class="mui-pull-left font-mid" v-if="item.type==2">任务奖励</span>
+													<span class="mui-pull-left font-mid" v-if="item.type==3">积分提现</span>
+													<p class="mui-text-right" v-text="item.createtime"></p>
+													<p class='mui-text-left '  style="white-space: normal;" v-text="item.describes"></p>
+													<div class='mui-text-right font-red' v-if="item.type == 1">-<span v-text="item.jifen"></span></div>
+													<div class='mui-text-right font-green' v-if="item.type == 2">+<span v-text="item.jifen"></span></div>
+													<div class='mui-text-right' v-if="item.type == 3">-<span v-text="item.jifen"></span></div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!--<div id="item2mobile" class="mui-slider-item mui-control-content">
+							<div class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="mui-table-view-cell mui-media" v-for="item in billList">
+											<a href="javascript:;">
+												<div class="mui-media-body">
+													<span class="mui-pull-left font-max">{{item.msg}}</span>
+													<p class="mui-text-right">{{item.createtime}}</p>
+													<div class='mui-text-right font-green' v-if="item.status == 1">+{{item.descripe}}元</div>
+													<div class='mui-text-right' v-if="item.status == 2">-{{item.descripe}}元</div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>	-->
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#myBillList',
+				data: {
+					billList: [
+					/*{
+						Memid    会员ID
+						Giftid   礼品id 可以为空
+						Type      记录类型：1—兑换礼品  2—任务奖励  3—积分提现
+						Jifen     消费积分、所得积分、兑换积分数 
+						Acount    提现账号
+						Charge    提现手续费 
+						Describe     描述
+						Createtime  交易时间
+
+					}*/
+						{
+							type: '1',
+							jifen: '20',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						},
+						{
+							type: '2',
+							jifen: '30',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						},
+						{
+							type: '3',
+							jifen: '50',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						}
+					]
+				},
+				mounted: function(){
+					var that = this;
+					(function(m) {
+	            		m.init();
+	            		mui.plusReady(function(){
+		                	//返回刷新主页
+			                var main = plus.webview.currentWebview().opener();
+			                
+			                aja.getJifenRizhiPage(1,-1,function(data){//page,type:1—兑换礼品  2—任务奖励  3—积分提现     -1搜索全部
+								console.log(JSON.stringify(data.list))
+								that.billList = data.list;
+								that.billList.pageNum = data.pageNum;
+								 
+		                    });
+			                //循环初始化所有下拉刷新，上拉加载。
+							mui.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+								mui(pullRefreshEl).pullToRefresh({
+									down: {
+										callback: function() {
+											var self = this;
+											
+											setTimeout(function() {
+												var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+												var status = '';
+												switch (currentText){
+													case '明细':
+														status = 0;
+														aja.getJifenRizhiPage(1,-1,function(data){
+															that.billList = data.list;
+															that.billList.pageNum = data.pageNum;
+															self.endPullDownToRefresh();
+															self.refresh(true)
+									                    });
+														break;
+													default:
+														break;
+												}
+												
+											}, 1000);
+										}
+									},
+									up: {
+										contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+		      							contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+										callback: function() {
+											var self = this;
+											
+											setTimeout(function() {
+												var currentText = document.querySelector('.mui-control-item.mui-active').innerHTML.trim();
+												var status = '';
+												switch (currentText){
+													case '明细':
+														status = 0;
+														aja.getJifenRizhiPage(that.billList.pageNum+1,-1,function(data){
+															if(!data.list[0]){
+																self.endPullUpToRefresh(true);
+																
+															}else{
+																app.afterList(that.billList,data.list);
+																that.billList.pageNum = data.pageNum;
+																self.endPullUpToRefresh();
+															}
+														})
+														break;
+													default:
+														break;
+												}
+											}, 1000);
+										}
+									}
+								});
+							});
+							//--
+		                	//返回
+			                var old_back = mui.back;
+					        mui.back = function(){
+					            mui.currentWebview.close();
+					            mui.fire(main, "settingrefresh");
+					            old_back();
+					        }
+		                })
+	            	}(mui))
+					
+					
+				},
+				methods: {
+					toMsgInfo: function(obj){
+						app.setMsgObj(obj);
+						app.mainPage('msgInfo');
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

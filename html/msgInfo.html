@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<title>首页</title>
+		<script src="../js/mui.min.js"></script>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/color.css" rel="stylesheet" />
+		<style type="text/css">
+			.mui-content{
+				background: #fff;
+			}
+			.title{
+				margin: 20px 25px 10px;
+				color: #6d6d72;
+				font-size: 17px;
+			}
+			.img{
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="msgInfo">
+	        <header id="header" class="mui-bar mui-bar-nav">
+	            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	            <h1 class="mui-title">影视快讯</h1>
+	        </header>
+	        <div id="content" class="mui-content">
+	        	<div class="mui-content-padded">
+	        		<h3 class="title mui-text-center">
+		        		<!--{{content.newsttile}}-->新消息
+		        	</h3>
+		        	<div>
+		        		<p v-text="content.createtime"></p>
+		        	</div>
+		        	<img class="img" :src="content.titleimg"/>
+		        	<div class="font-min" v-text="content.descripe"></div>
+	        	</div>
+	        	
+	        </div>
+       </div>
+       <script src="../js/app.js"></script>
+       <script src="../js/immersed.js"></script>
+       <script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+       <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+       <script type="text/javascript">
+       		new Vue({
+       			el: '#msgInfo',
+       			data: {
+       				content: {}
+       			},
+       			mounted: function(){
+       				mui.init();
+       				var that = this;
+       				var msgObj = app.getMsgObj();
+       				that.content = msgObj;
+       				
+       				var old_back = mui.back;
+			        mui.back = function(){
+			            mui.currentWebview.close();
+			            old_back();
+			        }
+       			}
+       		})
+       </script>
+	</body>
+</html>
+

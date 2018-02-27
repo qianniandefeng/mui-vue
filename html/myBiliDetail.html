@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+	</head>
+
+	<body>
+	<div id="myBillList">
+		<header id="header" class="mui-bar mui-bar-nav">
+	        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	        <h1 class="mui-title">积分明细</h1>
+	    </header>
+		<!--下拉刷新容器-->
+		<div id="content" class="mui-content mui-scroll">
+			<div class="mui-scroll">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-media" v-if="billList.length==0">
+						<a href="javascript:;">
+							<div class="mui-media-body">
+								<p>您还没有明细信息</p>
+							</div>
+						</a>
+					</li>
+					<li class="mui-table-view-cell mui-media" v-for="item in billList">
+						<a href="javascript:;">
+							<div class="mui-media-body">
+								<span class="mui-pull-left font-mid" v-if="item.type==1">兑换礼品</span>
+								<span class="mui-pull-left font-mid" v-if="item.type==2">任务奖励</span>
+								<span class="mui-pull-left font-mid" v-if="item.type==3">积分提现</span>
+								<p class="mui-text-right" v-text="item.createtime"></p>
+								<p class='mui-text-left '  style="white-space: normal;" v-text="item.describes"></p>
+								<div class='mui-text-right font-red' v-if="item.type == 1">-<span v-text="item.jifen"></span></div>
+								<div class='mui-text-right font-green' v-if="item.type == 2">+<span v-text="item.jifen"></span></div>
+								<div class='mui-text-right' v-if="item.type == 3">-<span v-text="item.jifen"></span></div>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<!--数据列表-->
+			</div>
+		</div>
+	</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/mui.pullToRefresh.js"></script>
+		<script src="../js/mui.pullToRefresh.material.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		 
+		<script>
+			new Vue({
+				el: '#myBillList',
+				data: {
+					billList: [
+					/*{
+						Memid    会员ID
+						Giftid   礼品id 可以为空
+						Type      记录类型：1—兑换礼品  2—任务奖励  3—积分提现
+						Jifen     消费积分、所得积分、兑换积分数 
+						Acount    提现账号
+						Charge    提现手续费 
+						Describe     描述
+						Createtime  交易时间
+
+					}*/
+						{
+							type: '1',
+							jifen: '20',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						},
+						{
+							type: '2',
+							jifen: '30',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						},
+						{
+							type: '3',
+							jifen: '50',
+							acount: '',
+							charge: '',
+							describe: '',
+							createtime: '2011-10-11'
+						}
+					]
+				},
+				mounted: function(){
+					var that = this;
+					(function(m) {
+	            		m.init();
+	            		mui.plusReady(function(){
+		                	//返回刷新主页
+			                var main = plus.webview.currentWebview().opener();
+			                
+			                aja.getJifenRizhiPage(1,-1,function(data){//page,type:1—兑换礼品  2—任务奖励  3—积分提现     -1搜索全部
+								console.log(JSON.stringify(data.list))
+								that.billList = data.list;
+								that.billList.pageNum = data.pageNum;
+								 
+		                    });
+			                //循环初始化所有下拉刷新，上拉加载。
+							mui.each(document.querySelectorAll('content'), function(index, pullRefreshEl) {
+								mui(pullRefreshEl).pullToRefresh({
+									down: {
+										callback: function() {
+											var self = this;							
+											aja.getJifenRizhiPage(1,-1,function(data){
+												that.billList = data.list;
+												that.billList.pageNum = data.pageNum;
+												self.endPullDownToRefresh();
+												self.refresh(true)
+						                  	});							
+										}
+									},
+									up: {
+										contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+		      							contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+										callback: function() {
+											var self = this;	 
+											aja.getJifenRizhiPage(that.billList.pageNum+1,-1,function(data){
+												if(!data.list[0]){
+													self.endPullUpToRefresh(true);
+													
+												}else{
+													app.afterList(that.billList,data.list);
+													that.billList.pageNum = data.pageNum;
+													self.endPullUpToRefresh();
+												}
+											});
+										}
+									}
+								});
+							});
+							//--
+		                	//返回
+			                var old_back = mui.back;
+					        mui.back = function(){
+					            mui.currentWebview.close();
+					            mui.fire(main, "settingrefresh");
+					            old_back();
+					        }
+		                })
+	            	}(mui))
+					
+					
+				},
+				methods: {
+					toMsgInfo: function(obj){
+						app.setMsgObj(obj);
+						app.mainPage('msgInfo');
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

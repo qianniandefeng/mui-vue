@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>快讯</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			img{
+				border-radius: 2px;
+			}
+			.mui-title{
+				color: #fff;
+			}
+			.title {
+				padding: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+				background-color: #fff;
+			}
+			.mui-table-view .mui-table-view-cell{
+				padding: 11px;
+			}
+			.mui-table-view .mui-table-view-cell .img{
+				width: 100%;
+				height: 120px;
+			}
+			.imgs-wrapper{
+				display: flex;
+				justify-content: space-between;
+				margin: 0 auto;
+			}
+			.imgs-wrapper img{
+				width: 32%;
+				height: 145px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="tabChat">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <h1 class="mui-title">快讯</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view mui-table-view-chevron">
+							<li class="mui-table-view-cell" v-for="item in filmNews" @tap="toFilmNews(item.id)" v-if="item.newstype==1">
+								<div class="mui-card-content">
+									<div v-text="item.newsttile"></div>
+									<img class="img" :src="item.homepic"/>
+								</div>
+								<p class="font-min">
+									<span v-text="item.souce"></span>
+									<span v-text="item.createdate"></span>
+								</p>
+							</li>
+							<li class="mui-table-view-cell" v-for="item in filmNews" @tap="toFilmNews(item.id)" v-if="item.newstype==2">
+								<div class="mui-card-content">
+									<div v-text="item.newsttile"></div>
+									<div class="imgs-wrapper">
+										<img :src="item.homepic"/>
+										<img :src="item.homepic"/>
+										<img :src="item.homepic"/>
+									</div>
+									
+								</div>
+								<p class="font-min">
+									<span v-text="item.souce"></span>
+									<span v-text="item.createdate"></span>
+								</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+		    </div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+		<script src="../js/util.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript"></script>
+		<script src="../js/movieAjax.js" type="text/javascript"></script>
+		<script>
+			new Vue({
+				el: '#tabChat',
+				data: {
+					filmNews: [
+						{
+							content: '包含页眉页脚的卡片，页眉常用来显示面板标题，页脚用来显示额外信息或支持的操作（比如点赞、评论等）'
+						}
+					]
+				},
+				mounted: function(){
+					var that = this;
+					mui.init({
+						swipeBack: false,
+						pullRefresh: {
+							container: '#pullrefresh',
+							down: {
+								style:'circle',
+								callback: pulldownRefresh
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+					});
+					aja.getFilmNews(1,function(data){
+						that.filmNews = data.list;
+						that.filmNews.pageNum = data.pageNum;
+					});
+					/**
+					 * 下拉刷新具体业务实现
+					 */
+					function pulldownRefresh() {
+						setTimeout(function() {
+							aja.getFilmNews(1,function(data){
+								that.filmNews = data.list;
+								that.filmNews.pageNum = data.pageNum;
+								mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+							});
+						}, 1000);
+					}
+					var count = 0;
+					/**
+					 * 上拉加载具体业务实现
+					 */
+					function pullupRefresh() {
+						setTimeout(function() {
+							aja.getFilmNews(that.filmNews.pageNum+1,function(data){
+								if(!data.list[0]){
+									mui('#pullrefresh').pullRefresh().endPullupToRefresh(true)
+								}else{
+									app.afterList(that.filmNews,data.list);
+									that.filmNews.pageNum = data.pageNum;
+									mui('#pullrefresh').pullRefresh().endPullUpToRefresh();
+								}
+							});
+						}, 1000);
+					}
+				},
+				methods: {
+					toFilmNews: function(id){
+	               		localStorage.setItem('_filmNewsId_',id);
+                        mui.openWindow({
+                            url: '../sonPage/filmNews.html',
+                            id: 'filmNews',
+                            preload: true,
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+	                }
+				}
+			})
+			
+		</script>
+	</body>
+
+</html>

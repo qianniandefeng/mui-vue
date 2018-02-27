@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<link rel="stylesheet" type="text/css" href="./css/feedback-page.css" />
+	</head>
+	<body>
+		<div id="feedback">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">问题反馈</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="feedback">
+					<div class="mui-content-padded">
+						<p>问题和意见</p>
+						<div class="row mui-input-row">
+							<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..." v-model="feedback.question"></textarea>
+						</div>
+						<p>QQ/邮箱</p>
+						<div class="mui-input-row">
+							<input id='contact' type="text" class="mui-input-clear contact" placeholder="(选填,方便我们联系你 )" v-model="feedback.contact"/>
+						</div>
+						<button id='submit' type="button" class="mui-btn mui-btn-yellow mui-btn-block" @click="sendFeedback(feedback)">提交</button>
+					</div>
+				</div>
+				<p>最终解释权归本公司所有。</p>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#feedback',
+				data: {
+					feedback: {//问题反馈
+						memid: app.getUser().memid,
+						question: '',
+						contact: ''
+				}
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+				
+					mui.plusReady(function(){
+                	//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "settingrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					sendFeedback: function(info){
+						if (info.question == '' ||
+						(info.contact != '' &&
+							info.contact.search(/^(\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+)|([1-9]\d{4,9})$/) != 0)) {
+							return mui.toast('信息填写不符合规范');
+						}
+						if (info.question.length > 200 || info.contact.length > 200) {
+							return mui.toast('信息超长,请重新填写~')
+						}
+		            	
+		            	aja.insertCustomer(info,function(data){
+		            		console.log(JSON.stringify(data))
+		            		plus.nativeUI.toast('感谢反馈，我们会尽快处理您提出的意见');
+		            	})
+		            	
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

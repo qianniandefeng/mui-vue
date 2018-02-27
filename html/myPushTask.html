@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>我的任务</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../css/mui.min.css" rel="stylesheet" />
+    <link href="../css/color.css" rel="stylesheet" >
+    <style>
+        .mui-content{
+			padding-bottom: 43px;
+		}
+        /*list*/
+		.mui-scroll .mui-table-view .mui-table-view-cell img {
+			width: 80px;
+			height: 100px;
+			line-height: 100px;
+			margin-right: 10px;
+		}
+		.mui-table-view-cell.mui-active{
+			background-color: #fff;
+		}
+		.fix-bottom{
+			position: fixed;
+			bottom: 0px;
+			left: 0;
+			right: 0;
+			text-align: center;
+		}
+		.fix-bottom button{
+			width: 100%;
+			height: 42px;
+			border-radius: 0;
+		}
+    </style>
+</head>
+<body>
+    <div id="myPushTask">
+        <header id="header" class="mui-bar mui-bar-nav">
+            <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+            <h1 class="mui-title">领任务赚积分</h1>
+        </header>
+        <div id="content" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view">
+					<!--没有list-->
+					<li class="mui-table-view-cell" v-if="executorys.length==0">
+            			<div class="mui-text-center">
+            				<img src="../images/default.png">	 
+            			</div>
+	                </li>
+	                <!--有list-->
+					<li class="mui-table-view-cell" v-for="item in executorys">
+						<div class="mui-pull-left">
+							<div>
+								<img :src='item.titleImg|photo' @tap="movieInfo(item.filmId)"/>
+							</div>
+						</div>
+						<div><span v-text="item.filename"></span></div>
+						<div class="mui-pull-right font-red">	
+							<button class="mui-btn mui-btn-red" v-if="item.remainintegral > 0"  @tap="qiang(item)">领取</button>
+							</div>
+						<div class="mui-media-body" @tap="movieInfo(item.filmId)">
+							
+							<div class='font-blue font-min'>票房奖励<span v-text="item.bili+item.ptbili"></span>%</div>
+							<!--<div>{{item.ptbili}}</div>-->
+							<div class='font-gray font-min'>总积分：<span v-text="item.integral"></span> 剩余:<span class="font-red" v-text="item.remainintegral < 0 ? 0 : item.remainintegral"></span></div>
+							
+							<div class='font-gray font-min'>最低人数：<span v-text="item.minicount"></span>人/场</div>
+							<div class='font-gray font-min'>任务时间：<span v-text="item.startdate"></span>至<span v-text="item.enddate"></span></div>
+							<!--<button class="mui-btn mui-btn-link mui-pull-right" @click="showTask(item)">查看详情>></button>-->
+						</div>
+					</li>
+				</ul>
+			</div>
+        </div>
+        <!--<div id="addTask" class="fix-bottom">
+			<button class="mui-btn mui-btn-primary" @tap="pushTask">发布任务</button>
+		</div>-->
+    </div>
+    <script src="../js/mui.min.js" type="text/javascript"></script>
+    <script src="../js/immersed.js"></script>
+    <script src="../libs/easymob-webim-sdk/jquery-1.11.1.js" type="text/javascript"></script>
+    <script src="../libs/vue.js" type="text/javascript"></script>
+    <script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: '#myPushTask',
+            data: {
+            	executorys: [//任务中
+					{
+						id:'101',
+						memid: 123456,
+						titleImg: 'images/qihoo.png',
+						filename: '让子弹飞',
+						integral: '1000',
+						bili: '10',
+						ptbili: '',
+						remainintegral: '500',
+						minicount: '50',
+						minticketprice: '40',
+						startdate: '2017-10-1',
+						enddate: '2017-10-30',
+						status: '0',//状态
+						createtime: '2017-9-30'
+					}
+				]
+            },
+            mounted: function (){
+            	var that = this;
+            	(function(m) {
+            		m.init({
+            			pullRefresh: {
+							container: '#content',
+							down: {
+								style:'circle',
+								callback: pulldownRefresh
+							},
+							up: {
+								contentrefresh: '正在加载...',
+								callback: pullupRefresh
+							}
+						}
+            		});
+	                function pullupRefresh() {
+						setTimeout(function() {
+							aja.getAllTaskPage(0,that.executorys.pageNum+1,function(data){
+								function afterList(arr){
+									for (var i=0; i < data.list.length; i++) {
+										arr.push( data.list[i] );
+									}
+								}
+								if(!data.list[0]){
+									mui('#content').pullRefresh().endPullup(true); 
+								}else{
+									afterList(that.executorys);
+									that.executorys.pageNum = data.pageNum;
+									mui('#content').pullRefresh().endPullup(); 
+								}
+							})
+							
+						}, 1500);
+					}
+	                /**
+					 * 下拉刷新具体业务实现
+					 */
+					function pulldownRefresh() {
+						setTimeout(function() {
+							aja.getAllTaskPage(0,1,function(data){
+								that.executorys = data.list;
+								that.executorys.pageNum = data.pageNum;
+		                    });
+							mui('#content').pullRefresh().endPulldown();
+							mui('#content').pullRefresh().refresh(true);
+						}, 1500);
+					}
+					getData();
+					function getData(){
+						aja.getAllTaskPage(0,1,function(data){
+							that.executorys = data.list;
+							that.executorys.pageNum = data.pageNum;
+	                    });
+					}
+					window.addEventListener('pageflowrefresh', function(e){
+						getData();
+					})
+            		//返回键退出当前页
+	                var old_back = m.back;
+	                m.back = function(){
+	                    m.currentWebview.close();
+	                    old_back();
+	                }
+            	}(mui))
+            	
+            },
+            methods: {
+            	movieInfo: function(id){
+               		localStorage.setItem('__movieinfo_',id);
+                    mui.openWindow({
+                        url: '../sonPage/movieInfo.html',
+                        id: 'movieInfo',
+                        preload: true,
+                        show: {
+                            aniShow: 'pop-in'
+                        },
+                        styles: {
+                            popGesture: 'close'
+                        },
+                        waiting: {
+                            autoShow: false
+                        }
+                    });
+               },
+				showTask: function(obj){
+					localStorage.setItem('_pianfang_task_',JSON.stringify(obj));
+					console.log(JSON.stringify(obj))
+					mui.openWindow({
+						url: '../sonPage/allTaskList.html',
+						id: 'allTaskList',
+						preload: true,
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'close'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				},
+				qiang: function (obj) {//抢
+					var that = this;
+					localStorage.setItem('_jidian_chang_',JSON.stringify(obj))
+					console.log(JSON.stringify(obj))
+                   	//app.mainPage('qiang')
+                   	mui.openWindow({
+						url: '../sonPage/qiang.html',
+						id: 'qiang',
+						preload: true,
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'close'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+                },
+				pushTask: function (){//发布
+					mui.openWindow({
+						url: '../sonPage/pushTask.html',
+						id: 'pushTask',
+						preload: true,
+						show: {
+							aniShow: 'pop-in'
+						},
+						styles: {
+							popGesture: 'hide'
+						},
+						waiting: {
+							autoShow: false
+						}
+					});
+				}
+            }
+        })
+    </script>
+</body>
+</html>
+

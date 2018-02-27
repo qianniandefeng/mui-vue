@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/color.css" rel="stylesheet" type="text/css" />
+		<script src="../js/common.js" type="text/javascript"></script>
+		<script src="../js/mui.min.js" type="text/javascript"></script>
+		<script src="../js/app.js" type="text/javascript"></script>
+		<script src="../libs/vue.js" type="text/javascript"></script>
+		<script src="../js/movieAjax.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			var pays={};
+			function plusReady(){
+				
+				// 获取支付通道
+				plus.payment.getChannels(function(channels){
+					
+					var content=document.getElementById('dcontent');
+					var info=document.getElementById('info');
+					var txt='支付通道信息：';
+//					for(var i in channels){
+//						var channel=channels[i];
+						var channel=channels[0];
+//						if(channel.id=='qhpay'||channel.id=='qihoo'){	// 过滤掉不支持的支付通道：暂不支持360相关支付
+//							continue;
+//						}
+						pays[channel.id]=channel;
+						txt += 'id:'+channel.id+', ';
+						txt += 'description:'+channel.description+', ';
+						txt += 'serviceReady:'+channel.serviceReady+'； ';
+						var de=document.createElement('div');
+						de.setAttribute('class', 'button');
+						de.setAttribute('onclick', 'pay(this.id)');
+						de.id=channel.id;
+						de.innerText=channel.description+'支付';
+						content.appendChild(de);
+						checkServices(channel);
+//					}
+					info.innerText=txt;
+				},function(e){
+					outLine('获取支付通道失败：'+e.message);
+				});
+				
+				var main = plus.webview.currentWebview().opener();
+	        	//返回
+	            var old_back = mui.back;
+		        mui.back = function(){
+		            mui.currentWebview.close();
+		            mui.fire(main, "richesrefresh");
+		            old_back();
+		        }
+			}
+			document.addEventListener('plusready', plusReady, false);
+			// 检测是否安装支付服务
+			function checkServices(pc){
+				if(!pc.serviceReady){
+					var txt=null;
+					switch(pc.id){
+						case 'alipay':
+						txt='检测到系统未安装“支付宝快捷支付服务”，无法完成支付操作，是否立即安装？';
+						break;
+						default:
+						txt='系统未安装“'+pc.description+'”服务，无法完成支付，是否立即安装？';
+						break;
+					}
+					plus.nativeUI.confirm(txt, function(e){
+						if(e.index==0){
+							pc.installService();
+						}
+					}, pc.description);
+				}
+			}
+			
+			var w=null;
+			// 支付
+			function pay(id){
+				if(w){return;}//检查是否请求订单中
+				if(id==='appleiap'){
+					outSet('应用内支付');
+					clicked('payment_iap.html');
+					return;
+				}
+				if(id=='wxpay'){
+					return;
+				}
+				outSet('----- 请求支付 -----');
+				var amount = document.getElementById('total').value;
+				var memid = JSON.parse(localStorage.getItem('_user_')).memid;
+				console.log(memid)
+				if(id=='alipay'){
+					var payData = {
+						body:'积分充值',
+                      	subject:'积分充值',
+                      	out_trade_no: new Date().getTime(),
+                      	timeout_express:'30m',
+                      	seller_id:memid,
+                        total_amount:amount
+					}
+					aja.payMoney(payData, function(data){
+						plus.payment.request(pays[id],data,function(result){
+						outLine('----- 支付成功 -----');
+						outLine(JSON.stringify(result));
+						plus.nativeUI.alert('支付成功',function(){
+							back();
+							},'交易');
+						},function(e){
+							outLine('----- 支付失败 -----');
+							outLine('['+e.code+']：'+e.message);
+							plus.nativeUI.alert('支付失败', null, '交易');
+						});
+					})
+				}else{
+					plus.nativeUI.alert('当前环境不支持此支付通道！', null, '交易');
+					return;
+				}
+			}
+			
+		</script>
+		<link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8"/>
+	</head>
+	<body>
+		<div>
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">金额</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-card dcontent" id="dcontent">
+		    		<p id="info" style="padding: 0 1em;text-align:left;" class="mui-hidden">支付通道信息：
+					<div class="mui-card-header">
+						<div class="mui-card-media-object mui-pull-left">
+							金额
+						</div>
+					</div>
+					<div class="mui-card-content" style="height:120px;width: 90%;margin: 0 auto;">
+						<br />
+						<div class="mui-input-row" style="border-bottom: 1px solid #000;">
+							<label style="width: 12%;">￥</label>
+							<input id="total" type="number" style="width: 88%;" value="1" autofocus>
+						</div>
+					</div>
+				</div>
+				<br />
+		    </div>
+		    <div id="output" class="mui-hidden"></div>
+		</div>
+		<script src="../js/immersed.js" type="text/javascript"></script>
+	</body>
+</html>

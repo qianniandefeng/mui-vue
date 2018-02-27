@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>影娱宝</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/color.css"/>
+		<style type="text/css">
+			.mui-btn{
+				margin-top: 50px;
+				width: 90%;
+				left: 50%;
+				-webkit-transform: translate(-50%);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="addbankCard">
+			<header id="header" class="mui-bar mui-bar-nav">
+		        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		        <h1 class="mui-title">我的银行卡</h1>
+		    </header>
+		    <div id="content" class="mui-content">
+		    	<div class="mui-input-group">
+					<div class="mui-input-row">
+						<label>持卡人</label>
+						<input type="text" placeholder="请输入姓名" v-model="bankcard.cardholder">
+					</div>
+					<div class="mui-input-row">
+						<label>银行卡号</label>
+						<input type="number" placeholder="银行卡号" v-model="bankcard.cardnumber">
+					</div>
+				</div>
+				<button class="mui-btn mui-btn-red" :disabled="bankcard.cardholder==''||bankcard.cardnumber==''"  @tap="addBank(bankcard)">添加</button>
+		    </div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/app.js"></script>
+		<script src="../js/immersed.js"></script>
+		<script src="../libs/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/movieAjax.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Vue({
+				el: '#addbankCard',
+				data: {
+					bankcard: {
+						id: '',
+						memid: app.getUser().memid,
+						cardholder: '',
+						cardnumber: ''
+					}
+				},
+				mounted: function(){
+					var that = this;
+					mui.init();
+				
+					mui.plusReady(function(){
+                		//返回刷新主页
+		                var main = plus.webview.currentWebview().opener();
+	                	//返回
+		                var old_back = mui.back;
+				        mui.back = function(){
+				            mui.currentWebview.close();
+				            mui.fire(main, "bankcardrefresh");
+				            old_back();
+				        }
+	                })
+				},
+				methods: {
+					addBank: function(info){
+						var that = this;
+						var userLogin = app.getUser();
+		            	info.id = new Date().getTime();
+		            	aja.updateBankCard(info, function(data){
+		            		if(data.r == 1){
+		            			//如果添加成功则更新默认银行卡信息
+		            			if(userLogin.type == 1){
+						        	aja.getCertCompany(userLogin.memid, function(data1){
+						        		data1.bankcard = JSON.stringify(info);
+							        	aja.updateCertCompany(data1, function(data2){
+							        		console.log('默认银行卡更新成功：'+JSON.stringify(data2))
+							        	})
+							        })
+						        }else if(userLogin.type == 2){
+						        	aja.getCinemaByMemID(userLogin.memid, function(data1){
+						        		data1.bankcard = JSON.stringify(info);
+							        	aja.updateCinema(data1, function(data2){
+							        		console.log('默认银行卡更新成功：'+JSON.stringify(data2))
+							        	})
+							        })
+						        }
+		            			//获取银行卡列表
+						        aja.getBankCardPage(function(data){
+						        	that.bankcardList = data.list;
+						        	plus.nativeUI.toast('添加成功');
+						        	mui.back();
+						        })
+		            		}
+		            	})
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
