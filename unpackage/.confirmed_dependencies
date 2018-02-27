@@ -1,0 +1,346 @@
+{
+	"index.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"html/tab-webview-subpage-about.html",
+			"fonts/mui.ttf",
+			"fonts/iconfont.ttf",
+			"js/util.js",
+			"html/tab-webview-subpage-chat.html",
+			"html/tab-webview-film.html",
+			"js/app.js",
+			"js/movieAjax.js",
+			"libs/vue.js",
+			"images/b1.jpg",
+			"images/dntg.jpg",
+			"images/b3.jpg",
+			"images/b4.jpg",
+			"images/b2.jpg"
+		],
+		"refer": [
+			"html/tab-webview-subpage-setting.html",
+			"html/tab-webview-subpage-chat.html",
+			"html/tab-webview-subpage-contact.html",
+			"html/tab-webview-subpage-about.html",
+			"html/new-webview.html",
+			"html/tab-webview-film.html",
+			"html/login.html",
+			"sonPage/filmNews.html",
+			"sonPage/pushTask.html",
+			"html/guide.html",
+			"sonPage/qiangList.html",
+			"html/mainy.html",
+			"sonPage/movieInfo.html"
+		]
+	},
+	"launch.html": {
+		"resources": [
+			"js/mui.min.js",
+			"css/mui.min.css",
+			"html/tab-webview-subpage-about.html"
+		],
+		"refer": [
+			"html/tab-webview-subpage-setting.html",
+			"html/tab-webview-subpage-chat.html",
+			"html/tab-webview-subpage-contact.html",
+			"html/tab-webview-subpage-about.html"
+		]
+	},
+	"html/tab-webview-subpage-setting.html": {
+		"resources": [
+			"fonts/mui.ttf",
+			"css/mui.min.css",
+			"js/mui.min.js"
+		],
+		"refer": [
+			"settingItem/myset.html",
+			"settingItem/riches.html",
+			"settingItem/bankCard.html",
+			"settingItem/feedback.html",
+			"settingItem/dataCenter.html",
+			"html/main.html",
+			"html/mainy.html",
+			"settingItem/myInvite.html",
+			"settingItem/myPushTask.html",
+			"html/reg2.html",
+			"html/reg1.html",
+			"html/login.html",
+			"settingItem/changeGift.html",
+			"settingItem/shareFriends.html",
+			"settingItem/myMessages.html",
+			"settingItem/myGetTask.html",
+			"html/dataCenter.html",
+			"html/riches.html",
+			"html/myMessages.html",
+			"html/myInvite.html",
+			"html/myset.html",
+			"html/changeGift.html",
+			"html/myGetTask.html",
+			"html/shareFriends.html",
+			"html/feedback.html",
+			"html/myPushTask.html",
+			"html/bankCard.html",
+			"html/verified2.html",
+			"html/changePassword.html",
+			"html/addTing.html"
+		]
+	},
+	"html/tab-webview-subpage-about.html": {
+		"resources": [
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"js/util.js"
+		],
+		"refer": []
+	},
+	"html/tab-webview-subpage-chat.html": {
+		"resources": [
+			"fonts/mui.ttf",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": [
+			"sonPage/filmNews.html",
+			"html/downloader.html"
+		]
+	},
+	"html/tab-webview-subpage-contact.html": {
+		"resources": [
+			"images/60x60.gif",
+			"js/mui.min.js",
+			"css/mui.min.css"
+		],
+		"refer": []
+	},
+	"html/new-webview.html": {
+		"resources": [
+			"css/mui.min.css",
+			"js/mui.min.js",
+			"fonts/mui.ttf"
+		],
+		"refer": []
+	},
+	"html/tab-webview-film.html": {
+		"refer": [
+			"html/movieInfo.html",
+			"sonPage/movieInfo.html",
+			"sonPage/qiang.html",
+			"html/login.html",
+			"sonPage/pushTask.html",
+			"sonPage/qiangList.html"
+		],
+		"resources": []
+	},
+	"settingItem/bankCard.html": {
+		"refer": [
+			"settingItem/addBankcard.html"
+		],
+		"resources": []
+	},
+	"html/login.html": {
+		"refer": [
+			"html/register.html",
+			"html/mainy.html",
+			"html/main.html",
+			"html/tab-webview-subpage-setting.html",
+			"index.html",
+			"html/forget_password.html"
+		],
+		"resources": []
+	},
+	"settingItem/riches.html": {
+		"refer": [
+			"settingItem/payMoney.html",
+			"settingItem/getMoney.html",
+			"settingItem/myBillList.html"
+		],
+		"resources": []
+	},
+	"settingItem/myset.html": {
+		"refer": [
+			"settingItem/changePassword.html",
+			"settingItem/lock.html",
+			"html/login.html"
+		],
+		"resources": []
+	},
+	"html/mainy.html": {
+		"refer": [
+			"sonPage/editBlockTask.html",
+			"sonPage/submitTask.html",
+			"sonPage/finishedy.html"
+		],
+		"resources": []
+	},
+	"settingItem/myPushTask.html": {
+		"refer": [
+			"sonPage/movieInfo.html",
+			"sonPage/allTaskList.html",
+			"sonPage/pushTask.html"
+		],
+		"resources": []
+	},
+	"html/main.html": {
+		"refer": [
+			"sonPage/movieInfo.html",
+			"sonPage/allTaskList.html",
+			"sonPage/finishedp.html",
+			"sonPage/checkList.html",
+			"sonPage/checkItem.html",
+			"sonPage/pushTask.html"
+		],
+		"resources": []
+	},
+	"html/register.html": {
+		"refer": [
+			"html/selectMem.html"
+		],
+		"resources": []
+	},
+	"html/selectMem.html": {
+		"refer": [
+			"html/reg1.html",
+			"html/reg2.html"
+		],
+		"resources": []
+	},
+	"sonPage/qiang.html": {
+		"refer": [
+			"sonPage/otherTime.html",
+			"html/login.html",
+			"html/addTing.html"
+		],
+		"resources": []
+	},
+	"sonPage/movieInfo.html": {
+		"refer": [
+			"sonPage/qiang.html",
+			"sonPage/qiangList.html",
+			"sonPage/editComment.html",
+			"html/login.html"
+		],
+		"resources": []
+	},
+	"sonPage/qiangList.html": {
+		"refer": [
+			"sonPage/qiang.html"
+		],
+		"resources": []
+	},
+	"settingItem/myGetTask.html": {
+		"refer": [
+			"sonPage/editBlockTask.html"
+		],
+		"resources": []
+	},
+	"sonPage/editBlockTask.html": {
+		"refer": [
+			"html/login.html"
+		],
+		"resources": []
+	},
+	"sonPage/checkList.html": {
+		"refer": [
+			"html/login.html"
+		],
+		"resources": []
+	},
+	"html/reg2.html": {
+		"refer": [
+			"index.html"
+		],
+		"resources": []
+	},
+	"settingItem/myMessages.html": {
+		"refer": [
+			"settingItem/msgInfo.html"
+		],
+		"resources": []
+	},
+	"sonPage/finishedy.html": {
+		"refer": [
+			"sonPage/editComment.html"
+		],
+		"resources": []
+	},
+	"sonPage/checkItem.html": {
+		"refer": [
+			"html/login.html"
+		],
+		"resources": []
+	},
+	"sonPage/allTaskList.html": {
+		"refer": [
+			"sonPage/checkItem.html"
+		],
+		"resources": []
+	},
+	"html/riches.html": {
+		"refer": [
+			"html/payMoney.html",
+			"html/getMoney.html",
+			"html/myBillList.html",
+			"html/changeGift.html",
+			"html/myBiliDetail.html",
+			"html/myPushTask.html"
+		],
+		"resources": []
+	},
+	"html/myset.html": {
+		"refer": [
+			"html/login.html",
+			"html/addTing.html",
+			"html/changePassword.html",
+			"html/shareFriends.html",
+			"html/feedback.html"
+		],
+		"resources": []
+	},
+	"sonPage/pushTask.html": {
+		"refer": [
+			"html/login.html",
+			"sonPage/pushTask.html",
+			"html/payMoney.html",
+			"sonPage/payMoney.html"
+		],
+		"resources": []
+	},
+	"html/myPushTask.html": {
+		"refer": [
+			"sonPage/pushTask.html",
+			"sonPage/allTaskList.html",
+			"sonPage/movieInfo.html",
+			"sonPage/qiang.html"
+		],
+		"resources": []
+	},
+	"html/bankCard.html": {
+		"refer": [
+			"html/addBankcard.html"
+		],
+		"resources": []
+	},
+	"html/myMessages.html": {
+		"refer": [
+			"html/msgInfo.html"
+		],
+		"resources": []
+	},
+	"html/myGetTask.html": {
+		"refer": [
+			"sonPage/editBlockTask.html"
+		],
+		"resources": []
+	},
+	"html/verified2.html": {
+		"refer": [
+			"html/verified2-1.html"
+		]
+	},
+	"html/forget_password.html": {
+		"refer": [
+			"html/forget_password.html"
+		]
+	}
+}
