@@ -1,0 +1,39 @@
+.font-red{
+    color: #dd524d;
+}
+.font-blue{
+    color: #007aff;
+}
+.font-orange{
+    color: #f0ad4e;
+}
+.font-green{
+    color: #4cd964;
+}
+.font-gray{
+    color: #8f8f94;
+}
+.font-white{
+    color: #f1f1f1;
+}
+.font-min{
+    font-size: 12px;
+}
+.font-max{
+	font-size: 20px;
+}
+.font16{
+	font-size: 16px;
+}
+.font18{
+	font-size: 18px;
+}
+.font-mid{
+	font-size: 14px;
+}
+.mui-title,.mui-bar a{
+	color: #fff;
+}
+#header{
+	box-shadow: none;
+}
