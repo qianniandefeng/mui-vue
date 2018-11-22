@@ -29,7 +29,7 @@ v-html用于带有标签的处理
 
 [教程参考](http://ask.dcloud.net.cn/article/12602)
 ## localStorage存储的数据
-_user_://保存用户信息
+### _user_://保存用户信息
 	{
 	    "memid": 1511167906752,
 	    "comId": null,
@@ -48,9 +48,9 @@ _user_://保存用户信息
 	    "titleImg": "/company/1511167906752/1511167906752.jpg?random=80909",
 	    "deviceId": "a3de30e7aa4f63f2c1f8ba182bb2119d"
 	}
-__movieinfo_：//影片ID
-_filmNewsId_: //电影快讯ID
-_jidian_chang_：//影片发布的任务对象   抢
+### __movieinfo_：//影片ID
+### _filmNewsId_: //电影快讯ID
+### _jidian_chang_：//影片发布的任务对象   抢
 	{
 	    "id": 1512547675380,
 	    "memid": 1511167906751,
@@ -70,7 +70,7 @@ _jidian_chang_：//影片发布的任务对象   抢
 	    "frozen": null,
 	    "ptbili": 5
 	}
-_pianfang_task_://同上
+### _pianfang_task_://同上
 	{
 	    "id": 1515400928352,
 	    "memid": 1511167906751,
@@ -90,7 +90,7 @@ _pianfang_task_://同上
 	    "frozen": null,
 	    "ptbili": 5
 	}
-_cinema_://发布任务时携带的电影信息
+### _cinema_://发布任务时携带的电影信息
 	{
 	    "id": 71946,
 	    "name": "无问西东",
@@ -109,7 +109,7 @@ _cinema_://发布任务时携带的电影信息
 	    "istask": 1,
 	    "bili": 15
 	}
-_jidian_task_://审核完成后 包场播放情况及审核信息
+### _jidian_task_://审核完成后 包场播放情况及审核信息
 	{
 	 	"id": 151254790983361,
 	 	"memid": 1511167906752,
@@ -132,7 +132,7 @@ _jidian_task_://审核完成后 包场播放情况及审核信息
 	 	"bili": null,
 	 	"cinema": "北京三未信安科技发展有限公司"
 	}
-_otherTimeTask_://其他时间包场任务
+### _otherTimeTask_://其他时间包场任务
 	{
 		"id": "",
 		"memid": "1511167906752",
@@ -150,7 +150,7 @@ _otherTimeTask_://其他时间包场任务
 		"cmemId": 1511167906751,
 		"titleImg": "http://p0.meituan.net/movie/9efefcccb19036ae3529dfded0a9223c1765339.jpg@165w_220h"
 	}
-_msgObj_://我的消息 详情
+### _msgObj_://我的消息 详情
  	{
 		"id": 1,
 		"memid": 1512025961202,
