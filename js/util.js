@@ -2,7 +2,7 @@ var util = {
 	options: {
 		ACTIVE_COLOR: "#F03D37",
 		NORMAL_COLOR: "#000",
-		subpages: ["html/tab-webview-film.html", "html/tab-webview-subpage-chat.html","html/tab-webview-subpage-setting.html"]
+		subpages: ["html/tab-webview-film.html", "html/tab-webview-news.html","html/tab-webview-subpage-setting.html"]
 	},
 	/**
 	 *  简单封装了绘制原生view控件的方法
@@ -20,16 +20,16 @@ var util = {
 		var subpage_style = {
 				top: -25,
 				bottom: 49
-			},
-			subpages = util.options.subpages,
-			self = plus.webview.currentWebview(),
-			temp = {};
-			if(mui.os.ios||(mui.os.android&&(plus.os.version).substring(0,3)<4.4)){
-				 subpage_style = {
-					top: 0,
-					bottom: 49
-				}
+		},
+		subpages = util.options.subpages,
+		self = plus.webview.currentWebview(),
+		temp = {};
+		if(mui.os.ios||(mui.os.android&&(plus.os.version).substring(0,3)<4.4)){
+			 subpage_style = {
+				top: 0,
+				bottom: 49
 			}
+		}
 		//兼容安卓上添加titleNView 和 设置沉浸式模式会遮盖子webview内容
 		if(mui.os.android) {
 			if(plus.navigator.isImmersedStatusbar()) {
@@ -38,7 +38,6 @@ var util = {
 			if(self.getTitleNView()) {
 				subpage_style.top += 40;
 			}
-			
 		}
 
 		// 初始化第一个tab项为首次显示

@@ -1,3 +1,4 @@
+/*颜色*/
 .font-red{
     color: #dd524d;
 }
@@ -16,11 +17,24 @@
 .font-white{
     color: #f1f1f1;
 }
+.font-black{
+    color: #111111 !important;
+}
+.bg-red{
+	background: #CF2D28;
+}
+.bg-green{
+	background: #67c23a;
+}
+.bg-blue{
+	background: #409eff;
+}
+/*字号*/
 .font-min{
     font-size: 12px;
 }
-.font-max{
-	font-size: 20px;
+.font-mid{
+	font-size: 14px;
 }
 .font16{
 	font-size: 16px;
@@ -28,12 +42,129 @@
 .font18{
 	font-size: 18px;
 }
-.font-mid{
-	font-size: 14px;
+.font-max{
+	font-size: 20px;
+}
+/*小红点*/
+.xiaohongdian{
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	position: absolute;
+	background: #dd524d;
 }
 .mui-title,.mui-bar a{
 	color: #fff;
 }
 #header{
 	box-shadow: none;
+}
+.mui-popover.mui-popover-action .mui-table-view{
+	/*拍照的action字体颜色*/
+	color: #111111;
+}
+
+/*ueditor生成的内容的样式*/
+.ql-align-center{
+	text-align: center;
+}
+.ql-align-right{
+	text-align: right;
+}
+.ql-align-justify{
+	text-align: justify;
+}
+.ql-size-small{
+	font-size: 0.75em;
+}
+.ql-size-large{
+	font-size: 1.5em;
+}
+.ql-size-huge{
+	font-size: 2.5em;
+}
+.ql-syntax{
+	background-color: #23241f;
+    color: #f8f8f2;
+    overflow: visible;
+}
+.ql-indent-1{
+	padding-left: 3em;
+}
+.ql-indent-2{
+	padding-left: 6em;
+}
+.ql-indent-3{
+	padding-left: 9em;
+}
+.ql-editor .ql-size-small{
+	font-size: 12px;
+}
+.ql-editor .ql-size-small{
+	font-size: 12px;
+}
+.ql-editor .ql-size-large{
+	font-size: 16px;
+}
+.ql-editor .ql-size-huge{
+	font-size: 18px;
+}
+.ql-editor .ql-font-serif{
+	font-family: Georgia, Times New Roman, serif;
+}
+.ql-editor .ql-font-monospace{
+	font-family: Monaco, Courier New, monospace;
+}
+h3{
+	font-size: 16px;
+}
+/*图片*/
+.mui-scroll .mui-table-view .mui-table-view-cell .taskImg,.taskImg{
+	width: 83px;
+    height: 117px;
+    line-height: 117px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+/*图片懒加载淡入*/
+@-webkit-keyframes fadeIn{
+	0%{opacity:0}100%{opacity:1}
+}
+@keyframes fadeIn{
+	0%{opacity:0}100%{opacity:1}
+}
+.img-lazyload{
+	-webkit-animation: fadeIn 350ms linear 0ms 1 normal both;
+	animation: fadeIn 350ms linear 0ms 1 normal both;
+	opacity:1;
+}
+/*空行*/
+.blank-w{
+	background: #eee;
+	height: 10px;
+	margin-top: 4px;
+}
+.big-btn{
+	padding: 0;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 90%;
+	left: 50%;
+	height: 40px;
+	line-height: 40px;
+	-webkit-transform: translate(-50%);
+}
+/*dialog*/
+.mui-popup-title{
+	font-weight: bold;
+	padding-bottom: 6px;
+	font-size: 16px;
+}
+.mui-popup-button:first-child{
+	background: #777777;
+	color: #eee;
+}
+.mui-popup-button.mui-popup-button-bold{
+	background: #CF2D28;
+	color: #eee;
 }

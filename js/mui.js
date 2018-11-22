@@ -8087,8 +8087,9 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
         }
         var opacity = (y - this.options.top) / this.options.offset + this._A;
         opacity = Math.min(Math.max(this._A, opacity), 1);
+        
         this._style.backgroundColor = 'rgba(' + this._R + ',' + this._G + ',' + this._B + ',' + opacity + ')';
-        this._style.opacity = opacity;//新增加属性
+        //this._style.opacity = opacity;//新增加属性
         if (opacity > this._A) {
             this.element.classList.add(CLASS_ACTIVE);
         } else {

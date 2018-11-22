@@ -4,10 +4,10 @@
 		"iPhone",
 		"iPad"
 	],
-	"id": "H53B12F37",/*应用的标识，创建应用时自动生成，勿手动修改*/
+	"id": "cc.yingyubao.yybao",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "影娱宝",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.10",/*应用版本名称*/
+		"name": "1.0.2",/*应用版本名称*/
 		"code": ""
 	},
 	"description": "影娱宝，一款专门为包场定做的APP",/*应用描述信息*/
@@ -27,9 +27,7 @@
 		"Audio": {
 			"description": "访问麦克风"
 		},
-		"Messaging": {
-			"description": "短彩邮件插件"
-		},
+		
 		"Cache": {
 			"description": "管理应用缓存"
 		},
@@ -39,9 +37,7 @@
 		"Console": {
 			"description": "跟踪调试输出日志"
 		},
-		"Contacts": {
-			"description": "访问系统联系人信息"
-		},
+		
 		"Device": {
 			"description": "访问设备信息"
 		},
@@ -88,12 +84,8 @@
 		"Barcode": {
 			"description": "管理二维码扫描插件"
 		},
-		"Maps": {
-			"description": "管理地图插件"
-		},
-		"Speech": {
-			"description": "管理语音识别插件"
-		},
+		
+		
 		"Webview": {
 			"description": "窗口管理"
 		},
@@ -105,7 +97,7 @@
 		},
 		"NativeObj": {
 			"description": "原生对象"
-		},"Push":{},"Payment":{},"OAuth":{}
+		},"Push":{},"OAuth":{}
 	},
 	"plus": {
 		"statusbar": {
@@ -128,17 +120,17 @@
 						{
 							"tag": "font",
 							"id": "indexIcon",
-							"text": "\ue900",
+							"text": "\ue93b",
 							"position": {
-								"top": "4px",
+								"top": "6px",
 								"left": "0",
 								"width": "25%",
-								"height": "24px"
+								"height": "22px"
 							},
 							"textStyles": {
 								"fontSrc": "_www/fonts/icomoon.ttf",
 								"align": "center",
-								"size": "24px"
+								"size": "22px"
 							}
 						}, {
 							"tag": "font",
@@ -157,17 +149,17 @@
 						},{
 							"tag": "font",
 							"id": "newsIcon",
-							"text": "\ue902",
+							"text": "\ue93d",
 							"position": {
-								"top": "4px",
+								"top": "6px",
 								"left": "25%",
 								"width": "25%",
-								"height": "24px"
+								"height": "22px"
 							},
 							"textStyles": {
 								"fontSrc": "_www/fonts/icomoon.ttf",
 								"align": "center",
-								"size": "24px"
+								"size": "22px"
 							}
 						}, {
 							"tag": "font",
@@ -186,22 +178,22 @@
 						},{
 							"tag": "font",
 							"id": "contactIcon",
-							"text": "\ue903",
+							"text": "\ue93e",
 							"position": {
-								"top": "4px",
+								"top": "6px",
 								"left": "50%",
 								"width": "25%",
-								"height": "24px"
+								"height": "22px"
 							},
 							"textStyles": {
 								"fontSrc": "_www/fonts/icomoon.ttf",
 								"align": "center",
-								"size": "24px"
+								"size": "22px"
 							}
 						}, {
 							"tag": "font",
 							"id": "contactText",
-							"text": "快讯",
+							"text": "有料",
 							"position": {
 								"top": "24px",
 								"left": "50%",
@@ -215,17 +207,17 @@
 						},{
 							"tag": "font",
 							"id": "newwindowIcon",
-							"text": "\ue901",
+							"text": "\ue93c",
 							"position": {
-								"top": "4px",
+								"top": "6px",
 								"left": "75%",
 								"width": "25%",
-								"height": "24px"
+								"height": "22px"
 							},
 							"textStyles": {
 								"fontSrc": "_www/fonts/icomoon.ttf",
 								"align": "center",
-								"size": "24px"
+								"size": "22px"
 							}
 						}, {
 							"tag": "font",
@@ -261,12 +253,12 @@
 		},
 		"splashscreen": {
 			"autoclose": false,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
-			"waiting": true
+			"waiting": true,"delay":"2000"
 		},
 		"popGesture": "close",/*设置应用默认侧滑返回关闭Webview窗口，"none"为无侧滑返回功能，"hide"为侧滑隐藏Webview窗口。参考http://ask.dcloud.net.cn/article/102*/
 		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
-		"distribute": {"plugins":{"oauth":{},"payment":{"alipay":{"description":"阿里支付","scheme":""},"appleiap":{"description":"Apple应用内支付"}},"push":{"mipush":{"appid_android":"2882303761517647334","appkey_android":"5981764769334","appid_ios":"2882303761517647153","appkey_ios":"5501764758153"}}},
+		"distribute": {"plugins":{"oauth":{},"payment":{},"push":{"mipush":{"appid_android":"2882303761517781039","appkey_android":"5521778151039","appid_ios":"2882303761517778560","appkey_ios":"5131777832560"}}},
 			"apple": {
 				"appid": "",/*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
 				"mobileprovision": "",/*iOS应用打包配置文件*/
@@ -274,7 +266,13 @@
 				"p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
 				"devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
 				"UIReserveStatusbarOffset": true,
-				"frameworks": []
+				"frameworks": [],
+				"plistcmds": [		          
+		          "Set :NSMicrophoneUsageDescription 用于语音搜索、语音对话等需要获取语音信息功能",
+		          "Set :NSPhotoLibraryUsageDescription 用于设置账户头像、上传完成任务的凭证资料等",
+		          "Set :NSCameraUsageDescription 用于设置头像或上传完成任务的相关凭证资料等",       
+		          "Set :NSLocationWhenInUseUsageDescription 用于搜索周边的电影院信息"
+		        ]
 			},
 			"google": {
 				"packagename": "",/*Android应用包名，如io.dcloud.HelloH5*/
@@ -282,7 +280,7 @@
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
 				"ImmersedStatusbar": true,
-				"permissions": ["<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>","<uses-permission android:name=\"android.permission.GET_TOP_ACTIVITY_INFO\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>","<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>","<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.INTERNET\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-permission android:name=\"android.permission.INTERACT_ACROSS_USERS_FULL\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"]
+				"permissions": ["<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.INTERNET\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-feature android:name=\"android.hardware.camera.autofocus\"/>","<uses-permission android:name=\"android.permission.INTERACT_ACROSS_USERS_FULL\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>","<uses-permission android:name=\"android.permission.GET_TOP_ACTIVITY_INFO\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>"]
 			},
 			"orientation": [
 				"portrait-primary"
@@ -328,11 +326,11 @@
 				"ios": {
 					"iphone": {
 						"default": "", /*iPhone3启动图片选，分辨率：320x480*/
-						"retina35": "",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
-						"retina40": "C:/Users/mishi/Pictures/Saved Pictures/qidong640i.png",/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
-						"retina47": "C:/Users/mishi/Pictures/Saved Pictures/qidong750i.png",/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
-						"retina55": "C:/Users/mishi/Pictures/Saved Pictures/qidong1242i.png",/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
-						"retina55l": "C:/Users/mishi/Pictures/Saved Pictures/qidong1242i.png","iphonex":"C:/Users/mishi/Pictures/Saved Pictures/qidong1125i.png","iphonexl":"C:/Users/mishi/Pictures/Saved Pictures/qidong1125i.png"
+						"retina35": "startupImg/640x960.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+						"retina40": "startupImg/640x1136.png",/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
+						"retina47": "startupImg/750x1334.png",/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
+						"retina55": "startupImg/1242x2208.png",/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
+						"retina55l": "startupImg/1242x2208.png","iphonex":"startupImg/1125x2436.png","iphonexl":"startupImg/1125x2436.png"
 					},
 					"ipad": {
 						"portrait": "", /*iPad竖屏启动图片，分辨率：768x1004*/
@@ -348,23 +346,26 @@
 				"android": {
 					"mdpi": "", /*普通屏启动图片，分辨率：240x282*/
 					"ldpi": "", /*大屏启动图片，分辨率：320x442*/
-					"hdpi": "C:/Users/mishi/Pictures/Saved Pictures/qidong480.png", /*高分屏启动图片，分辨率：480x762*/
-					"xhdpi": "C:/Users/mishi/Pictures/Saved Pictures/qidong720.png", /*720P高分屏启动图片，分辨率：720x1242*/
-					"xxhdpi": "C:/Users/mishi/Pictures/Saved Pictures/qidong1080.png"
+					"hdpi": "startupImg/480x742.png", /*高分屏启动图片，分辨率：480x762*/
+					"xhdpi": "startupImg/720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "startupImg/1080x1882.png"
 				}
 			}
-		},"ads":{"rp":false,"splash":false,"push":false,"spot":false},"adid":""
+		},"ads":{"rp":false,"splash":false,"push":false,"spot":false}
 	},
 	"dependencies": {
 		"pages": {
 			"index.html": {
 				"resources": [
 					"js/mui.min.js",
+					"js/mui.js",
 					"css/mui.min.css",
 					"html/tab-webview-subpage-about.html",
 					"fonts/mui.ttf",
 					"fonts/iconfont.ttf",
-					"html/tab-webview-subpage-chat.html",
+					"fonts/icomoon.ttf",
+					"css/style.css",
+					"html/tab-webview-news.html",
 					"js/util.js",
 					"html/tab-webview-subpage-contact.html",
 					"html/tab-webview-film.html",
@@ -376,7 +377,17 @@
 					"images/dntg.jpg",
 					"images/b3.jpg",
 					"images/b4.jpg",
-					"images/b2.jpg"
+					"images/b2.jpg",
+					"css/color.css",
+					"css/swiper.min.css",
+					"images/bannerdefault2.jpg",
+					"images/icon/icon2.svg",
+					"images/wait.png",
+					"css/icons-extra.css",
+					"images/icon/icon1.svg",
+					"images/icon/icon3.svg",
+					"images/imgLoading.gif",
+					"images/carddefault.jpg"
 				],
 				"refer": [
 					"html/guide.html",
@@ -386,7 +397,23 @@
 					"sonPage/pushTask.html",
 					"sonPage/qiangList.html",
 					"html/mainy.html",
-					"sonPage/movieInfo.html"
+					"sonPage/movieInfo.html",
+					"html/qiangList.html",
+					"html/pushTask.html",
+					"html/movieInfo.html",
+					null,
+					"html/filmNews.html",
+					"html/shareFriends.html",
+					"html/qiang.html",
+					"html/getTaskItem.html",
+					"html/giftDetail.html",
+					"html/advertisement.html",
+					"html/actiList.html",
+					"html/shareGift.html",
+					"html/searches.html",
+					"html/fuli.html",
+					"html/xiaojifen.html",
+					"html/castItem.html"
 				],
 				"priority": 0
 			},
@@ -398,7 +425,7 @@
 				],
 				"refer": [
 					"html/tab-webview-subpage-setting.html",
-					"html/tab-webview-subpage-chat.html",
+					"html/tab-webview-news.html",
 					"html/tab-webview-subpage-contact.html"
 				],
 				"priority": 0
@@ -408,7 +435,10 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css",
 					"js/mui.min.js",
-					"js/util.js"
+					"js/util.js",
+					"images/icon/shareFriends-i2.png",
+					"images/icon/resetCheck-i2.png",
+					"images/icon/setting-i2.png"
 				],
 				"refer": [
 					"settingItem/myset.html",
@@ -440,7 +470,11 @@
 					"html/bankCard.html",
 					"html/verified2.html",
 					"html/changePassword.html",
-					"html/addTing.html"
+					"html/addTing.html",
+					"html/verified2-1.html",
+					"html/verified.html",
+					"html/mykefu.html",
+					"html/0manual.html"
 				],
 				"priority": 0
 			},
@@ -453,7 +487,7 @@
 				"refer": [],
 				"priority": 0
 			},
-			"html/tab-webview-subpage-chat.html": {
+			"html/tab-webview-news.html": {
 				"resources": [
 					"fonts/mui.ttf",
 					"js/mui.min.js",
@@ -461,7 +495,10 @@
 				],
 				"refer": [
 					"sonPage/filmNews.html",
-					"html/downloader.html"
+					"html/downloader.html",
+					"html/filmNews.html",
+					"html/getTaskItem.html",
+					"html/advertisement.html"
 				],
 				"priority": 0
 			},
@@ -499,7 +536,10 @@
 					"sonPage/qiang.html",
 					"html/login.html",
 					"sonPage/pushTask.html",
-					"sonPage/qiangList.html"
+					"sonPage/qiangList.html",
+					"html/qiangList.html",
+					"html/pushTask.html",
+					"html/getTaskItem.html"
 				],
 				"priority": 0
 			},
@@ -518,7 +558,8 @@
 					"html/main.html",
 					"html/tab-webview-subpage-setting.html",
 					"index.html",
-					"html/forget_password.html"
+					"html/forget_password.html",
+					"html/selectMem.html"
 				],
 				"priority": 0
 			},
@@ -545,7 +586,12 @@
 				"refer": [
 					"sonPage/editBlockTask.html",
 					"sonPage/submitTask.html",
-					"sonPage/finishedy.html"
+					"sonPage/finishedy.html",
+					"html/checkItem.html",
+					"html/submitTask.html",
+					"html/finishedy.html",
+					"html/movieInfo.html",
+					"html/editBlockTask.html"
 				],
 				"priority": 0
 			},
@@ -566,14 +612,19 @@
 					"sonPage/finishedp.html",
 					"sonPage/checkList.html",
 					"sonPage/checkItem.html",
-					"sonPage/pushTask.html"
+					"sonPage/pushTask.html",
+					"html/allTaskList.html",
+					"html/checkItem.html",
+					"html/movieInfo.html",
+					"html/pushTask.html"
 				],
 				"priority": 0
 			},
 			"html/register.html": {
 				"resources": [],
 				"refer": [
-					"html/selectMem.html"
+					"html/selectMem.html",
+					"html/xieyi.html"
 				],
 				"priority": 0
 			},
@@ -635,7 +686,8 @@
 			"html/reg2.html": {
 				"resources": [],
 				"refer": [
-					"index.html"
+					"index.html",
+					"html/login.html"
 				],
 				"priority": 0
 			},
@@ -675,7 +727,10 @@
 					"html/myBillList.html",
 					"html/changeGift.html",
 					"html/myBiliDetail.html",
-					"html/myPushTask.html"
+					"html/myPushTask.html",
+					"html/giftList.html",
+					"html/myWaitBili.html",
+					"html/giftDetail.html"
 				],
 				"priority": 0
 			},
@@ -686,7 +741,8 @@
 					"html/addTing.html",
 					"html/changePassword.html",
 					"html/shareFriends.html",
-					"html/feedback.html"
+					"html/feedback.html",
+					"html/0manual.html"
 				],
 				"priority": 0
 			},
@@ -706,7 +762,10 @@
 					"sonPage/pushTask.html",
 					"sonPage/allTaskList.html",
 					"sonPage/movieInfo.html",
-					"sonPage/qiang.html"
+					"sonPage/qiang.html",
+					"html/movieInfo.html",
+					"html/qiang.html",
+					"html/getTaskItem.html"
 				],
 				"priority": 0
 			},
@@ -744,13 +803,192 @@
 					"html/forget_password.html"
 				],
 				"priority": 0
+			},
+			"sonPage/submitTask.html": {
+				"resources": [],
+				"refer": [
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/qiangList.html": {
+				"resources": [],
+				"refer": [
+					"html/qiang.html",
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/qiang.html": {
+				"resources": [],
+				"refer": [
+					"html/addTing.html",
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/movieInfo.html": {
+				"resources": [],
+				"refer": [
+					"html/editComment.html",
+					"html/xiangbaochang.html",
+					"html/login.html",
+					"html/qiangList.html",
+					"html/yybchat.html"
+				],
+				"priority": 0
+			},
+			"html/dataCenter.html": {
+				"resources": [],
+				"refer": [
+					"html/change_touxiang.html",
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/change_touxiang.html": {
+				"resources": [],
+				"refer": [
+					"html/cropper.html"
+				],
+				"priority": 0
+			},
+			"html/pushTask.html": {
+				"resources": [],
+				"refer": [
+					"html/payMoney.html"
+				],
+				"priority": 0
+			},
+			"html/verified.html": {
+				"resources": [],
+				"refer": [
+					"html/verified2-1.html"
+				],
+				"priority": 0
+			},
+			"html/getMoney.html": {
+				"resources": [],
+				"refer": [
+					"html/bankCard.html"
+				],
+				"priority": 0
+			},
+			"html/allTaskList.html": {
+				"resources": [],
+				"refer": [
+					"html/checkItem.html"
+				],
+				"priority": 0
+			},
+			"html/getTaskItem.html": {
+				"resources": [],
+				"refer": [
+					"html/FAQ.html",
+					"html/qiangList.html",
+					"html/editComment.html",
+					"html/filmNews.html",
+					"html/login.html",
+					"html/qiang.html",
+					"html/yybchat.html"
+				],
+				"priority": 0
+			},
+			"html/changeGift.html": {
+				"resources": [],
+				"refer": [
+					"html/giftDetail.html"
+				],
+				"priority": 0
+			},
+			"html/actiList.html": {
+				"resources": [],
+				"refer": [
+					"html/actiItem.html"
+				],
+				"priority": 0
+			},
+			"html/shareGift.html": {
+				"resources": [],
+				"refer": [
+					"html/shareFriends.html",
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/filmNews.html": {
+				"resources": [],
+				"refer": [
+					"html/getTaskItem.html"
+				],
+				"priority": 0
+			},
+			"html/searches.html": {
+				"resources": [],
+				"refer": [
+					"html/filmNews.html",
+					"html/searches.html"
+				],
+				"priority": 0
+			},
+			"html/giftDetail.html": {
+				"resources": [],
+				"refer": [
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/advertisement.html": {
+				"resources": [],
+				"refer": [
+					"html/shareFriends.html"
+				],
+				"priority": 0
+			},
+			"html/fuli.html": {
+				"resources": [],
+				"refer": [
+					"html/getTaskItem.html",
+					"html/myPushTask.html",
+					"html/shareFriends.html",
+					"html/login.html",
+					"html/riches.html"
+				],
+				"priority": 0
+			},
+			"html/mykefu.html": {
+				"resources": [],
+				"refer": [
+					"html/feedback.html",
+					"html/addTing.html",
+					"html/login.html",
+					"html/im-chat.html",
+					"html/yybchat.html"
+				],
+				"priority": 0
+			},
+			"html/verified2-1.html": {
+				"resources": [],
+				"refer": [
+					"html/login.html"
+				],
+				"priority": 0
+			},
+			"html/yybchat.html": {
+				"resources": [
+					"html/%3C%\u003d(item.content)%%3E"
+				],
+				"refer": [],
+				"priority": 0
 			}
 		},
 		"idle": {
 			"resources": [
-				"js/mui.js",
 				"css/mui.css"
 			]
 		}
-	}
+	},
+	"unpackage":[
+	  "css/mui.css"
+	]
 }

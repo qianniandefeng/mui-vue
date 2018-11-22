@@ -1,7 +1,7 @@
 (function(w){
 
 document.addEventListener('plusready',function(){
-	console.log("Immersed-UserAgent: "+navigator.userAgent);
+//	console.log("Immersed-UserAgent: "+navigator.userAgent);
 },false);
 
 var immersed = 0;

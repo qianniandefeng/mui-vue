@@ -4,22 +4,19 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 		<title>首页</title>
-		<script src="js/mui.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/swiper.min.css" rel="stylesheet" />
 		<link href="css/color.css" rel="stylesheet" />
 		<style>
-			html,
-			body {
-				background-color: #efeff4;
-			}
 			.mui-content{
+				background-color: #fff;
 				padding-bottom: 50px;
 			}
 			img{
 				border-radius: 2px;
 			}
 			.mui-bar-transparent{
-				opacity: 0;
+				/*opacity: 0;*/
 				background-color: rgba(240, 61, 55, 0);
 			}
 			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
@@ -30,47 +27,167 @@
 			#slider .mui-slider-group .mui-slider-item a img{
 				height: 120px;
 			}
+			/*线条颜色*/
+			.mui-table-view-cell:after,.mui-table-view-cell:before{
+				background-color: #efeff4;
+			}
+			/*swiper*/
+			.swiper-container {
+		        width: 100%;
+		    }
+		    .swiper-container-h {
+		    	padding-left: 80px;
+		        height: 36px;
+		    }
+		    .swiper-container-wg,.swiper-container-wq{
+		    	padding: 0 15px;
+		    	margin: 5px auto;
+		    }
+		    .swiper-slide {
+		        text-align: center;
+		        
+		        /* Center slide text vertically */
+		        display: -webkit-box;
+		        display: -ms-flexbox;
+		        display: -webkit-flex;
+		        display: flex;
+		        -webkit-box-pack: center;
+		        -ms-flex-pack: center;
+		        -webkit-justify-content: center;
+		        justify-content: center;
+		        -webkit-box-align: center;
+		        -ms-flex-align: center;
+		        -webkit-align-items: center;
+		        align-items: center;
+		    }
+		    .swiper-slide img{
+		    	width: 100%;
+		    }
+		    .wrapper-h{
+		    	margin: 10px auto 0;
+		    	width: 100%;
+		    	background: #efefef;
+		    }
+		    
+		    .wrapper-h .left{
+		    	margin-top: 8px;
+		    	display: flex;
+		    	background: #D74B28;
+		    	width: 62px;
+		    	margin-left: 12px;
+		    	border-radius: 12px;
+		    	position: absolute;
+		    }
 			/*输入框*/
 			.mui-search .mui-placeholder .mui-icon,.mui-search.mui-active:before{
 				color: #fff;
 			}
-			/*热映*/
-			.content-padded{
-				padding: 11px 21px;
+			.searchBox{
+			    height: 30px;
+			    margin: 6px 44px;
+			    padding-left: 6px;
+			    border: 0;
+			    border-radius: 30px;
+			    background-color: rgba(255,255,255,.9);
+			}
+			.searchBox .mui-icon-search{
+				padding-top: 6px;
+				color: #999;
+				font-size: 17px;
+			}
+			/*四小按钮*/
+			.mui-grid-flex{
+				margin: 0 auto;
+				display: flex;
+				justify-content: space-around;
+				padding: 11px !important;
 				background: #fff;
 			}
-			.ver-hot img{
-				display: block;
-				width: 100px;
-				height: 150px;
-			}
-			.ver-hot>a>div{
-				margin: 4px 0;
-			}
-			.ver-hot>a>div>span{
+			.grid-tab{
+				height: 70px;
+				text-align: center;
 				display: inline-block;
-				height: 33px;
-				line-height: 37px;
 			}
-			.ver-hot .mui-btn{
-				height: 25px;
-				width: 53px;
-				border-radius: 25px;
+			.grid-tab .gird-icon{
+				width: 60px;
+				height: 60px;
+				margin: 0 auto;
+				position: relative;
+			}
+			.grid-tab span{
+				font-size: 28px;
+				position: relative;
+			}
+			.title-padded{
+				margin-top: 8px;
+				margin-bottom: 8px;
+				padding-left: 8px;
+				border-left: 4px solid #dd524d;
+				
+			}
+			.font-black2{
+				color: #333;
+			}
+			.iconStyle{
+				width: 46px;
+			}
+			/*领任务赚积分*/
+			.mui-btn{
+				height: 28px;
+				width: 59px;
+				line-height: 28px;
+				border-radius: 28px;
 				padding: 0;
 				text-align: center;
-			}
-			.ver-hot .ping{
-				width: 100%;
-				padding-left: 4px;
-				background-color: rgba(0,0,0,0.3);
 				position: absolute;
-				bottom: 72px;
-				text-align: left;
+				right: 20px;
+				bottom: 48px;
+			}
+			.jiaotu{
+				height: 59px;
+				width: 59px;
+				line-height: 28px;
+				padding: 0;
+				text-align: center;
+				position: absolute;
+				right: 15px;
+				top: 0px;
+				overflow: hidden;
+			}
+			.jiaotu>div{
+				width: 88px;
+				height: 30px;
+				line-height: 36px;
+				text-align: center;
+				background: #f03d37;
+				color: #FFCC33;
+				font-size: 10px;
+				transform:rotate(45deg) translateY(6px);
+				-ms-transform:rotate(45deg) translateY(6px); /* Internet Explorer */
+				-moz-transform:rotate(45deg) translateY(6px); /* Firefox */
+				-webkit-transform:rotate(45deg) translateY(6px); /* Safari 和 Chrome */
+				-o-transform:rotate(45deg) translateY(6px);
+			}
+			/*积分兑换*/
+			.posi-left{
+				font-size: 10px;
+				position: absolute;
+				bottom: -10px;
+				left: 0;
+			}
+			.posi-right{
+				font-size: 10px;
+				position: absolute;
+				bottom: -10px;
+				right: 0;
 			}
 			/*观察*/
+			.mui-table-view .mui-table-view-cell{
+				background: #fff;
+			}
 			.mui-table-view .mui-table-view-cell .img{
 				width: 100%;
-				height: 120px;
+				height: 160px;
 			}
 			.imgs-wrapper{
 				display: flex;
@@ -82,6 +199,7 @@
 				height: 145px;
 			}
 			.newsttile{
+				font-size: 15px;
 				color: rgb(87,86,86);
 			}
 			/*遮罩*/
@@ -94,148 +212,206 @@
 			    z-index: 998;
 			    background-color: rgba(0,0,0,.3);
 			}
+			
+			.refreshbox{
+				position: relative;
+				opacity: 0;
+				height: 0px;
+				line-height: 34px;
+				background: #79afea;
+				color: #007aff;
+				font-size: 14px;
+				text-align: center;
+				transition:height,opacity 1s,2s;
+				-moz-transition:height,opacity 1s,1s; /* Firefox 4 */
+				-webkit-transition:height,opacity 1s,1s; /* Safari and Chrome */
+				-o-transition:height,opacity 1s,1s; /* Opera */
+			}
 		</style>
 	</head>
 	<body>
 		<div id="index">
-			<header class="mui-bar mui-bar-transparent">
-		        <div class="mui-input-row mui-search">
-			        <input type="search" class="mui-input-clear" placeholder="">
+		    <header class="mui-bar mui-bar-transparent">
+		    	<!--ios手机需在header中加上（ data-top='0' data-offset='150' data-duration='16' data-scrollby=".mui-scroll-wrapper"）这些属性-->
+		        <div class="mui-input-row mui-search" @tap="searches">
+		        	<div class="searchBox">
+		        		<span class="mui-icon mui-icon-search">
+		        			<span class="font-mid">&nbsp;红海行动</span>
+		        		</span>
+		        	</div>
 			    </div>
 		    </header>
 			<div id="pullUpRefresh" class="mui-content mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div class="title">
-						<div class="mui-slider">
-						  <div class="mui-slider-group mui-slider-loop">
-						    <!--支持循环，需要重复图片节点-->
-						    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="images/b4.jpg" /></a></div>
-						    <div class="mui-slider-item"><a href="#"><img src="images/b1.jpg" /></a></div>
-						    <div class="mui-slider-item"><a href="#"><img src="images/b2.jpg" /></a></div>
-						    <div class="mui-slider-item"><a href="#"><img src="images/b3.jpg" /></a></div>
-						    <div class="mui-slider-item"><a href="#"><img src="images/b4.jpg" /></a></div>
-						    <!--支持循环，需要重复图片节点-->
-						    <div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="images/b1.jpg" /></a></div>
-						  </div>
-						</div>
-						<div class="content-padded">
-							<span class="font18">热映任务</span>
-							<span id="more" class="mui-pull-right font-gray font-mid">全部 ></span>
-						</div>
-						<div class="mui-slider" id="secondSlider">
-							<div class="mui-slider-group">
-								
-								<div class="mui-slider-item">
-									<ul class="mui-table-view mui-grid-view">
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[0].titleImg"  @tap="movieInfo(hotList[0].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[0].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[0].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[0])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[0].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[1].titleImg"  @tap="movieInfo(hotList[1].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[1].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[1].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[1])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[1].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[2].titleImg"  @tap="movieInfo(hotList[2].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[2].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[2].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[2])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[2].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-									</ul>
+						<!--轮播图-->
+						<div class="swiper-container swiper-container-w">
+		                    <div class="swiper-wrapper">
+		                        <div class="swiper-slide" v-if="adItem.atype==0" v-for="adItem in adList">
+		                        	<img :src="adItem.image" @tap="seeAd(adItem.id)"/>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div id="refreshbox" class="refreshbox">有{{refreshtiao}}条数据更新</div>
+		                <!--四小按钮-->
+						<div class="mui-grid-flex" style="background: #fff;" v-if="user.type==2">
+							<div class="grid-tab" @tap="shareGift">
+								<div class="gird-icon">
+									<img class="iconStyle" src="images/icon/icon1.svg" alt="" />
 								</div>
-								<div class="mui-slider-item">
-									<ul class="mui-table-view mui-grid-view">
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[3].titleImg"  @tap="movieInfo(hotList[3].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[3].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[3].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[3])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[3].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[4].titleImg"  @tap="movieInfo(hotList[4].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[4].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[4].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[4])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[4].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-										<li class="ver-hot mui-table-view-cell mui-media mui-col-xs-4">
-											<a href="#item1mobile">
-												<img :src="hotList[5].titleImg"  @tap="movieInfo(hotList[5].id)"/>
-												<div>
-													<div class='ping font-orange font-mid'>经理评<span v-text="hotList[5].pingfen"></span></div>
-													<span class="mui-ellipsis">{{hotList[5].name}}</span>
-													<br />
-													<button class="mui-btn mui-btn-red" @tap="pushTask(hotList[5])" v-if="user.type == 1">+票房</button>
-													<button class="mui-btn mui-btn-red" @tap="baochang(hotList[5].id)" v-if="user.type == 2">包场</button>
-												</div>
-											</a>
-										</li>
-									</ul>
+								<div class="font-gray font-mid">推荐有礼</div>
+							</div>
+							<div class="grid-tab" @tap="fuli">
+								<div class="gird-icon">
+									<img class="iconStyle" src="images/icon/icon2.svg" alt="" />
 								</div>
+								<div class="font-gray font-mid">新客福利</div>
+							</div>
+							<!--<div class="grid-tab">
+								<div class="mui-icon gird-icon">
+									<img src="images/icon/changeGift-i2.png" alt="" />
+								</div>
+								<div class="font-gray font-mid">我的消息</div>
+							</div>-->
+							<div class="grid-tab" @tap="actiList">
+								<div class="gird-icon">
+									<img class="iconStyle" src="images/icon/icon3.svg" alt="" />
+								</div>
+								<div class="font-gray font-mid">最新活动</div>
 							</div>
 						</div>
-						
+						<!--影视头条-->
+						<div class="wrapper-h" v-if="user.type==2&&broadcast.length">
+							<!--v-if="user.type==2&&broadcast.length"-->
+							<div class="left">
+								<img src="images/icon/xiaolaba.png" style="height: 14px;margin-top: 4px;" alt="影视头条" />
+								<span class="font-white font-min">头条</span>
+							</div>
+							<div class="swiper-container swiper-container-h">
+						        <div class="swiper-wrapper">
+						            <div class="swiper-slide font-min font-black" 
+						            	v-text="item.titile" 
+						            	@tap="seeCast(item)" 
+						            	v-for="item in broadcast">
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<!--领任务赚积分-->
+						<div class="title-padded" v-if="user.type==2">
+							<span class="font16 font-black2">抢任务赚积分</span>
+						</div>
+						<div class="mui-table-view-cell" v-for="item in hotList" @tap="getTaskItem(item.filmId,item)" v-if="user.type==2&&item.isdisplay!=0">
+							<div class="mui-pull-left">
+								<div>
+									<img class="taskImg" :src='item.titleImg|photo'/>
+								</div>
+							</div>
+							<div class="font-mid" v-text="item.filename"></div>
+							<div class="mui-media-body" style="margin-right: 10px;">
+								<div class='font-orange font-min'>票房奖励<span v-text="item.bili"></span>%</div>
+								<div class='font-gray font-min'>总积分:<span v-text="item.integral"></span> 剩余:<span class="font-red" v-text="item.remainintegral < 0 ? 0 : item.remainintegral"></span></div>
+								<div class='font-gray font-min'>最低人数:<span v-text="item.minicount"></span>人/场</div>
+								<div class='font-gray font-min'>任务时间:<span v-text="item.startdate"></span>至<span v-text="item.enddate"></span></div>
+								<div class='font-gray font-min' v-if="item.sales" v-text="item.sales">新人首次获取双倍积分 <span class="mui-icon-extra mui-icon-extra-gift font-orange"></span></div>
+							</div>
+							<div class="jiaotu" v-if="item.isnew==1">
+								<div>新人专享</div>
+							</div>
+						</div>
+						<!--<div class="blank-w"></div>-->
+						<!--广告位-->
+						<div class="swiper-container swiper-container-wg" v-if="user.type==2">
+		                    <div class="swiper-wrapper">
+		                        <div class="swiper-slide" v-if="adItem.atype==1&&adItem.status==1" v-for="adItem in adList">
+		                        	<img :src="adItem.image" @tap="seeAd(adItem.id)" />
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="blank-w"></div>
+		                
+		                <!--积分当钱花-->
+		                <div class="title-padded" v-if="user.type==2">
+							<span class="font16 font-black2">积分当钱花</span>
+						</div>
+						<!--小积分大用途-->
+		                <div style="padding: 0 15px;margin: 5px auto;">
+		                	<img id="jifendangqian" :src="jifendangqian" width="100%" @tap="seeXjd()" />
+		                </div>
+		                <div class="swiper-container swiper-container-wq" v-if="user.type==2">
+					        <div class="swiper-wrapper">
+					            <div class="swiper-slide" v-for="gift in gifts" @tap="getGiftDetail(gift)">
+					            	<div>
+					            		<p><img :id="gift.id" :src="gift.img" alt=""/></p>
+					            		<div><span class="font-mid" v-text="gift.name"></span></div>
+					            		<p class="font-min">兑换需<span v-text="gift.integral"></span>积分</p>
+					            	</div>
+					            </div>
+					        </div>
+					        <!-- Add Pagination -->
+					        <div class="swiper-pagination"></div>
+					    </div>
 					</div>
-					<div class="content-padded" style="margin-top: 8px;">
-						<span class="font18">影视观察</span>
+					<div class="blank-w"></div>
+					<div class="title-padded">
+						<span class="font16 font-black2">天天有料</span>
 					</div>
 					<ul class="mui-table-view">
-						<li class="mui-table-view-cell" v-for="item in filmNews" @tap="toFilmNews(item.id)" v-if="item.newstype==2">
-							<div class="mui-card-content">
-								<div class="newsttile" v-text="item.newsttile"></div>
-								<img class="img" :src="item.homepic"/>
+						
+						<li class="mui-table-view-cell" v-for="item in filmNews">
+							<!--资讯-->
+							<div style="width: 100%;" @tap="toFilmNews(item.id)" v-if="item.classid==2&&item.homepic">
+								<div class="mui-card-content" style="width: 100%;">
+									<div class="newsttile" v-text="item.newsttile"></div>
+									<img class="img" :id="item.id+''+indexpic" :src="itempic.url|photo" v-if="JSON.parse(item.homepic).length==1" v-for="(itempic,indexpic) in JSON.parse(item.homepic)"/>
+									<div class="imgs-wrapper" v-if="JSON.parse(item.homepic).length==3">
+										<img :id="item.id+''+indexpic" :src="itempic.url|photo" v-for="(itempic,indexpic) in JSON.parse(item.homepic)"/>
+									</div>
+									<p v-text="item.remark"></p>
+								</div>
+								<p class="font-min">
+									<span v-text="item.souce"></span>
+									<span v-text="item.createdate"></span>
+									<span class="mui-pull-right">阅读{{item.click}}次</span>
+								</p>
 							</div>
-							<p class="font-min">
-								<span v-text="item.souce"></span>
-								<span v-text="item.createdate"></span>
-							</p>
-						</li>
-						<li class="mui-table-view-cell" v-for="item in filmNews" @tap="toFilmNews(item.id)" v-if="item.newstype==1">
-							<div class="mui-card-content" style="width: 100%;">
-								<div class="newsttile" v-text="item.newsttile"></div>
-								<div class="imgs-wrapper">
-									<img :src="item.homepic"/>
-									<img :src="item.homepic"/>
-									<img :src="item.homepic"/>
+							<!--通知-->
+							<div style="width: 100%;" @tap="toFilmNews(item.id)" v-if="item.classid==3">
+								<div class="mui-card-content" style="width: 100%;">
+									<div class="newsttile" v-text="item.newsttile"></div>
+									<img class="img" :id="item.id+''+indexpic" :src="itempic.url|photo" v-if="item.homepic&&JSON.parse(item.homepic).length==1" v-for="(itempic,indexpic) in JSON.parse(item.homepic)"/>
 								</div>
 							</div>
-							<p class="font-min">
-								<span v-text="item.souce"></span>
-								<span v-text="item.createdate"></span>
-							</p>
+							<!--物料-->
+							<div style="width: 100%;" @tap="toFilmNews(item.id)" v-if="item.classid==4">
+								<div class="mui-card-content" style="width: 100%;">
+									<div class="newsttile" v-text="item.newsttile"></div>
+									<img class="img" :id="item.id+''+indexpic" :src="itempic.url|photo" v-if="item.homepic&&JSON.parse(item.homepic).length==1" v-for="(itempic,indexpic) in JSON.parse(item.homepic)"/>
+								</div>
+							</div>
+							<!--任务-->
+							<div style="width: 100%;" @tap="getTaskItem(item.filmids,item)" v-if="item.classid==5&&user.type==2&&item.isdisplay!=0">
+								<div class="mui-pull-left">
+									<div>
+										<img :id="item.id" class="taskImg" :src='item.homepic|photo'/>
+									</div>
+								</div>
+								<div class="font-mid" v-text="item.newsttile"></div>
+								<div style="margin-right: 10px;">
+									<div class='font-orange font-min'>票房奖励<span v-text="item.istop"></span>%</div>
+									<div class='font-gray font-min'>最低票价:<span v-text="item.isaudit"></span></div>
+									<div class='font-gray font-min'>最低人数:<span v-text="item.iscomm"></span>人/场</div>
+									<div class='font-gray font-min'>任务时间:<span v-text="item.createdate"></span>至<span v-text="item.remark"></span></div>
+								</div>
+							</div>
+							
+							<!--广告-->
+							<div style="width: 100%;" @tap="seeAd(item.id)" v-if="item.classid==8&&item.homepic">
+								<div class="mui-card-content" style="width: 100%;">
+									<div class="newsttile" v-text="item.newsttile"></div>
+									<img class="img" :id="item.id" :src="item.homepic|photo"/>
+								</div>
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -243,32 +419,37 @@
 			<div class="mui-backdrop" style="display: none;" id="mask" @tap="clo"></div>
 			<div class="mui-popup mui-popup-in" style="display: none;" id="maskInner">
 				<div class="mui-popup-inner">
-					<div class="mui-popup-title mui-pull-right" @tap="clo">×</div>
+					<div class="mui-pull-right" @tap="clo">×</div>
 					<div class="mui-popup-text font-red">
-						<img src="images/nopass.png" width="100%" />
-						您有<span v-text="orderNumber"></span>条任务未通过审核哦！
+						<br />
+						<img src="images/wait.png" width="120" />
+						<br /><br />
+						<div v-if="item2Num"><span v-text="item2Num"></span>条任务待执行</div>
+						<div v-if="item5Num"><span v-text="item5Num"></span>条任务未通过审核</div>
 					</div>
 				</div>
 				<div class="mui-popup-buttons">
-					<span class="mui-popup-button mui-popup-button-bold" @tap="watchMsg(2,'item5')">我去看看</span>
+					<span class="mui-popup-button mui-popup-button-bold" @tap="item5Num?watchMsg(2,'item5'):watchMsg(2,'item2')">我去看看</span>
 				</div>
 			</div>
 		</div>
-		
-
+		<script src="./js/mui.js"></script>
 		<script src="./js/util.js"></script>
 		<script src="./js/app.js"></script>
-		<script src="./libs/easymob-webim-sdk/jquery-1.11.1.js"></script>
+		<script src="./libs/swiper.min.js"></script>
 		<script src="./js/immersed.js"></script>
-		<script src="./js/mui.pullToRefresh.js"></script>
-		<script src="./js/mui.pullToRefresh.material.js"></script>
-		<script src="./libs/vue.js" type="text/javascript"></script>
+		<script src="./libs/vue.min.js" type="text/javascript"></script>
 		<script src="./js/movieAjax.js" type="text/javascript"></script>
 		<script type="text/javascript">
+
 			new Vue({
 				el: "#index",
 				data: {
-					orderNumber: '',
+					jifendangqian: 'http://www.36le.com/img/jifendangqian.jpg',
+					refreshtiao: '5',
+					refreshbox: null,
+					item2Num: '',
+					item5Num: '',
 					user: {
 						memid: 0,
 					    comId: 0,
@@ -287,97 +468,45 @@
 					    titleImg: "",
 					    deviceId: ""
 					},
-					hotList: [
+					adList: [
 						{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/ban1.jpg',
+							atype: 0
 						},{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/ban2.jpg',
+							atype: 0
 						},{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/ban3.jpg',
+							atype: 0
 						},{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/bannerdefault2.jpg',
+							atype: 1
 						},{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/bannerdefault2.jpg',
+							atype: 1
 						},{
-							id : 49,
-						    name : "大闹天宫",
-						    ename : "The Monkey King 2D",
-						    titleImg : "./images/imgLoading.gif",
-						    ctype : "动画",
-						    ltime : "中国大陆 / 88分钟",
-						    playdate : "2017-10-13大陆上映",
-						    xiangkan : "8179",
-						    pingfen : "8.3",
-						    fen910 : "60.7%",
-						    fen58 : "32.8%",
-						    fen14 : "6.5%",
-						    xiangbaochang : 0,
-						    yibaochang : 0
+							image: 'images/bannerdefault2.jpg',
+							atype: 1
+						}
+					],
+					broadcast: [
+						{
+							titile: '暂未开放，敬请期待',
+							content: ''
+						}
+					],
+					hotList: [{
+						titleImg: 'images/imgLoading.gif'
+					},{
+						titleImg: 'images/imgLoading.gif'
+					}],
+					gifts: [
+						{
+							img: 'images/carddefault.jpg'
+						},{
+							img: 'images/carddefault.jpg'
+						},{
+							img: 'images/carddefault.jpg'
 						}
 					],
 					filmNews: [
@@ -387,88 +516,597 @@
 							souce: '今日头条',
 							createdate: '2017-10-21'
 						}
-					]
+					],
+					refreshbox: null,
+					reIndex: true,
+					reFilm: true,
+					reNews: true,
+					reSetting: true,
+				},
+				methods: {
+					setSrc: function(arr){
+						var that = this;
+						that.$nextTick(function(){
+							arr.forEach(function(item, index){//缓存图片
+								var regu = /^\http/;
+								var re = new RegExp(regu);
+								if(re.test(item.homepic)){
+									app.setImg(item.id,item.homepic);
+								}else if(!item.homepic){
+									return
+								}else{
+									var picArr = JSON.parse(item.homepic);
+									for(var i = 0;i < picArr.length; i++){
+										app.setImg(item.id+''+i,picArr[i].url);
+									}
+								}
+							})
+						})
+					},
+					tipsBox: function(){
+						var that =this;
+						that.refreshbox = document.getElementById('refreshbox');
+						that.refreshbox.style.height='34px';
+						that.refreshbox.style.opacity='1';
+						setTimeout(function(){
+							that.refreshbox.style.height='0px'
+							that.refreshbox.style.opacity='0';
+						},1500)
+					},
+					clo: function(){
+						var mask = document.getElementById('mask');
+						var maskInner = document.getElementById('maskInner');
+						mask.style.display = maskInner.style.display = 'none';
+					},
+					watchMsg: function(type,item){
+						var that = this;
+						that.clo();
+						if(!that.user.memid){
+							mui.openWindow({
+				                url: './html/login.html',
+				                id: 'login',
+				                show: {
+				                    aniShow: 'pop-in'
+				                },
+				                styles: {
+				                    popGesture: 'hide'
+				                },
+				                waiting: {
+				                    autoShow: false
+				                }
+				            });
+							return;
+						}
+						if(type == 1){
+							mui.openWindow({
+								url: './html/main.html',
+								id: 'html/main',
+								show: {
+									aniShow: 'pop-in'
+								},
+								styles: {
+									popGesture: 'hide'
+								},
+								waiting: {
+									autoShow: false
+								}
+							});
+						}else if(type == 2){
+							mui.openWindow({
+								url: './html/mainy.html',
+								id: 'html/mainy',
+								show: {
+									aniShow: 'pop-in'
+								},
+								styles: {
+									popGesture: 'hide'
+								},
+								waiting: {
+									autoShow: false
+								}
+							});
+						}
+						localStorage.setItem('_tabItem_',item);
+					},
+					searches: function(){//信息检索
+						mui.openWindow({
+			                url: './html/searches.html',
+			                id: 'searches',
+			                show: {
+			                    aniShow: 'slide-in-bottom'
+			                },
+			                styles: {
+			                    popGesture: 'hide'
+			                },
+			                waiting: {
+			                    autoShow: false
+			                }
+			            });
+					},
+					shareGift: function(){//推荐有礼
+						mui.openWindow({
+			                url: './html/shareGift.html',
+			                id: 'shareGift',
+			                show: {
+			                    aniShow: 'pop-in'
+			                },
+			                styles: {
+			                    popGesture: 'hide'
+			                },
+			                waiting: {
+			                    autoShow: false
+			                }
+			            });
+					},
+					fuli: function(){//推荐有礼
+						mui.openWindow({
+			                url: './html/fuli.html',
+			                id: 'fuli',
+			                show: {
+			                    aniShow: 'pop-in'
+			                },
+			                styles: {
+			                    popGesture: 'hide'
+			                },
+			                waiting: {
+			                    autoShow: false
+			                }
+			            });
+					},
+					actiList: function(){//最新活动
+						mui.openWindow({
+							url: './html/actiList.html',
+							id: 'actiList',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					},
+					seeCast: function(cast){
+						if(!cast.content){
+							return;
+						}
+						localStorage.removeItem('_cast_');
+						app.setCast(cast);
+						mui.openWindow({
+							url: './html/castItem.html',
+							id: 'castItem',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+						});
+					},
+					seeAd: function(adId){//查看广告
+						localStorage.removeItem('_adId_')
+						app.setAdId(adId);
+						mui.openWindow({
+							url: './html/advertisement.html',
+							id: 'advertisement',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+						});
+					},
+					seeXjd: function(){//小积分大用途
+						mui.openWindow({
+							url: './html/xiaojifen.html',
+							id: 'xiaojifen',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+						});
+					},
+					pushTask: function (info){//发布
+						if(!app.getUser().memid){
+							mui.openWindow({
+				                url: 'html/login.html',
+				                id: 'html/login',
+				                show: {
+				                    aniShow: 'pop-in'
+				                },
+				                styles: {
+				                    popGesture: 'hide'
+				                },
+				                waiting: {
+				                    autoShow: false
+				                }
+				            });
+				            return;
+						}
+						app.setCinema(info);
+						mui.openWindow({
+							url: './html/pushTask.html',
+							id: 'pushTask',
+							show: {
+								aniShow: 'pop-in'
+							},
+							styles: {
+								popGesture: 'hide'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+					},
+					getTaskItem: function(id,obj){//显示图片信息
+						app.removeMovieId();
+						app.setChangId(obj.id);
+						app.setMovieId(id);
+						mui.openWindow({
+                            url: './html/getTaskItem.html',
+                            id: 'getTaskItem',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+		            },
+		            getGiftDetail: function(obj){//积分兑换
+		            	
+					    localStorage.removeItem('_giftId_')
+					    app.setGiftId(obj.id);
+						mui.openWindow({
+							url: './html/giftDetail.html',
+							id: 'giftDetail',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+						});
+						
+					},
+		            toFilmNews: function(id){
+	               		localStorage.setItem('_filmNewsId_',id);
+                        mui.openWindow({
+                            url: './html/filmNews.html',
+                            id: 'filmNews',
+                            show: {
+                                aniShow: 'pop-in'
+                            },
+                            styles: {
+                                popGesture: 'close'
+                            },
+                            waiting: {
+                                autoShow: false
+                            }
+                        });
+	                }
 				},
 				mounted: function(){
 					var that = this;
-					var gallery = mui('.mui-slider');
-					gallery.slider({
-					  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
-					});
-					mui('#secondSlider').slider({
-					  interval:0 //自动轮播周期，若为0则不自动播放，默认为0；
-					});
 					
-					if(mui.os.ios){     //注意，这里是小写的android   
-					    mui('.mui-bar-transparent').transparent({
-						    top: 0,
-						    offset: 150,
-						    duration: 16,
-						    scrollby: document.querySelector('.mui-scroll-wrapper')
-						})
-					}  
-					getData();
-					window.addEventListener("indexrefresh", function (e) {
-	        			getData();
-	        		})
-					function getData(){
-						//获取当前类型
-						that.user = app.getUser();			 
-						//alert(that.user.stype);
-						//获取热映电影
-						aja.getAllHostFilms(1,function(data){
-							that.hotList = data.list;
-						})
+					var onSwiper = function (){
+						new Swiper('.swiper-container-w', {
+							autoplay: 5000,
+					        spaceBetween: 5,
+					        observer:true, //修改swiper自己或子元素时，自动初始化swiper
+    						observeParents:true,//修改swiper的父元素时，自动初始化swiper
+					    });
+					    new Swiper('.swiper-container-h', {
+					    	autoplay: 2000,
+					        direction: 'vertical',
+					        //loop: true,
+					        observer:true, //修改swiper自己或子元素时，自动初始化swiper
+    						observeParents:true,//修改swiper的父元素时，自动初始化swiper
+					    });
+					    new Swiper('.swiper-container-wg', {
+							autoplay: 4000,
+					        spaceBetween: 15,
+					        observer:true, //修改swiper自己或子元素时，自动初始化swiper
+    						observeParents:true,//修改swiper的父元素时，自动初始化swiper
+					    });
+					    new Swiper('.swiper-container-wq', {
+							slidesPerView: 3,
+					        spaceBetween: 30,
+					        freeMode: true,
+					        observer:true, //修改swiper自己或子元素时，自动初始化swiper
+    						observeParents:true,//修改swiper的父元素时，自动初始化swiper
+					    });
 					}
-					//获取影视快讯
-					aja.getFilmNews(1,function(data){
-						that.filmNews = data.list;
-						that.filmNews.pageNum = data.pageNum;
-						console.log(JSON.stringify(data));
-					});
-					//打开页面时的遮罩
-					if(that.user.type == 2){
-						aja.getTaskOrderByMemid(4,1,function(data){//check,page
-							console.log(JSON.stringify(data))
-							that.orderNumber = data.total;
-							if(data.total==0){
-								return;
+					
+					//获取公共数据（任务、新闻、广告、商城）
+					var getPublicData = function (){
+							//获取当前类型
+							that.user = app.getUser();
+							that.user.type = 2;
+							//新闻头条
+							aja.getBroadcast(function(data){
+								that.broadcast = data.list;
+								that.broadcast.pageNum = data.pageNum;
+							})
+							//获取热映电影
+							aja.getAllTaskPage(0,1,function(data){
+								that.hotList = data.list;
+								localStorage.setItem('_yyb_allTask_', JSON.stringify(data.list));
+		                    });
+		                    //积分兑换
+		                    aja.getGiftsPage(1,1,function(data){ //page,status,status=0已下架，status=1上架
+					        	that.gifts = data.list;
+					        	that.gifts.pageNum = data.pageNum;
+					        	localStorage.setItem('_yyb_gifts_', JSON.stringify(data.list));
+					        })
+		                    //获取影视快讯
+							aja.getFilmNews(1,function(data){
+								that.filmNews = data.list;
+								that.refreshtiao = data.pageSize;
+								localStorage.setItem('_yyb_filmNews_', JSON.stringify(data.list));
+								that.setSrc(data.list);
+								//刷新提醒
+								that.tipsBox();
+								that.filmNews.pageNum = data.pageNum;
+							});
+							if(that.user && that.user.sex && that.user.age){
+								aja.getGuanggao(that.user.sex,that.user.age,function(data){
+									that.adList = data;
+								})
+							}else {
+								aja.getGuanggao(0,30,function(data){
+									that.adList = data;
+								})
 							}
-							var mask = document.getElementById('mask');
-							var maskInner = document.getElementById('maskInner');
-							mask.style.display = maskInner.style.display = 'block';
-						})
-						
-					}
-					
-					//向上滑动
-					mui.init({
-						swipeBack: false,
-						pullRefresh: {
-							container: '#pullUpRefresh',
-							up: {
-								contentrefresh: '正在加载...',
-								callback: upRefresh
+							
+							setTimeout(function(){
+								onSwiper();
+							},0)
+							app.setImg('jifendangqian',that.jifendangqian);
+						}
+					//获取会员私有数据
+					var getPricateDate= function(){
+						//首次打开自动登陆					   
+						var user = app.getUser();
+						var loginInfo = {
+							username: user.memName,
+							password: user.memPwd,
+						}
+						function loginSucc(user,data){
+							//储存到本地的用户信息，登录成功后返回的信息，保存到state中的对象用于记录token
+							//登录成功后
+							
+							user.memid = data.memid;
+							user.type = data.type;
+							user.token = data.token;
+							app.setUser(user);
+							console.log('自动登录成功');
+							
+							var upNewObj = {
+								memid: data.memid,
+								deviceId: plus.push.getClientInfo().token
+							}
+							if(mui.os.android){
+			            		upNewObj.devicetype = 'and';
+			            	}else{
+			            		upNewObj.devicetype = 'ios';
+			            	}
+			            	
+		                	aja.updateMembers(upNewObj,function(data1){
+								if(data.r == 1){
+									console.log('设备id更新成功');
+								}
+							})
+							if(data.type == 2){
+								aja.getYingtingByMemID(user.memid,function(data){
+									app.setTings(data);
+								})
 							}
 						}
-					});
-					function upRefresh(){
-						setTimeout(function() {
-							aja.getFilmNews(that.filmNews.pageNum+1,function(data){
-								
-								if(!data.list[0]){
-									mui('#pullUpRefresh').pullRefresh().endPullupToRefresh(true)
-								}else{
-									app.afterList(that.filmNews,data.list);
-									that.filmNews.pageNum = data.pageNum;
-									mui('#pullUpRefresh').pullRefresh().endPullUpToRefresh();
+						 
+						if(user.memName&&user.memPwd){
+							var id = setTimeout(function () {
+								app.login(loginInfo,function(data){
+									if(data.result == 'ok'){
+										loginSucc(user,data)
+									}else{
+										console.log('登录失败')
+									}
+								});
+								clearTimeout(id);
+							},20);
+						}
+						
+						
+						window.addEventListener("indexrefresh", function (e) {
+		        			getPublicData();
+		        		})
+						//打开页面时的遮罩
+						if(that.user.memid&&that.user.type == 2){
+							aja.getNotifyTaskByID("1,4",function(data){//check
+								if(data.length==0){
+									return;
+								}else {
+									data.forEach(function(item,index){
+										if(item.checks==1){
+											that.item2Num = item.ccsum;
+										}
+										if(item.checks==4){
+											that.item5Num = item.ccsum;
+										}
+									})
 								}
-							});
-						}, 1000);
+								var mask = document.getElementById('mask');
+								var maskInner = document.getElementById('maskInner');
+								mask.style.display = maskInner.style.display = 'block';
+							})
+						}
 					}
-					//消息推送
+					var updateVersion = function(){
+						if(mui.os.ios){ return; }
+						//获取版本号
+						var wgtVer = null;
+						plus.runtime.getProperty(plus.runtime.appid,function(inf){
+    						wgtVer = inf.version;
+						});
+						var server = "http://www.36le.com/reg/update"; //获取升级描述文件服务器地址
+						 mui.ajax({
+				            url      : server,
+				            type     : 'GET',
+				            success  : function(data){		
+				            	   // alert(wgtVer);
+				                if (data.version > wgtVer) {
+								    plus.ui.confirm(data.note, function(i) {									     
+										if (0 == i.index) {											 
+											plus.runtime.openURL(data.url);
+										}else{											
+											plus.runtime.quit();//仅Android 有效
+											getPublicData();
+					        				getPricateDate();
+										}
+									}, data.title, ["立即更新", "取　　消"]);
+								} else {
+									//mui.toast('当前已是最新版本~')
+									getPublicData();
+				        			getPricateDate();
+								}
+				            },
+				            error    : function(xhr,type,errorThrown){
+				                mui.toast(type);
+				            }
+				        });                				 
+					}
+					var wainshow = function () {
+					    if (plus && plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+					        mui.toast("网络异常，请检查网络设置！");
+					        
+					    } else {
+					      //  mui.toast("网络正常");//回复网络时，刷新数据
+					        that.hotList = {};
+					      	that.gifts = {};
+							getPublicData();
+						    getPricateDate();
+					        updateVersion();
+					    }
+					}
+//对网络变更状态进行监听，网络恢复时候，进行数据刷新操作
+//					mui.plusReady(function() {
+//				    	document.addEventListener("netchange", wainshow, false);
+//					});
+//-------启动时执行数据初始化					
+					mui.plusReady(function() {
+						document.addEventListener("netchange", wainshow, false);
+						
+						if (plus && plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+							//获取获取本地缓存
+							that.user.type = 2;
+							that.hotList = JSON.parse(localStorage.getItem('_yyb_allTask_')) ;
+							that.gifts = JSON.parse(localStorage.getItem('_yyb_gifts_')) ;
+							that.filmNews = JSON.parse(localStorage.getItem('_yyb_filmNews_')) ;
+							that.setSrc(that.filmNews);
+							app.setImg('jifendangqian',that.jifendangqian);
+					        mui.toast("网络异常，请检查网络设置！");
+					        
+					        return;
+					    }
+						getPublicData();
+					    getPricateDate();
+					    updateVersion();
+					})
 					document.addEventListener( 'plusready', function(){
-					    message = document.getElementById('message');
+						
+						//向上滑动
+						mui.init({
+							swipeBack: false,
+							pullRefresh: {
+								container: '#pullUpRefresh',
+								down: {
+									style:'circle',
+									height:'100px',//可选,默认50px.下拉刷新控件的高度,
+	      							range:'150px', //可选 默认100px,控件可下拉拖拽的范围
+									callback: pulldownRefresh
+								},
+								up: {
+									contentrefresh: '正在加载...',
+									callback: upRefresh
+								}
+							}
+						});
+						function pulldownRefresh(){
+							
+							if(!app.wainshow()){ 
+								mui('#pullUpRefresh').pullRefresh().endPulldownToRefresh();
+								return;}
+							//获取热映电影
+							aja.getAllTaskPage(0,1,function(data){
+								that.hotList = data.list;
+		                    });
+		                    //积分兑换
+		                    aja.getGiftsPage(1,1,function(data){ //page,status,status=0已下架，status=1上架
+					        	that.gifts = data.list;
+					        	that.gifts.pageNum = data.pageNum;
+					        })
+							setTimeout(function() {
+								aja.getFilmNews(that.filmNews.pageNum,function(data){
+									that.refreshtiao = data.pageSize;
+									//刷新提醒
+									that.tipsBox();
+									var oldFilmNews = that.filmNews;
+									that.filmNews = (data.list).concat(oldFilmNews);
+									
+									that.filmNews.pageNum = data.pageNum;
+									//setSrc(data.list);
+									mui('#pullUpRefresh').pullRefresh().endPulldownToRefresh();
+								},function(msg, type, errorThrown){
+					        		console.log(type)
+									mui('#pullUpRefresh').pullRefresh().endPulldownToRefresh();
+								});
+							}, 1000);
+						}
+						function upRefresh(){
+							if(!app.wainshow()){ 
+								mui('#pullUpRefresh').pullRefresh().endPullup();
+								return;}
+							setTimeout(function() {
+								aja.getFilmNews(that.filmNews.pageNum,function(data){
+									if(!data.list[0]){
+										mui('#pullUpRefresh').pullRefresh().endPullup(true)
+									}else{
+										app.afterList(that.filmNews,data.list);
+										that.filmNews.pageNum = data.pageNum;
+//										setSrc(data.list);
+										mui('#pullUpRefresh').pullRefresh().endPullup();
+									}
+								},function(msg, type, errorThrown){
+									mui('#pullUpRefresh').pullRefresh().endPullup();
+								});
+							}, 1000);
+							
+						}
+						
+						//消息推送
+						
+//					    var message = document.getElementById('message');
 					    // 监听点击消息事件
 					    plus.push.addEventListener( 'click', function( msg ) {
 					        // 判断是从本地创建还是离线推送的消息
@@ -494,23 +1132,30 @@
 					        }
 					        logoutPushMsg( msg );
 					    }, false );
-					}, false );
-					mui.plusReady(function() {
+					
+						
 						//顶部状态栏是否透明
 						var header = document.getElementsByTagName('header')[0];
 						header.style.paddingTop = app.Immersed(header)+'px';
 						header.style.height = header.offsetHeight + app.Immersed(header) + 'px';
 						//是否首次安装
-						var showGuide = plus.storage.getItem("lauchFlag");
+						setTimeout(function() {
+							//预加载
+							plus.navigator.closeSplashscreen();
+							plus.navigator.setFullscreen(false);
+						}, 1500);
+						
+						/*var showGuide = plus.storage.getItem("lauchFlag");
 						//仅支持竖屏显示
 						plus.screen.lockOrientation("portrait-primary");
 						if(showGuide) {
 							//有值，说明已经显示过了，无需显示；
 							//关闭splash页面；
-							plus.navigator.closeSplashscreen();
-							plus.navigator.setFullscreen(false);
-							//预加载
-//							preload();
+							setTimeout(function() {
+								//预加载
+								plus.navigator.closeSplashscreen();
+								plus.navigator.setFullscreen(false);
+							}, 600);
 						} else {
 							//显示启动导航
 							mui.openWindow({
@@ -526,19 +1171,14 @@
 									autoShow: false
 								}
 							});
-							//延迟的原因：优先打开启动导航页面，避免资源争夺
-							setTimeout(function() {
-								//预加载
-//								preload();
-							}, 200);
-						}
+						}*/
 						
 						 // 创建加载内容窗口
 					    var topoffset='45px';
-					    if(plus.navigator.isImmersedStatusbar()){// 兼容immersed状态栏模式
+					    /*if(plus.navigator.isImmersedStatusbar()){// 兼容immersed状态栏模式
 					        // 获取状态栏高度并根据业务需求处理，这里重新计算了子窗口的偏移位置
 					        topoffset=(Math.round(plus.navigator.getStatusbarHeight())+45)+'px';
-					    }
+					    }*/
 					    // 使用偏移位置创建子窗口
 					    wc=plus.webview.create(null,'doccontent',{top:topoffset,bottom:'0px',bounce:'vertical',bounceBackground:'#FFFFFF'});
 						
@@ -561,17 +1201,53 @@
 						nview.addEventListener('click', function(e) {
 							var clientX = e.clientX;
 							if(clientX > 0 && clientX <= parseInt(pageW * 0.25)) {
+								if(currIndex===0){
+									getPublicData();
+								}
+								if(that.user.memid != app.getUser().memid){
+									getPublicData();
+								}
 								currIndex = 0;
-								getData();
 							} else if(clientX > parseInt(pageW * 0.25) && clientX <= parseInt(pageW * 0.5)) {
+								if(that.reFilm){
+									mui.fire(plus.webview.getWebviewById(subpages[0]), "filmrefresh");
+									that.reFilm = false;
+								}
+								else if(that.user.memid != app.getUser().memid){
+									mui.fire(plus.webview.getWebviewById(subpages[0]), "filmrefresh");
+								}
+								else if(currIndex == 1){
+									mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "filmrefresh");
+								}
 								currIndex = 1;
-								mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "chatrefresh");
+//								currIndex = 1;
+//								mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "filmrefresh");
 							} else if(clientX > parseInt(pageW * 0.5) && clientX <= parseInt(pageW * 0.75)) {
+								if(that.reNews){
+									mui.fire(plus.webview.getWebviewById(subpages[1]), "chatrefresh");
+									that.reNews = false;
+								}
+								else if(that.user.memid != app.getUser().memid){
+									mui.fire(plus.webview.getWebviewById(subpages[1]), "chatrefresh");
+								}
+								else if(currIndex == 2){
+									mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "chatrefresh");
+								}
 								currIndex = 2;
-								
-							} else {
+							} else if(clientX > parseInt(pageW * 0.75) && clientX <= parseInt(pageW * 1)){
+								if(that.reSetting){
+									mui.fire(plus.webview.getWebviewById(subpages[2]), "settingrefresh");
+									that.reSetting = false;
+								}
+								else if(that.user.memid != app.getUser().memid){
+									mui.fire(plus.webview.getWebviewById(subpages[2]), "settingrefresh");
+								}
+								else if(currIndex == 3){
+									mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "settingrefresh");
+								}
+								//mui.fire(plus.webview.getWebviewById(subpages[2]), "settingrefresh");
+								//mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "settingrefresh");
 								currIndex = 3;
-								mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "settingrefresh");
 							}
 							// 匹配对应tab窗口	
 							if(currIndex > 0) {
@@ -583,212 +1259,18 @@
 							if(targetPage == activePage) {
 								return;
 							}
-	
-	//						if(currIndex !== 3) { 
-								//底部选项卡切换
-								util.toggleNview(currIndex);
-								// 子页面切换
-								util.changeSubpage(targetPage, activePage, aniShow);
-								//更新当前活跃的页面
-								activePage = targetPage;
-	//						} else {
-	//							//第四个tab 打开新窗口
-	//							plus.webview.open('html/new-webview.html', 'new', {}, 'slide-in-right', 200);
-	//						}
-						});
-						//更多》》
-						var more = document.getElementById('more');
-						more.addEventListener('tap', function(e) {
-							currIndex = 1;
-							mui.fire(plus.webview.getWebviewById(subpages[currIndex - 1]), "chatrefresh");
-							targetPage = plus.webview.getWebviewById(subpages[currIndex - 1]);
 							//底部选项卡切换
 							util.toggleNview(currIndex);
 							// 子页面切换
 							util.changeSubpage(targetPage, activePage, aniShow);
 							//更新当前活跃的页面
 							activePage = targetPage;
-						})
-					});
-				},
-				methods: {
-					clo: function(){
-						var mask = document.getElementById('mask');
-						var maskInner = document.getElementById('maskInner');
-						mask.style.display = maskInner.style.display = 'none';
-					},
-					watchMsg: function(type,item){
-						var that = this;
-						var mask = document.getElementById('mask');
-						var maskInner = document.getElementById('maskInner');
-						mask.style.display = maskInner.style.display = 'none';
-						
-						if(!that.user.memid){
-							app.mainPage('login')
-							return;
-						}
-						if(type == 1){
-							mui.openWindow({
-								url: './html/main.html',
-								id: 'main',
-								preload: true,
-								show: {
-									aniShow: 'pop-in'
-								},
-								styles: {
-									popGesture: 'hide'
-								},
-								waiting: {
-									autoShow: false
-								}
-							});
-						}else if(type == 2){
-							mui.openWindow({
-								url: './html/mainy.html',
-								id: 'mainy',
-								preload: true,
-								show: {
-									aniShow: 'pop-in'
-								},
-								styles: {
-									popGesture: 'hide'
-								},
-								waiting: {
-									autoShow: false
-								}
-							});
-						}
-						localStorage.setItem('_tabItem_',item);
-						
-					},
-					more: function(){
-						var aniShow = {};
-						var subpages = util.options.subpages;
-						var targetPage = plus.webview.getWebviewById(subpages[0]);
-						var activePage = plus.webview.currentWebview();
-						//底部选项卡切换
-						util.toggleNview(1);
-						// 子页面切换
-						util.changeSubpage(targetPage, activePage, aniShow);
-						//更新当前活跃的页面
-						activePage = targetPage;
-//						util.changeSubpage("html/tab-webview-film.html")
-					},
-					baochang: function (id) {//抢list
-						var that = this;
-						if(!that.user.memid){
-							app.mainPage('./html/login')
-							return;
-						}
-						localStorage.setItem('__movieinfo_',id)
-                        mui.openWindow({
-                            url: './sonPage/qiangList.html',
-                            id: 'qiangList',
-                            preload: true,
-                            show: {
-                                aniShow: 'pop-in'
-                            },
-                            styles: {
-                                popGesture: 'hide'
-                            },
-                            waiting: {
-                                autoShow: false
-                            }
-                        });
-                    },
-					pushTask: function (info){//发布
-						if(!app.getUser().memid){
-							mui.openWindow({
-				                url: './html/login.html',
-				                id: 'login',
-				                preload: true,
-				                show: {
-				                    aniShow: 'pop-in'
-				                },
-				                styles: {
-				                    popGesture: 'hide'
-				                },
-				                waiting: {
-				                    autoShow: false
-				                }
-				            });
-				            return;
-						}
-						app.setCinema(info);
-						mui.openWindow({
-							url: './sonPage/pushTask.html',
-							id: 'pushTask',
-							preload: true,
-							show: {
-								aniShow: 'pop-in'
-							},
-							styles: {
-								popGesture: 'hide'
-							},
-							waiting: {
-								autoShow: false
-							}
 						});
-					},
-					movieInfo: function(id,obj){//显示图片信息
-//						if(!app.getUser().memid){
-//							mui.openWindow({
-//				                url: './html/login.html',
-//				                id: 'login',
-//				                preload: true,
-//				                show: {
-//				                    aniShow: 'pop-in'
-//				                },
-//				                styles: {
-//				                    popGesture: 'hide'
-//				                },
-//				                waiting: {
-//				                    autoShow: false
-//				                }
-//				            });
-//				            return;
-//						}
-						localStorage.removeItem('__movieinfo_')
-	               		localStorage.setItem('__movieinfo_',id);
-	               		localStorage.setItem('_jidian_chang_',JSON.stringify(obj))
-                        mui.openWindow({
-                            url: '/sonPage/movieInfo.html',
-                            id: 'movieInfo',
-                            preload: true,
-                            show: {
-                                aniShow: 'pop-in'
-                            },
-                            styles: {
-                                popGesture: 'close'
-                            },
-                            waiting: {
-                                autoShow: false
-                            }
-                        });
-		            },
-		            toFilmNews: function(id){
-	               		localStorage.setItem('_filmNewsId_',id);
-                        mui.openWindow({
-                            url: './sonPage/filmNews.html',
-                            id: 'filmNews',
-                            preload: true,
-                            show: {
-                                aniShow: 'pop-in'
-                            },
-                            styles: {
-                                popGesture: 'close'
-                            },
-                            waiting: {
-                                autoShow: false
-                            }
-                        });
-	               }
-	               
-				}
+					}, false );
+					//})
+				},
+				
 			})
-			
-			
-			
 			
 		</script>
 	</body>
